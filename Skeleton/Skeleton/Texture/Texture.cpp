@@ -28,6 +28,7 @@ Texture::~Texture()
 	for (auto itr = tex.begin(); itr != tex.end(); ++itr)
 	{
 		descMane.GetRsc(itr->second.cRsc)->Unmap(0, nullptr);
+		Release(itr->second.rsc);
 	}
 }
 
@@ -70,7 +71,7 @@ void Texture::CreateConView(int * i)
 {
 	D3D12_CONSTANT_BUFFER_VIEW_DESC desc{};
 	desc.BufferLocation = descMane.GetRsc(tex[i].cRsc)->GetGPUVirtualAddress();
-	desc.SizeInBytes = (sizeof(tex::Info) + 0xff) &~0xff;
+	desc.SizeInBytes    = (sizeof(tex::Info) + 0xff) &~0xff;
 
 	auto handle = descMane.GetHeap(*i)->GetCPUDescriptorHandleForHeapStart();
 	dev.lock()->Get()->CreateConstantBufferView(&desc, handle);
@@ -108,7 +109,7 @@ long Texture::CreateShaderRsc(int * i, const unsigned int & width, const unsigne
 	desc.DepthOrArraySize = 1;
 	desc.MipLevels        = 1;
 	desc.Format           = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
-	desc.SampleDesc.Count = 1;
+	desc.SampleDesc       = { 1, 0 };
 	desc.Flags            = D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE;
 	desc.Layout           = D3D12_TEXTURE_LAYOUT::D3D12_TEXTURE_LAYOUT_UNKNOWN;
 
@@ -158,7 +159,7 @@ long Texture::WriteSub(int * i)
 }
 
 // 作成テクスチャのサブリソースに書き込み
-long Texture::WriteSub(int * i, const std::vector<tex::Color>& data)
+long Texture::WriteSub(int * i, const std::vector<unsigned char>& data)
 {
 	D3D12_BOX box{};
 	box.back   = 1;
@@ -168,7 +169,7 @@ long Texture::WriteSub(int * i, const std::vector<tex::Color>& data)
 	box.right  = static_cast<UINT>(tex[i].rsc->GetDesc().Width);
 	box.top    = 0;
 
-	auto hr = tex[i].rsc->WriteToSubresource(0, &box, &data[0], box.right * sizeof(tex::Color), box.right * box.bottom * sizeof(tex::Color));
+	auto hr = tex[i].rsc->WriteToSubresource(0, &box, &data[0], box.right * 4, box.right * box.bottom * 4);
 	if (FAILED(hr))
 	{
 		OutputDebugString(_T("\n作成テクスチャのサブリソースの更新：失敗"));
@@ -196,7 +197,7 @@ long Texture::CreateVertexRsc(int * i)
 	desc.Height           = 1;
 	desc.Layout           = D3D12_TEXTURE_LAYOUT::D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	desc.MipLevels        = 1;
-	desc.SampleDesc       = { 1,0 };
+	desc.SampleDesc       = { 1, 0 };
 	desc.Width            = sizeof(tex::Vertex) * vertex.size();
 
 	return descMane.CreateRsc(dev, tex[i].vRsc, prop, desc);
@@ -236,12 +237,12 @@ void Texture::SetBundle(int * i)
 
 	D3D12_VERTEX_BUFFER_VIEW view{};
 	view.BufferLocation = descMane.GetRsc(tex[i].vRsc)->GetGPUVirtualAddress();
-	view.SizeInBytes    = sizeof(tex::Vertex) * vertex.size();
-	view.StrideInBytes  = sizeof(tex::Vertex);
+	view.SizeInBytes = sizeof(tex::Vertex) * vertex.size();
+	view.StrideInBytes = sizeof(tex::Vertex);
 	tex[i].list->GetList()->IASetVertexBuffers(0, 1, &view);
 
 	tex[i].list->GetList()->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-	
+
 	tex[i].list->GetList()->SetGraphicsRootDescriptorTable(1, handle);
 	tex[i].list->GetList()->DrawInstanced(vertex.size(), 1, 0, 0);
 
@@ -256,10 +257,10 @@ void Texture::Load(const std::string & fileName, int & i)
 		return;
 	}
 
-	tex[&i].rsc    = loader.GetRsc(fileName);
+	tex[&i].rsc = loader.GetRsc(fileName);
 	tex[&i].decode = loader.GetDecode(fileName);
-	tex[&i].sub    = loader.GetSub(fileName);
-	tex[&i].list   = std::make_unique<List>(dev, D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_BUNDLE);
+	tex[&i].sub = loader.GetSub(fileName);
+	tex[&i].list = std::make_unique<List>(dev, D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_BUNDLE);
 
 	descMane.CreateHeap(dev, i, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, 2);
 	CreateConRsc(&i);
@@ -273,7 +274,7 @@ void Texture::Load(const std::string & fileName, int & i)
 }
 
 // 配列データから画像を生成
-void Texture::CreateImg(const std::vector<tex::Color>& data, const unsigned int & width, const unsigned int & height, int & i)
+void Texture::CreateImg(const std::vector<unsigned char>& data, const unsigned int & width, const unsigned int & height, int & i)
 {
 	CreateShaderRsc(&i, width, height);
 	tex[&i].list = std::make_unique<List>(dev, D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_BUNDLE);
@@ -289,19 +290,19 @@ void Texture::CreateImg(const std::vector<tex::Color>& data, const unsigned int 
 }
 
 // 描画
-void Texture::Draw(std::weak_ptr<List>list, int & i, const DirectX::XMFLOAT2 & pos, const DirectX::XMFLOAT2 & size, 
+void Texture::Draw(std::weak_ptr<List>list, int & i, const DirectX::XMFLOAT2 & pos, const DirectX::XMFLOAT2 & size,
 	const DirectX::XMFLOAT2 & uvPos, const DirectX::XMFLOAT2 & uvSize, const float & alpha, const bool & turnX, const bool & turnY)
 {
-	 XMStoreFloat4x4(&tex[&i].info->matrix, 
-		 DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat2(
-			 &DirectX::XMFLOAT2(size.x / static_cast<float>(win.lock()->GetX()), size.y / static_cast<float>(win.lock()->GetY()))))
-	   * DirectX::XMMatrixTranslationFromVector(
-			 DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(pos.x, pos.y)))
-	 );
-	 tex[&i].info->uvPos   = uvPos;
-	 tex[&i].info->uvSize  = uvSize;
-	 tex[&i].info->reverse = { (turnX) ? -1.0f : 1.0f, (turnY) ? -1.0f : 1.0f };
-	 tex[&i].info->alpha   = alpha;
+	XMStoreFloat4x4(&tex[&i].info->matrix,
+		DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat2(
+			&DirectX::XMFLOAT2(size.x / static_cast<float>(win.lock()->GetX()), size.y / static_cast<float>(win.lock()->GetY()))))
+		* DirectX::XMMatrixTranslationFromVector(
+			DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(pos.x, pos.y)))
+	);
+	tex[&i].info->uvPos = uvPos;
+	tex[&i].info->uvSize = uvSize;
+	tex[&i].info->reverse = { (turnX) ? -1.0f : 1.0f, (turnY) ? -1.0f : 1.0f };
+	tex[&i].info->alpha = alpha;
 
 	auto heap = descMane.GetHeap(i);
 	list.lock()->GetList()->SetDescriptorHeaps(1, &heap);

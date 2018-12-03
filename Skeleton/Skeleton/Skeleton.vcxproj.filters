@@ -106,9 +106,6 @@
     <Filter Include="Effector">
       <UniqueIdentifier>{b31f9d28-2a04-4c89-8da2-2448cf7c23a7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Filter">
-      <UniqueIdentifier>{12196c9e-cb5d-4212-ad62-42d023aeea8c}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -200,9 +197,6 @@
     </ClCompile>
     <ClCompile Include="Effector\Effector.cpp">
       <Filter>Effector</Filter>
-    </ClCompile>
-    <ClCompile Include="Filter\Filter.cpp">
-      <Filter>Filter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -310,9 +304,6 @@
     </ClInclude>
     <ClInclude Include="Effector\Effector.h">
       <Filter>Effector</Filter>
-    </ClInclude>
-    <ClInclude Include="Filter\Filter.h">
-      <Filter>Filter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

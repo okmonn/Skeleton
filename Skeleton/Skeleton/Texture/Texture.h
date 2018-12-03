@@ -25,20 +25,6 @@ namespace tex {
 		DirectX::XMFLOAT2 uv;
 	};
 
-	// 色
-	struct Color {
-		unsigned char r;
-		unsigned char g;
-		unsigned char b;
-		unsigned char a;
-
-		Color() : r(0), g(0), b(0), a(0) {
-		}
-		Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a) :
-			r(r), g(g), b(b), a(a) {
-		}
-	};
-
 	struct Info
 	{
 		//移動行列
@@ -88,11 +74,11 @@ public:
 	void Load(const std::string& fileName, int& i);
 
 	// 配列データから画像を生成
-	void CreateImg(const std::vector<tex::Color>&data, const unsigned int& width, const unsigned int& height, int& i);
+	void CreateImg(const std::vector<unsigned char>&data, const unsigned int& width, const unsigned int& height, int& i);
 
 	// 描画
-	void Draw(std::weak_ptr<List>list, int& i, const DirectX::XMFLOAT2& pos, const DirectX::XMFLOAT2& size, 
-		const DirectX::XMFLOAT2& uvPos, const DirectX::XMFLOAT2& uvSize, const float& alpha = 1.0f, 
+	void Draw(std::weak_ptr<List>list, int& i, const DirectX::XMFLOAT2& pos, const DirectX::XMFLOAT2& size,
+		const DirectX::XMFLOAT2& uvPos, const DirectX::XMFLOAT2& uvSize, const float& alpha = 1.0f,
 		const bool& turnX = false, const bool& turnY = false);
 
 	// 削除
@@ -118,7 +104,7 @@ private:
 	long WriteSub(int* i);
 
 	// 作成テクスチャのサブリソースに書き込み
-	long WriteSub(int* i, const std::vector<tex::Color>&data);
+	long WriteSub(int* i, const std::vector<unsigned char>&data);
 
 	// 定数バッファのマップ
 	long MapCon(int* i);

@@ -109,6 +109,12 @@ void Union::LoadImg(const std::string & fileName, int & i)
 	tex->Load(fileName, i);
 }
 
+// 配列データから画像を生成
+void Union::CreateImg(const std::vector<unsigned char>& data, const unsigned int & width, const unsigned int & height, int & i)
+{
+	tex->CreateImg(data, width, height, i);
+}
+
 // 画像の描画
 void Union::DrawImg(int & i, const float & x, const float & y, const float & sizeX, const float & sizeY, const float & rectX, const float & rectY, 
 	const float & rectSizexX, const float & rectSizeY, const float & alpha, const bool & turnX, const bool & turnY)

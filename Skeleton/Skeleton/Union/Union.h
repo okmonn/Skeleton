@@ -2,6 +2,7 @@
 #include "../etc/tString.h"
 #include <map>
 #include <list>
+#include <vector>
 #include <memory>
 
 enum D3D12_PRIMITIVE_TOPOLOGY_TYPE : int;
@@ -30,6 +31,9 @@ public:
 
 	// 画像の読み込み
 	void LoadImg(const std::string& fileName, int& i);
+
+	// 配列データから画像を生成
+	void CreateImg(const std::vector<unsigned char>&data, const unsigned int& width, const unsigned int& height, int& i);
 
 	// 画像の描画
 	void DrawImg(int& i, const float& x, const float& y, const float& sizeX, const float& sizeY, const float& rectX, const float& rectY, 

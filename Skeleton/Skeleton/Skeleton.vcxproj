@@ -126,7 +126,6 @@
     <ClCompile Include="Effector\Effector.cpp" />
     <ClCompile Include="etc\Func.cpp" />
     <ClCompile Include="Fence\Fence.cpp" />
-    <ClCompile Include="Filter\Filter.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="List\List.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -162,7 +161,6 @@
     <ClInclude Include="etc\Release.h" />
     <ClInclude Include="etc\tString.h" />
     <ClInclude Include="Fence\Fence.h" />
-    <ClInclude Include="Filter\Filter.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="List\List.h" />
     <ClInclude Include="Pipe\Pipe.h" />
