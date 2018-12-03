@@ -3,9 +3,12 @@
 #include "XAudio2/VoiceCallback.h"
 #include "SoundLoader/SoundLoader.h"
 #include "../Effector/Effector.h"
+#include "../Filter/Filter.h"
 #include "Destroy.h"
 #include <ks.h>
 #include <ksmedia.h>
+
+std::unique_ptr<Filter>filter = std::make_unique<Filter>();
 
 // バッファの最大数
 #define BUF_MAX 3

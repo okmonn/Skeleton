@@ -145,96 +145,41 @@ void Fade(uint index)
     }
 }
 
-// ハニング窓
-float Hanning(int index, uint size)
+// フィルタ用入力バッファ
+groupshared float input[2];
+// フィルタ用出力バッファ
+groupshared float output[2];
+
+// IIR ローパス
+void LowPass(uint index)
 {
-    return (size % 2 == 0) ?
-    //偶数
-    0.5f - 0.5f * cos(2.0f * PI * index / size) :
-    //奇数
-    0.5f - 0.5f * cos(2.0f * PI * (index + 0.5f) / size);
-}
+    float cutoff = 20000.0f;
+    float q = 1.0f / sqrt(2.0f);
 
-// シンク関数
-float Sinc(float index)
-{
-    return (index == 0.0f) ? 1.0f : sin(index) / index;
-}
+    //フィルタ係数計算で使用する中間値を求める。
+    float omega = 2.0f * PI * cutoff / sample;
+    float alpha = sin(omega) / (2.0f * q);
 
-// FIRローパスフィルタ
-void FIR_LPF(uint index)
-{
-    //エッジ周波数
-    float edge = 1000.0f / sample;
-    //遷移帯域幅
-    float delta = 1000.0f / sample;
-    //遅延器の数
-    int num = (int) (3.1f / delta + 0.5f) - 1;
-    if(num % 2 != 0)
-    {
-        ++num;
-    }
+	//フィルタ係数を求める。
+    float a0 =  1.0f + alpha;
+    float a1 = -2.0f * cos(omega);
+    float a2 =  1.0f - alpha;
+    float b0 = (1.0f - cos(omega)) / 2.0f;
+    float b1 =  1.0f - cos(omega);
+    float b2 = (1.0f - cos(omega)) / 2.0f;
 
-    float data[32];
-    int offset = num / 2;
-    for (int i = -offset; i <= offset; ++i)
-    {
-        data[offset + i] = 2.0f * edge * Sinc(2.0f * PI * edge * i);
-    }
+    real[index] = (b0 / a0 * origin[index]) + (b1 / a0 * input[0]) + (b2 / a0 * input[1]) - (a1 / a0 * output[0]) - (a2 / a0 * output[1]);
 
-    for (int n = 0; n <= num; ++n)
-    {
-        data[n] *= Hanning(n, num + 1);
-        real[index] += (index - n >= 0) ? data[n] * origin[index - n] : 0.0f;
-    }
+    //入力バッファ
+    input[1] = input[0];
+    input[0] = origin[index];
 
-    //クリッピング
-    if(real[index] > 1.0f)
-    {
-        real[index] = 1.0f;
-    }
-    else if(real[index] < -1.0f)
-    {
-        real[index] = -1.0f;
-    }
-}
+    //出力バッファ
+    output[1] = output[0];
+    output[0] = real[index];
 
-// FIRハイパスフィルタ
-void FIR_HPF(uint index)
-{
-    //エッジ周波数
-    float edge = 1000.0f / sample;
-    //遷移帯域幅
-    float delta = 1000.0f / sample;
-    //遅延器の数
-    int num = (int) (3.1f / delta + 0.5f) - 1;
-    if (num % 2 != 0)
-    {
-        ++num;
-    }
-
-    float data[32];
-    int offset = num / 2;
-    for (int i = -offset; i <= offset; ++i)
-    {
-        data[offset + i] = Sinc(PI * i) - 2.0f * edge * Sinc(2.0f * PI * edge * i);
-    }
-
-    for (int n = 0; n <= num; ++n)
-    {
-        data[n] *= Hanning(n, num + 1);
-        real[index] += (index - n >= 0) ? data[n] * origin[index - n] : 0.0f;
-    }
-
-     //クリッピング
-    if (real[index] > 1.0f)
-    {
-        real[index] = 1.0f;
-    }
-    else if (real[index] < -1.0f)
-    {
-        real[index] = -1.0f;
-    }
+    //計算が終わるまでほかのスレッドは待機
+    GroupMemoryBarrierWithGroupSync();
 }
 
 // トレモロ
@@ -251,34 +196,11 @@ void Tremolo(uint index)
     real[index] = signal * origin[index];
 }
 
-// ビブラート
-void Vibrato(uint index)
-{
-     //変調深度
-    float depth = sample * 0.002f;
-    //変調周波数
-    float rate = 5.0f;
-
-    float tau = (sample * 0.002f) + depth * sin((2.0f * PI * rate * index) / sample);
-
-    float t = (float) index - tau;
-    int m = (int) t;
-    float delta = t - (float) m;
-
-    uint2 size;
-    origin.GetDimensions(size.x, size.y);
-
-    if (m >= 0 && m + 1 < size.x)
-    {
-        real[index] = delta * origin[m + 1] + (1.0f - delta) * origin[m];
-    }
-}
-
 [RootSignature(RS)]
 [numthreads(1, 1, 1)]
 void CS(uint3 gID : SV_GroupID, uint3 gtID : SV_GroupThreadID, uint3 disID : SV_DispatchThreadID)
 {
-    Fade(gID.x);
+    LowPass(gID.x);
 
     AllMemoryBarrierWithGroupSync();
 }

@@ -46,9 +46,6 @@
     <Filter Include="Sound">
       <UniqueIdentifier>{914ba2d1-3083-47ff-a73f-6ba56594247e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sound\Effector">
-      <UniqueIdentifier>{56c68830-acc6-437a-9b5d-08fd5deef256}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sound\SoundFunc">
       <UniqueIdentifier>{daf4b98a-02b5-4309-9e19-31148b788c14}</UniqueIdentifier>
     </Filter>
@@ -106,6 +103,12 @@
     <Filter Include="Union">
       <UniqueIdentifier>{cf83fe37-b718-4621-a618-94f3bab8a450}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effector">
+      <UniqueIdentifier>{b31f9d28-2a04-4c89-8da2-2448cf7c23a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Filter">
+      <UniqueIdentifier>{12196c9e-cb5d-4212-ad62-42d023aeea8c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -143,9 +146,6 @@
     </ClCompile>
     <ClCompile Include="Sound\Sound.cpp">
       <Filter>Sound</Filter>
-    </ClCompile>
-    <ClCompile Include="Effector\Effector.cpp">
-      <Filter>Sound\Effector</Filter>
     </ClCompile>
     <ClCompile Include="Sound\SoundFunc\SoundFunc.cpp">
       <Filter>Sound\SoundFunc</Filter>
@@ -197,6 +197,12 @@
     </ClCompile>
     <ClCompile Include="Union\Union.cpp">
       <Filter>Union</Filter>
+    </ClCompile>
+    <ClCompile Include="Effector\Effector.cpp">
+      <Filter>Effector</Filter>
+    </ClCompile>
+    <ClCompile Include="Filter\Filter.cpp">
+      <Filter>Filter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -260,9 +266,6 @@
     <ClInclude Include="etc\KeyData.h">
       <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="Effector\Effector.h">
-      <Filter>Sound\Effector</Filter>
-    </ClInclude>
     <ClInclude Include="etc\Func.h">
       <Filter>etc\Func</Filter>
     </ClInclude>
@@ -304,6 +307,12 @@
     </ClInclude>
     <ClInclude Include="Union\Union.h">
       <Filter>Union</Filter>
+    </ClInclude>
+    <ClInclude Include="Effector\Effector.h">
+      <Filter>Effector</Filter>
+    </ClInclude>
+    <ClInclude Include="Filter\Filter.h">
+      <Filter>Filter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

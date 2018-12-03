@@ -403,68 +403,9 @@ void Fade(void)
 	origin = s;
 }
 
-// FIR_LPF
-std::vector<float> FIR_LPF(const std::vector<float>&input)
-{
-	std::vector<float>out(input.size());
-
-	//‰~ü—¦
-	const float p = 3.14159265f;
-	// ƒGƒbƒWü”g”
-	float edge = 1000.0f / 44100.0f;
-	//‘JˆÚ‘Ñˆæ•
-	float delta = 1000.0f / 44100.0f;
-
-	//’x‰„Ší‚Ì”
-	int delayer = (3.1f / delta + 0.5f) - 1.0f;
-	if (delayer % 2 != 0)
-	{
-		++delayer;
-	}
-
-	// ƒtƒBƒ‹ƒ^ŒW”
-	int filterCof = delayer + 1;
-
-	auto hanning = [&](const int& index, const int& size)->float {
-		float tmp = 0.0f;
-
-		tmp = (size % 2 == 0) ?
-			//‹ô”
-			0.5f - 0.5f * cosf(2.0f * p * (float)index / (float)size) :
-			//Šï”
-			0.5f - 0.5f * cosf(2.0f * p * ((float)index + 0.5f) / (float)size);
-
-		if (tmp == 0.0f)
-		{
-			tmp = 1.0f;
-		}
-
-		return tmp;
-	};
-
-	std::vector<float>b(filterCof);
-
-	for (int i = 0; i < input.size(); ++i)
-	{
-		for (int n = 0; n < filterCof; ++n)
-		{
-			if (i - n < 0)
-			{
-				continue;
-			}
-
-			out[i] += filterCof * input[i - n];
-		}
-	}
-
-	return out;
-}
-
 // Às
 void Effector::Execution(const std::vector<float> & wave, std::vector<float> & adaptation, const unsigned int & index, const unsigned int & sample)
 {
-	//DFT();
-
 	param.attenuation = 0.5f;
 	param.time = 0.375f;
 	param.loop = 10;

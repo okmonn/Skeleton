@@ -91,6 +91,37 @@ long Texture::MapCon(int * i)
 	return hr;
 }
 
+// シェーダーリソースの生成
+long Texture::CreateShaderRsc(int * i, const unsigned int & width, const unsigned int & height)
+{
+	D3D12_HEAP_PROPERTIES prop{};
+	prop.Type                 = D3D12_HEAP_TYPE::D3D12_HEAP_TYPE_CUSTOM;
+	prop.CPUPageProperty      = D3D12_CPU_PAGE_PROPERTY::D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+	prop.MemoryPoolPreference = D3D12_MEMORY_POOL::D3D12_MEMORY_POOL_L0;
+	prop.CreationNodeMask     = 1;
+	prop.VisibleNodeMask      = 1;
+
+	D3D12_RESOURCE_DESC desc{};
+	desc.Dimension        = D3D12_RESOURCE_DIMENSION::D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	desc.Width            = width;
+	desc.Height           = height;
+	desc.DepthOrArraySize = 1;
+	desc.MipLevels        = 1;
+	desc.Format           = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
+	desc.SampleDesc.Count = 1;
+	desc.Flags            = D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE;
+	desc.Layout           = D3D12_TEXTURE_LAYOUT::D3D12_TEXTURE_LAYOUT_UNKNOWN;
+
+	auto hr = dev.lock()->Get()->CreateCommittedResource(&prop, D3D12_HEAP_FLAGS::D3D12_HEAP_FLAG_NONE, &desc,
+		D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&tex[i].rsc));
+	if (FAILED(hr))
+	{
+		OutputDebugString(_T("\n作成テクスチャのリソース生成：失敗\n"));
+	}
+
+	return hr;
+}
+
 // シェーダーリソースビューの生成
 void Texture::CreateShaderView(int * i)
 {
@@ -121,6 +152,26 @@ long Texture::WriteSub(int * i)
 	if (FAILED(hr))
 	{
 		OutputDebugString(_T("\nサブリソースの更新：失敗"));
+	}
+
+	return hr;
+}
+
+// 作成テクスチャのサブリソースに書き込み
+long Texture::WriteSub(int * i, const std::vector<tex::Color>& data)
+{
+	D3D12_BOX box{};
+	box.back   = 1;
+	box.bottom = tex[i].rsc->GetDesc().Height;
+	box.front  = 0;
+	box.left   = 0;
+	box.right  = static_cast<UINT>(tex[i].rsc->GetDesc().Width);
+	box.top    = 0;
+
+	auto hr = tex[i].rsc->WriteToSubresource(0, &box, &data[0], box.right * sizeof(tex::Color), box.right * box.bottom * sizeof(tex::Color));
+	if (FAILED(hr))
+	{
+		OutputDebugString(_T("\n作成テクスチャのサブリソースの更新：失敗"));
 	}
 
 	return hr;
@@ -216,6 +267,22 @@ void Texture::Load(const std::string & fileName, int & i)
 	MapCon(&i);
 	CreateShaderView(&i);
 	WriteSub(&i);
+	CreateVertexRsc(&i);
+	MapVertex(&i);
+	SetBundle(&i);
+}
+
+// 配列データから画像を生成
+void Texture::CreateImg(const std::vector<tex::Color>& data, const unsigned int & width, const unsigned int & height, int & i)
+{
+	CreateShaderRsc(&i, width, height);
+	tex[&i].list = std::make_unique<List>(dev, D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_BUNDLE);
+	descMane.CreateHeap(dev, i, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, 2);
+	CreateConRsc(&i);
+	CreateConView(&i);
+	MapCon(&i);
+	CreateShaderView(&i);
+	WriteSub(&i, data);
 	CreateVertexRsc(&i);
 	MapVertex(&i);
 	SetBundle(&i);
