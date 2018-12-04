@@ -45,7 +45,7 @@ void Application::Test(void)
 		if (input->Triger(INPUT_SPACE))
 		{
 			low = (low == true) ? false : true;
-			effector->BundPassFilter(low);
+			effector->LowPassFilter(low);
 		}
 
 		if (input->CheckKey(INPUT_UP))

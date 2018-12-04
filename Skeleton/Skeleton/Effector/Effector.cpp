@@ -459,6 +459,7 @@ void Effector::Execution(const std::vector<float> & wave, std::vector<float> & a
 
 	memcpy(info["b0"].data, &param, sizeof(Param));
 	memcpy(info["u0"].data, &wave[0], sizeof(float) * wave.size());
+	memset(info["u1"].data, 0, sizeof(float) * wave.size());
 
 	list->Reset();
 

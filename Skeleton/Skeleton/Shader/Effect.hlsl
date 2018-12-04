@@ -52,17 +52,40 @@ RWStructuredBuffer<float> real : register(u1);
 // ディレイ
 void Delay(uint index)
 {
-    real[index] = origin[index];
-    uint2 size;
-    origin.GetDimensions(size.x, size.y);
+    //real[index] = origin[index];
+    //uint2 size;
+    //origin.GetDimensions(size.x, size.y);
 
-    uint num = size.x * waveIndex + index;
+    //uint num = size.x * waveIndex + index;
 
-    for (int i = 1; i <= 10; ++i)
+    //for (int i = 1; i <= 10; ++i)
+    //{
+    //    int m = (int) (num - i * (sample * 0.05f));
+
+    //    real[index] += (m >= 0) ? pow(0.75f, i) * origin[index] : 0.0f;
+    //}
+
+    real[index] = 0.0f;
+
+    //減衰率
+    float amplitude = 0.5f;
+    //遅延時間
+    int delayTime = 441;
+    //ループ回数
+    int loop = 10;
+
+    for (int i = 1; i <= loop; ++i)
     {
-        int m = (int) (num - i * (sample * 0.05f));
+        int m = index - i * delayTime;
+        if(m >= 0)
+        {
+            real[index] += pow(amplitude, i) * origin[m];
+        }
+    }
 
-        real[index] += (m >= 0) ? pow(0.75f, i) * origin[index] : 0.0f;
+    if(real[index] > 1.0f)
+    {
+        real[index] = 1.0f;
     }
 }
 
@@ -290,8 +313,8 @@ void CS(uint3 gID : SV_GroupID, uint3 gtID : SV_GroupThreadID, uint3 disID : SV_
     }
     else
     {
-        Compressor(gID.x);
-        //real[gID.x] = origin[gID.x];
+        //Delay(gID.x);
+        real[gID.x] = origin[gID.x];
     }
 
     AllMemoryBarrierWithGroupSync();
