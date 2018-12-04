@@ -30,16 +30,23 @@ class Effector
 
 	// パラメータ
 	struct Param {
-		//減衰率
-		float attenuation;
-		//遅延時間
-		float time;
-		//ループ回数
-		int loop;
 		//全体の波形数からの相対数
 		unsigned int index;
 		//サンプリング周波数
 		int sample;
+
+		//LowPass適応フラグ
+		int low;
+		//HightPass適応フラグ
+		int hight;
+		//BundPass適応フラグ
+		int bund;
+		//カットオフ周波数
+		float cutoff;
+		//クオリティ
+		float q;
+		//帯域幅
+		float octave;
 	};
 
 public:
@@ -48,13 +55,25 @@ public:
 	// デストラクタ
 	~Effector();
 
-	// パラメータのセット
-	void SetParam(const float& attenuation, const float& time, const int& loop, const unsigned int& index, const int& sample = 44100) {
-		param = { attenuation, time, loop, index, sample };
-	}
+	// フィルターのパラメータのセット
+	void SetFilterParam(const float& cutoff, const float& q = 1.0f / sqrt(2.0f), const float& octave = 1.0f);
+
+	// LowPassFilterの実行管理
+	void LowPassFilter(const bool& flag);
+
+	// HightPassFilterの実行管理
+	void HightPassFilter(const bool& flag);
+
+	// BundPassFilterの実行管理
+	void BundPassFilter(const bool& flag);
 
 	// 実行
 	void Execution(const std::vector<float>& wave, std::vector<float>& adaptation, const unsigned int& index, const unsigned int& sample = 44100);
+
+	// イベントハンドルの取得
+	void* GetHandle(void) {
+		return handle;
+	}
 
 private:
 	// ルートシグネチャの生成
@@ -123,4 +142,7 @@ private:
 
 	// バッファ
 	std::map<std::string, Info>info;
+
+	// イベントハンドル
+	void* handle;
 };

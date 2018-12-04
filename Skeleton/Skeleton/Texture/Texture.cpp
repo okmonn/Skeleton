@@ -257,10 +257,10 @@ void Texture::Load(const std::string & fileName, int & i)
 		return;
 	}
 
-	tex[&i].rsc = loader.GetRsc(fileName);
+	tex[&i].rsc    = loader.GetRsc(fileName);
 	tex[&i].decode = loader.GetDecode(fileName);
-	tex[&i].sub = loader.GetSub(fileName);
-	tex[&i].list = std::make_unique<List>(dev, D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_BUNDLE);
+	tex[&i].sub    = loader.GetSub(fileName);
+	tex[&i].list   = std::make_unique<List>(dev, D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_BUNDLE);
 
 	descMane.CreateHeap(dev, i, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, 2);
 	CreateConRsc(&i);
@@ -299,10 +299,10 @@ void Texture::Draw(std::weak_ptr<List>list, int & i, const DirectX::XMFLOAT2 & p
 		* DirectX::XMMatrixTranslationFromVector(
 			DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(pos.x, pos.y)))
 	);
-	tex[&i].info->uvPos = uvPos;
-	tex[&i].info->uvSize = uvSize;
-	tex[&i].info->reverse = { (turnX) ? -1.0f : 1.0f, (turnY) ? -1.0f : 1.0f };
-	tex[&i].info->alpha = alpha;
+	tex[&i].info->uvPos   = uvPos;
+	tex[&i].info->uvSize  = uvSize;
+	tex[&i].info->reverse = { (turnX) ? 1.0f : 0.0f, (turnY) ? 1.0f : 0.0f };
+	tex[&i].info->alpha   = alpha;
 
 	auto heap = descMane.GetHeap(i);
 	list.lock()->GetList()->SetDescriptorHeaps(1, &heap);

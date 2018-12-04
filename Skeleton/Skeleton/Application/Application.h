@@ -1,6 +1,7 @@
 #pragma once
 #include "../etc/KeyData.h"
 #include <memory>
+#include <thread>
 
 class Window;
 class Input;
@@ -40,6 +41,9 @@ private:
 	// クラスの生成
 	void Create(void);
 
+	// テスト
+	void Test(void);
+
 
 	// ウィンドウ
 	std::shared_ptr<Window>win;
@@ -55,4 +59,7 @@ private:
 
 	// サウンド
 	std::shared_ptr<Sound>sound;
+
+	// スレッド
+	std::thread th;
 };

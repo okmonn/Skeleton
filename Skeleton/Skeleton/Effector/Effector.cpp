@@ -7,16 +7,17 @@
 #include "../Root/Root.h"
 #include "../Pipe/Pipe.h"
 #include "../etc/Release.h"
+#include <Windows.h>
 
 // リソース数
 #define RSC_MAX 3
 
 // データサイズ
-#define DATA_MAX 44100
+#define DATA_MAX 44100 / 10
 
 // コンストラクタ
 Effector::Effector(std::weak_ptr<Device>dev, const std::tstring & fileName) :
-	dev(dev), root(nullptr), shader(nullptr), pipe(nullptr), heap(nullptr), index(0)
+	dev(dev), root(nullptr), shader(nullptr), pipe(nullptr), heap(nullptr), index(0), handle(CreateEvent(nullptr, false, false, nullptr))
 {
 	param = {};
 	info.clear();
@@ -41,6 +42,53 @@ Effector::~Effector()
 	Release(pipe);
 	Release(shader);
 	Release(root);
+
+	CloseHandle(handle);
+}
+
+// フィルターのパラメータのセット
+void Effector::SetFilterParam(const float & cutoff, const float & q, const float & octave)
+{
+	param.cutoff = cutoff;
+	if (param.cutoff > param.sample / 2.0f)
+	{
+		param.cutoff = param.sample / 2.0f;
+	}
+	else if (param.cutoff < 0.0f)
+	{
+		param.cutoff = 0.0f;
+	}
+	param.q = (q <= 0) ? 1.0f / sqrt(2.0f) : q;
+	param.octave = (octave < 0.0f) ? 0.0f : octave;
+
+	printf("%f\n", param.cutoff);
+}
+
+// LowPassFilterの実行管理
+void Effector::LowPassFilter(const bool & flag)
+{
+	param.hight = 0;
+	param.bund  = 0;
+
+	param.low = (flag == true) ? 1 : 0;
+}
+
+// HightPassFilterの実行管理
+void Effector::HightPassFilter(const bool & flag)
+{
+	param.low  = 0;
+	param.bund = 0;
+
+	param.hight = (flag == true) ? 1 : 0;
+}
+
+// BundPassFilterの実行管理
+void Effector::BundPassFilter(const bool & flag)
+{
+	param.low   = 0;
+	param.hight = 0;
+
+	param.bund = (flag == true) ? 1 : 0;
 }
 
 // ルートシグネチャの生成
@@ -406,15 +454,11 @@ void Fade(void)
 // 実行
 void Effector::Execution(const std::vector<float> & wave, std::vector<float> & adaptation, const unsigned int & index, const unsigned int & sample)
 {
-	param.attenuation = 0.5f;
-	param.time = 0.375f;
-	param.loop = 10;
-	param.index = index;
+	param.index  = index;
 	param.sample = sample;
 
 	memcpy(info["b0"].data, &param, sizeof(Param));
 	memcpy(info["u0"].data, &wave[0], sizeof(float) * wave.size());
-	memset(info["u1"].data, 0, sizeof(float) * wave.size());
 
 	list->Reset();
 
@@ -446,4 +490,6 @@ void Effector::Execution(const std::vector<float> & wave, std::vector<float> & a
 	fence->Wait();
 
 	adaptation.assign(info["u1"].data, info["u1"].data + wave.size());
+
+	SetEvent(this->handle);
 }

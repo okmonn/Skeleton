@@ -6,6 +6,8 @@
 #include "../Sound/Sound.h"
 #include <Windows.h>
 
+bool flag = true;
+
 // コンストラクタ
 Application::Application()
 {
@@ -15,6 +17,8 @@ Application::Application()
 // デストラクタ
 Application::~Application()
 {
+	flag = false;
+	th.join();
 }
 
 // クラスの生成
@@ -24,10 +28,45 @@ void Application::Create(void)
 	input    = std::make_shared<Input>(win);
 	un       = std::make_shared<Union>(win);
 	effector = std::make_shared<Effector>(un->GetDev(), L"Shader/Effect.hlsl");
+	th = std::thread(&Application::Test, this);
 
 	sound = std::make_shared<Sound>(effector);
 	sound->Load("animal.wav");
 	sound->Play(true);
+}
+
+// テスト
+void Application::Test(void)
+{
+	static float freq = 0.0f;
+	bool low = false;
+	while (flag)
+	{
+		if (input->Triger(INPUT_SPACE))
+		{
+			low = (low == true) ? false : true;
+			effector->BundPassFilter(low);
+		}
+
+		if (input->CheckKey(INPUT_UP))
+		{
+			freq += 10.0f;
+			if (freq > 44100.0f / 2.0f)
+			{
+				freq = 44100.0f / 2.0f;
+			}
+			effector->SetFilterParam(freq);
+		}
+		else if (input->CheckKey(INPUT_DOWN))
+		{
+			freq -= 10.0f;
+			if (freq < 0.0f)
+			{
+				freq = 0.0f;
+			}
+			effector->SetFilterParam(freq);
+		}
+	}
 }
 
 // メッセージの確認
