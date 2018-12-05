@@ -88,12 +88,6 @@
     <Filter Include="Primitive\Triangle">
       <UniqueIdentifier>{d23c321d-6df4-4752-8044-f2a8e7615b3e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Roott">
-      <UniqueIdentifier>{c165eb0c-f74f-43b6-9de4-114be494d7a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Roott\RootMane">
-      <UniqueIdentifier>{d8365ee0-a7aa-4637-a1f5-b7e060e77fd8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Pipe">
       <UniqueIdentifier>{00eb6236-013e-4e28-8db2-de856ecad639}</UniqueIdentifier>
     </Filter>
@@ -111,6 +105,12 @@
     </Filter>
     <Filter Include="PMD\PmdLoader">
       <UniqueIdentifier>{c0b73084-c268-48ac-8b7a-862d2be75019}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Root">
+      <UniqueIdentifier>{c165eb0c-f74f-43b6-9de4-114be494d7a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Root\RootMane">
+      <UniqueIdentifier>{d8365ee0-a7aa-4637-a1f5-b7e060e77fd8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -187,10 +187,10 @@
       <Filter>Primitive\Triangle</Filter>
     </ClCompile>
     <ClCompile Include="Root\Root.cpp">
-      <Filter>Roott</Filter>
+      <Filter>Root</Filter>
     </ClCompile>
     <ClCompile Include="Root\RootMane.cpp">
-      <Filter>Roott\RootMane</Filter>
+      <Filter>Root\RootMane</Filter>
     </ClCompile>
     <ClCompile Include="Pipe\Pipe.cpp">
       <Filter>Pipe</Filter>
@@ -300,10 +300,10 @@
       <Filter>Primitive\Triangle</Filter>
     </ClInclude>
     <ClInclude Include="Root\Root.h">
-      <Filter>Roott</Filter>
+      <Filter>Root</Filter>
     </ClInclude>
     <ClInclude Include="Root\RootMane.h">
-      <Filter>Roott\RootMane</Filter>
+      <Filter>Root\RootMane</Filter>
     </ClInclude>
     <ClInclude Include="Pipe\Pipe.h">
       <Filter>Pipe</Filter>

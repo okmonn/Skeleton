@@ -40,6 +40,8 @@ Texture::~Texture()
 		descMane.DeleteRsc(itr->second.cRsc);
 		descMane.DeleteHeap(*itr->first);
 	}
+
+	descMane.DeleteRsc(vRsc);
 }
 
 // 頂点のセット

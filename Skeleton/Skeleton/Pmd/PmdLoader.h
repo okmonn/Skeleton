@@ -20,6 +20,15 @@ class PmdLoader
 		std::shared_ptr<std::vector<pmd::Material>>material;
 		//ボーン情報
 		std::shared_ptr<std::vector<pmd::Born>>born;
+
+		//頂点リソース
+		int vRsc;
+		//インデックスリソース
+		int iRsc;
+		//マテリアル用リソース
+		int mRsc;
+		//ボーン用リソース
+		int bRsc;
 	};
 
 public:
@@ -40,6 +49,9 @@ private:
 	PmdLoader();
 	PmdLoader(const PmdLoader&)      = delete;
 	void operator=(const PmdLoader&) = delete;
+
+	// 頂点リソースの生成
+	long CreateVertexRsc(std::weak_ptr<Device>dev, const std::string& fileName);
 
 
 	// ディスクリプターマネージャー
