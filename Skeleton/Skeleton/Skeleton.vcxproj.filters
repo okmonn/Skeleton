@@ -106,6 +106,12 @@
     <Filter Include="Effector">
       <UniqueIdentifier>{b31f9d28-2a04-4c89-8da2-2448cf7c23a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PMD">
+      <UniqueIdentifier>{8e8d2549-f67b-459d-9176-b6bd6ab531d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PMD\PmdLoader">
+      <UniqueIdentifier>{c0b73084-c268-48ac-8b7a-862d2be75019}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -197,6 +203,12 @@
     </ClCompile>
     <ClCompile Include="Effector\Effector.cpp">
       <Filter>Effector</Filter>
+    </ClCompile>
+    <ClCompile Include="Pmd\Pmd.cpp">
+      <Filter>PMD</Filter>
+    </ClCompile>
+    <ClCompile Include="Pmd\PmdLoader.cpp">
+      <Filter>PMD\PmdLoader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -304,6 +316,15 @@
     </ClInclude>
     <ClInclude Include="Effector\Effector.h">
       <Filter>Effector</Filter>
+    </ClInclude>
+    <ClInclude Include="Pmd\Pmd.h">
+      <Filter>PMD</Filter>
+    </ClInclude>
+    <ClInclude Include="Pmd\PmdData.h">
+      <Filter>PMD</Filter>
+    </ClInclude>
+    <ClInclude Include="Pmd\PmdLoader.h">
+      <Filter>PMD\PmdLoader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

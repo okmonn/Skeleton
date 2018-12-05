@@ -131,6 +131,8 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Pipe\Pipe.cpp" />
     <ClCompile Include="Pipe\PipeMane.cpp" />
+    <ClCompile Include="Pmd\Pmd.cpp" />
+    <ClCompile Include="Pmd\PmdLoader.cpp" />
     <ClCompile Include="Primitive\Line.cpp" />
     <ClCompile Include="Primitive\Point.cpp" />
     <ClCompile Include="Primitive\Primitive.cpp" />
@@ -165,6 +167,9 @@
     <ClInclude Include="List\List.h" />
     <ClInclude Include="Pipe\Pipe.h" />
     <ClInclude Include="Pipe\PipeMane.h" />
+    <ClInclude Include="Pmd\Pmd.h" />
+    <ClInclude Include="Pmd\PmdData.h" />
+    <ClInclude Include="Pmd\PmdLoader.h" />
     <ClInclude Include="Primitive\Line.h" />
     <ClInclude Include="Primitive\Point.h" />
     <ClInclude Include="Primitive\Primitive.h" />

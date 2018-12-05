@@ -1,8 +1,8 @@
 #pragma once
-#include <map>
 #include <vector>
 #include <string>
 #include <memory>
+#include <unordered_map>
 #include <DirectXMath.h>
 
 struct ID3D12GraphicsCommandList;
@@ -141,5 +141,5 @@ private:
 	std::vector<tex::Vertex>vertex;
 
 	// ‰æ‘œƒf[ƒ^
-	std::map<int*, Tex>tex;
+	std::unordered_map<int*, Tex>tex;
 };

@@ -34,10 +34,8 @@ public:
 private:
 	// コンストラクタ
 	PipeMane();
-	PipeMane(const PipeMane&) {
-	}
-	void operator=(const PipeMane&) {
-	}
+	PipeMane(const PipeMane&)       = delete;
+	void operator=(const PipeMane&) = delete;
 
 	// パイプライン
 	std::map<int*, std::shared_ptr<Pipe>>pipe;

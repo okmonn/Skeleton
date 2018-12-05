@@ -1,7 +1,7 @@
 #pragma once
-#include <map>
 #include <string>
 #include <memory>
+#include <unordered_map>
 
 struct D3D12_SUBRESOURCE_DATA;
 struct ID3D12Resource;
@@ -13,6 +13,8 @@ class TextureLoad
 	struct Origin {
 		//リソース
 		ID3D12Resource* rsc;
+		//頂点リソース
+		ID3D12Resource* vRsc;
 		//デコード
 		std::unique_ptr<unsigned char[]>decode;
 		//サブデータ
@@ -57,11 +59,13 @@ public:
 private:
 	// コンストラクタ
 	TextureLoad();
-	TextureLoad(const TextureLoad&) {
-	}
-	void operator=(const TextureLoad&) {
-	}
+	TextureLoad(const TextureLoad&)    = delete;
+	void operator=(const TextureLoad&) = delete;
+
+	// 頂点リソースの生成
+	long CreateVrsc(const std::string& fileName);
+
 
 	// オリジンデータ
-	std::map<std::string, Origin>origin;
+	std::unordered_map<std::string, Origin>origin;
 };

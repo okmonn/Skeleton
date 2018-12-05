@@ -20,6 +20,12 @@ TextureLoad::~TextureLoad()
 	}
 }
 
+// 頂点リソースの生成
+long TextureLoad::CreateVrsc(const std::string & fileName)
+{
+	return 0;
+}
+
 // 読み込み
 long TextureLoad::Load(std::weak_ptr<Device>dev, const std::string & fileName)
 {

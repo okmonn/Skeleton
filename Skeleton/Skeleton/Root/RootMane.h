@@ -30,10 +30,8 @@ public:
 private:
 	// コンストラクタ
 	RootMane();
-	RootMane(const RootMane&) {
-	}
-	void operator=(const RootMane&) {
-	}
+	RootMane(const RootMane&)       = delete;
+	void operator=(const RootMane&) = delete;
 
 	// ルートシグネチャ
 	std::map<int*, std::shared_ptr<Root>>root;

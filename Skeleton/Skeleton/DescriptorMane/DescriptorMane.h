@@ -51,10 +51,8 @@ public:
 private:
 	// コンストラクタ
 	DescriptorMane();
-	DescriptorMane(const DescriptorMane&) {
-	}
-	void operator=(const DescriptorMane&) {
-	}
+	DescriptorMane(const DescriptorMane&) = delete;
+	void operator=(const DescriptorMane&) = delete;
 
 
 	// ヒープ
