@@ -20,6 +20,8 @@ class Texture;
 class Point;
 class Line;
 class Triangle;
+class Camera;
+class Pmd;
 
 class Union
 {
@@ -53,6 +55,12 @@ public:
 	// 四角形の描画
 	void DrawBox(const float& x, const float& y, const float& sizeX, const float& sizeY,
 		const float& r, const float& g, const float& b, const float& alpha = 1.0f);
+
+	// PMDの読み込み
+	void LoadPmd(const std::string& fileName, int& i);
+
+	// PMDの描画
+	void DrawPmd(int& i);
 
 	// 画面クリア
 	void Clear(void);
@@ -125,4 +133,10 @@ private:
 
 	// トライアングル
 	std::list<std::shared_ptr<Triangle>>triangle;
+
+	// カメラ
+	std::shared_ptr<Camera>cam;
+
+	// PMD
+	std::unique_ptr<Pmd>pmd;
 };

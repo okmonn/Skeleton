@@ -8,6 +8,8 @@
 
 bool flag = true;
 
+int n = 0;
+
 // コンストラクタ
 Application::Application()
 {
@@ -33,6 +35,8 @@ void Application::Create(void)
 	sound = std::make_shared<Sound>(effector);
 	sound->Load("animal.wav");
 	sound->Play(true);
+
+	un->LoadPmd("model/初音ミク.pmd", n);
 }
 
 // テスト
@@ -103,6 +107,7 @@ void Application::Draw(void)
 	un->Clear();
 
 	//ここに描画・処理
+	un->DrawPmd(n);
 
 	un->Execution();
 }

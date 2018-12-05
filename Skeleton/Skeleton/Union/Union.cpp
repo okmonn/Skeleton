@@ -15,6 +15,8 @@
 #include "../Primitive/Point.h"
 #include "../Primitive/Line.h"
 #include "../Primitive/Triangle.h"
+#include "../Camera/Camera.h"
+#include "../Pmd/Pmd.h"
 #include <d3d12.h>
 #include <dxgi1_6.h>
 
@@ -60,8 +62,9 @@ void Union::CreateRoot(const std::string & name, const std::tstring & fileName)
 // ルートシグネチャの生成
 void Union::CreateRoot(void)
 {
-	CreateRoot("texture", L"Shader/Texture.hlsl");
+	CreateRoot("texture",   L"Shader/Texture.hlsl");
 	CreateRoot("primitive", L"Shader/Primitive.hlsl");
+	CreateRoot("model",     L"Shader/Model.hlsl");
 }
 
 // パイプラインの生成
@@ -84,6 +87,7 @@ void Union::CreatePipe(void)
 	CreatePipe("point",    "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT,    { 0, 3 }, false);
 	CreatePipe("line",     "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE,     { 0, 3 }, false);
 	CreatePipe("triangle", "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 3 }, false);
+	CreatePipe("model",    "model",     D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT,    { 0 },    false);
 }
 
 // クラスの生成
@@ -100,7 +104,10 @@ void Union::Create(void)
 	CreateRoot();
 	CreatePipe();
 
+	cam = std::make_shared<Camera>(win, dev);
+	cam->ChangeView({ 0.0f, 10.0f, -15.0f }, {0.0f, 10.0f, 0.0f});
 	tex = std::make_unique<Texture>(win, dev, root.Get(rootNo["texture"]), pipe.Get(pipeNo["texture"]));
+	pmd = std::make_unique<Pmd>(dev, cam, root.Get(rootNo["model"]), pipe.Get(pipeNo["model"]));
 }
 
 // 画像の読み込み
@@ -157,6 +164,18 @@ void Union::DrawBox(const float & x, const float & y, const float & sizeX, const
 	triangle.push_back(std::make_shared<Triangle>(win, dev, root.Get(rootNo["primitive"]), pipe.Get(pipeNo["triangle"])));
 	triangle.back()->SetVertex({ x + sizeX, y }, { x + sizeX, y + sizeY }, { x, y + sizeY }, { r, g, b }, alpha);
 	triangle.back()->Draw(list);
+}
+
+// PMDの読み込み
+void Union::LoadPmd(const std::string & fileName, int & i)
+{
+	pmd->Load(fileName, i);
+}
+
+// PMDの描画
+void Union::DrawPmd(int & i)
+{
+	pmd->Draw(list, i);
 }
 
 // 画面クリア

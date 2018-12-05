@@ -12,6 +12,10 @@ PmdLoader::PmdLoader() :
 // デストラクタ
 PmdLoader::~PmdLoader()
 {
+	for (auto itr = data.begin(); itr != data.end(); ++itr)
+	{
+		descMane.DeleteRsc(itr->second.vRsc);
+	}
 }
 
 // 頂点リソースの生成
@@ -39,9 +43,31 @@ long PmdLoader::CreateVertexRsc(std::weak_ptr<Device>dev, const std::string & fi
 	return descMane.CreateRsc(dev, data[fileName].vRsc, prop, desc);
 }
 
+// マップ
+long PmdLoader::Map(const std::string & fileName)
+{
+	auto hr = descMane.GetRsc(data[fileName].vRsc)->Map(0, nullptr, reinterpret_cast<void**>(&data[fileName].vertexData));
+	if (FAILED(hr))
+	{
+		OutputDebugString(_T("\nPMDの頂点リソースのマップ：失敗\n"));
+		return hr;
+	}
+
+	memcpy(data[fileName].vertexData, data[fileName].vertex->data(), sizeof(pmd::Vertex) * data[fileName].vertex->size());
+
+	descMane.GetRsc(data[fileName].vRsc)->Unmap(0, nullptr);
+
+	return hr;
+}
+
 // 読み込み
 int PmdLoader::Load(std::weak_ptr<Device>dev, const std::string & fileName)
 {
+	if (data.find(fileName) != data.end())
+	{
+		return 0;
+	}
+
 	FILE* file = nullptr;
 	if (fopen_s(&file, fileName.c_str(), "rb") != 0)
 	{
@@ -77,6 +103,9 @@ int PmdLoader::Load(std::weak_ptr<Device>dev, const std::string & fileName)
 	}
 
 	fclose(file);
+
+	CreateVertexRsc(dev, fileName);
+	Map(fileName);
 
 	return 0;
 }
