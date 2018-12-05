@@ -9,7 +9,7 @@
 
 // コンストラクタ
 Primitive::Primitive() : descMane(DescriptorMane::Get()),
-	heap(0), cRsc(0), vRsc(0)
+	constant(0), vRsc(0)
 {
 	vertex.clear();
 }
@@ -41,7 +41,7 @@ long Primitive::CreateRsc(void)
 	desc.SampleDesc       = { 1, 0 };
 	desc.Width            = (sizeof(DirectX::XMFLOAT2) + 0xff) &~0xff;
 
-	auto hr = descMane.CreateRsc(dev, cRsc, prop, desc);
+	auto hr = descMane.CreateRsc(dev, constant, prop, desc);
 	if (FAILED(hr))
 	{
 		OutputDebugString(_T("\nプリミティブ用定数リソースの生成：失敗\n"));
@@ -54,17 +54,17 @@ long Primitive::CreateRsc(void)
 void Primitive::CreateView(void)
 {
 	D3D12_CONSTANT_BUFFER_VIEW_DESC desc{};
-	desc.BufferLocation = descMane.GetRsc(cRsc)->GetGPUVirtualAddress();
+	desc.BufferLocation = descMane.GetRsc(constant)->GetGPUVirtualAddress();
 	desc.SizeInBytes    = (sizeof(DirectX::XMFLOAT2) + 0xff) &~0xff;
 
-	dev.lock()->Get()->CreateConstantBufferView(&desc, descMane.GetHeap(heap)->GetCPUDescriptorHandleForHeapStart());
+	dev.lock()->Get()->CreateConstantBufferView(&desc, descMane.GetHeap(constant)->GetCPUDescriptorHandleForHeapStart());
 }
 
 // 定数のマップ
 long Primitive::Map(void)
 {
 	void* data = nullptr;
-	auto hr = descMane.GetRsc(cRsc)->Map(0, nullptr, &data);
+	auto hr = descMane.GetRsc(constant)->Map(0, nullptr, &data);
 	if (FAILED(hr))
 	{
 		OutputDebugString(_T("\nプリミティブ用定数リソースのマップ：失敗\n"));
@@ -74,7 +74,7 @@ long Primitive::Map(void)
 	DirectX::XMFLOAT2 winSize = { static_cast<float>(win.lock()->GetX()), static_cast<float>(win.lock()->GetY()) };
 	memcpy(data, &winSize, sizeof(DirectX::XMFLOAT2));
 
-	descMane.GetRsc(cRsc)->Unmap(0, nullptr);
+	descMane.GetRsc(constant)->Unmap(0, nullptr);
 
 	return hr;
 }

@@ -28,15 +28,15 @@ Line::Line(std::weak_ptr<Window>win, std::weak_ptr<Device>dev, std::weak_ptr<Roo
 // デストラクタ
 Line::~Line()
 {
-	descMane.DeleteRsc(cRsc);
+	descMane.DeleteRsc(constant);
 	descMane.DeleteRsc(vRsc);
-	descMane.DeleteHeap(heap);
+	descMane.DeleteHeap(constant);
 }
 
 // 初期化
 void Line::Init(void)
 {
-	descMane.CreateHeap(dev, heap, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE);
+	descMane.CreateHeap(dev, constant, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE);
 	CreateRsc();
 	CreateView();
 	Map();
@@ -51,7 +51,7 @@ void Line::Bundle(void)
 	list->GetList()->SetGraphicsRootSignature(root.lock()->Get());
 	list->GetList()->SetPipelineState(pipe.lock()->Get());
 
-	auto h = descMane.GetHeap(heap);
+	auto h = descMane.GetHeap(constant);
 	list->GetList()->SetDescriptorHeaps(1, &h);
 	list->GetList()->SetGraphicsRootDescriptorTable(0, h->GetGPUDescriptorHandleForHeapStart());
 
@@ -94,7 +94,7 @@ long Line::SetVertex(const DirectX::XMFLOAT2 & pos1, const DirectX::XMFLOAT2 & p
 // 描画
 void Line::Draw(std::weak_ptr<List> list)
 {
-	auto h = descMane.GetHeap(heap);
+	auto h = descMane.GetHeap(constant);
 	list.lock()->GetList()->SetDescriptorHeaps(1, &h);
 	list.lock()->GetList()->ExecuteBundle(this->list->GetList());
 }

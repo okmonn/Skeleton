@@ -56,10 +56,6 @@ class Texture
 		int cRsc;
 		//定数送信データ
 		tex::Info* info;
-		//頂点リソースID
-		int vRsc;
-		//頂点送信データ
-		unsigned int* data;
 		//バンドルリスト
 		std::unique_ptr<List>list;
 	};
@@ -88,6 +84,12 @@ private:
 	// 頂点のセット
 	void SetVertex(void);
 
+	// 頂点リソースの生成
+	long CreateVertexRsc(void);
+
+	// 頂点リソースのマップ
+	long MapVertex(void);
+
 	// 定数リソースの生成
 	long CreateConRsc(int* i);
 
@@ -108,12 +110,6 @@ private:
 
 	// 定数バッファのマップ
 	long MapCon(int* i);
-
-	// 頂点リソースの生成
-	long CreateVertexRsc(int* i);
-
-	// 頂点マップ
-	long MapVertex(int* i);
 
 	// バンドルのセット
 	void SetBundle(int* i);
@@ -136,6 +132,12 @@ private:
 
 	// パイプライン
 	std::weak_ptr<Pipe>pipe;
+
+	// 頂点リソース
+	int vRsc;
+
+	// 頂点送信用データ
+	void* vertexData;
 
 	// 頂点
 	std::vector<tex::Vertex>vertex;

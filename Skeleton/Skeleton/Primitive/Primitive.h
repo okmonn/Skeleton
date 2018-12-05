@@ -61,11 +61,8 @@ protected:
 	// パイプ
 	std::weak_ptr<Pipe>pipe;
 
-	// ヒープ
-	int heap;
-
-	// 定数リソース
-	int cRsc;
+	// 定数ヒープ・リソース
+	int constant;
 
 	// 頂点リソース
 	int vRsc;

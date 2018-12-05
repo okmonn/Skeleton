@@ -73,10 +73,3 @@ void DescriptorMane::DeleteHeap(int & i)
 		heap.erase(heap.find(&i));
 	}
 }
-
-// íœ
-void DescriptorMane::Delete(int & i)
-{
-	DeleteRsc(i);
-	DeleteHeap(i);
-}

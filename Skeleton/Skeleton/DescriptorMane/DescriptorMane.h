@@ -1,6 +1,6 @@
 #pragma once
-#include <map>
 #include <memory>
+#include <unordered_map>
 
 enum D3D12_DESCRIPTOR_HEAP_FLAGS : int;
 enum D3D12_DESCRIPTOR_HEAP_TYPE : int;
@@ -36,8 +36,6 @@ public:
 	void DeleteRsc(int& i);
 	// ヒープの削除
 	void DeleteHeap(int& i);
-	// 削除
-	void Delete(int& i);
 
 	// ヒープの取得
 	ID3D12DescriptorHeap* GetHeap(int& i) {
@@ -56,8 +54,8 @@ private:
 
 
 	// ヒープ
-	std::map<int*, ID3D12DescriptorHeap*>heap;
+	std::unordered_map<int*, ID3D12DescriptorHeap*>heap;
 
 	// リソース
-	std::map<int*, ID3D12Resource*>rsc;
+	std::unordered_map <int*, ID3D12Resource*>rsc;
 };
