@@ -9,9 +9,12 @@
 #include "../etc/Release.h"
 #include "../etc/Func.h"
 
+// アンマップ
+#define UnMap(X) { if((X) != nullptr) (X)->Unmap(0, nullptr);  }
+
 // コンストラクタ
 Pmd::Pmd(std::weak_ptr<Device>dev, std::weak_ptr<Camera>cam, std::weak_ptr<Root>root, std::weak_ptr<Pipe>pipe) :
-	loader(PmdLoader::Get()), descMane(DescriptorMane::Get()), dev(dev), cam(cam), root(root), pipe(pipe)
+	loader(PmdLoader::Get()), descMane(DescriptorMane::Get()), dev(dev), cam(cam), root(root), pipe(pipe), index(0)
 {
 	data.clear();
 }
@@ -19,10 +22,19 @@ Pmd::Pmd(std::weak_ptr<Device>dev, std::weak_ptr<Camera>cam, std::weak_ptr<Root>
 // デストラクタ
 Pmd::~Pmd()
 {
+	for (auto itr = data.begin(); itr != data.end(); ++itr)
+	{
+		UnMap(descMane.GetRsc(itr->second.cRsc));
+		UnMap(descMane.GetRsc(itr->second.mRsc));
+		descMane.DeleteRsc(itr->second.cRsc);
+		descMane.DeleteRsc(itr->second.mRsc);
+
+		descMane.DeleteHeap(*itr->first);
+	}
 }
 
 // 定数リソースの生成
-long Pmd::CreateConRsc(int * i, int & rsc)
+long Pmd::CreateConRsc(int * i, int & rsc, const unsigned __int64 & size)
 {
 	D3D12_HEAP_PROPERTIES prop{};
 	prop.CPUPageProperty      = D3D12_CPU_PAGE_PROPERTY::D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
@@ -41,28 +53,30 @@ long Pmd::CreateConRsc(int * i, int & rsc)
 	desc.Layout           = D3D12_TEXTURE_LAYOUT::D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	desc.MipLevels        = 1;
 	desc.SampleDesc       = { 1, 0 };
-	desc.Width            = (sizeof(WVP) + 0xff) &~0xff;
+	desc.Width            = size;
+
+	rsc = index++;
 
 	return descMane.CreateRsc(dev, rsc, prop, desc);
 }
 
 // 定数ビューの生成
-void Pmd::CreateConView(int * i, int & rsc)
+void Pmd::CreateConView(int * i, int & rsc, const unsigned int & size, const int& index)
 {
 	D3D12_CONSTANT_BUFFER_VIEW_DESC desc{};
-	desc.BufferLocation = descMane.GetRsc(rsc)->GetGPUVirtualAddress();
-	desc.SizeInBytes    = (sizeof(WVP) + 0xff) &~0xff;
+	desc.BufferLocation = descMane.GetRsc(rsc)->GetGPUVirtualAddress() + (size * index);
+	desc.SizeInBytes    = size;
 
 	auto handle = descMane.GetHeap(*i)->GetCPUDescriptorHandleForHeapStart();
-	handle.ptr += dev.lock()->Get()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * rsc;
+	handle.ptr += dev.lock()->Get()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * (rsc + index);
 
 	dev.lock()->Get()->CreateConstantBufferView(&desc, handle);
 }
 
 // マップ
-long Pmd::Map(int * i, int & rsc)
+long Pmd::Map(int & rsc, void ** data)
 {
-	auto hr = descMane.GetRsc(rsc)->Map(0, nullptr, (void**)&data[i].wvp);
+	auto hr = descMane.GetRsc(rsc)->Map(0, nullptr, data);
 	if (FAILED(hr))
 	{
 		OutputDebugString(_T("\nPMDのマップ：失敗\n"));
@@ -92,13 +106,46 @@ void Pmd::Bundle(const std::string & fileName, int * i)
 	//頂点のセット
 	D3D12_VERTEX_BUFFER_VIEW view{};
 	view.BufferLocation = descMane.GetRsc(loader.GetVertexRsc(fileName))->GetGPUVirtualAddress();
-	view.SizeInBytes    = sizeof(pmd::Vertex) * data[i].vertex.lock()->size();
+	view.SizeInBytes    = sizeof(pmd::Vertex) * loader.GetVertex(fileName).size();
 	view.StrideInBytes  = sizeof(pmd::Vertex);
 	data[i].list->GetList()->IASetVertexBuffers(0, 1, &view);
 
-	data[i].list->GetList()->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+	//インデックスのセット
+	D3D12_INDEX_BUFFER_VIEW iView{};
+	iView.BufferLocation = descMane.GetRsc(loader.GetIndexRsc(fileName))->GetGPUVirtualAddress();
+	iView.Format         = DXGI_FORMAT::DXGI_FORMAT_R16_UINT;;
+	iView.SizeInBytes    = sizeof(unsigned short) * loader.GetIndex(fileName).size();
+	data[i].list->GetList()->IASetIndexBuffer(&iView);
 
-	data[i].list->GetList()->DrawInstanced(data[i].vertex.lock()->size(), 1, 0, 0);
+	data[i].list->GetList()->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	//送信データ
+	unsigned __int8* d = data[i].materialData;
+	//オフセット
+	unsigned int offset = 0;
+
+	handle.ptr += size * data[i].mRsc;
+	for (unsigned int n = 0; n < loader.GetMaterial(fileName).size(); ++n)
+	{
+		data[i].mat.diffuse     = loader.GetMaterial(fileName)[n].diffuse;
+		data[i].mat.alpha       = loader.GetMaterial(fileName)[n].alpha;
+		data[i].mat.specularity = loader.GetMaterial(fileName)[n].specularity;
+		data[i].mat.specula     = loader.GetMaterial(fileName)[n].specula;
+		data[i].mat.mirror      = loader.GetMaterial(fileName)[n].mirror;
+		memcpy(d, &data[i].mat, sizeof(pmd::Mat));
+
+		data[i].list->GetList()->SetGraphicsRootDescriptorTable(1, handle);
+
+		data[i].list->GetList()->DrawIndexedInstanced(loader.GetMaterial(fileName)[n].indexNum, 1, offset, 0, 0);
+
+		handle.ptr += size;
+
+		d = (unsigned __int8*)(((sizeof(pmd::Mat) + 0xff) &~0xff) + (char*)(d));
+
+		offset += loader.GetMaterial(fileName)[n].indexNum;
+	}
+
+	//data[i].list->GetList()->DrawIndexedInstanced(loader.GetIndex(fileName).size(), 1, 0, 0, 0);
 
 	data[i].list->GetList()->Close();
 }
@@ -109,20 +156,29 @@ void Pmd::Load(const std::string & fileName, int & i)
 	loader.Load(dev, fileName);
 
 	data[&i].list   = std::make_unique<List>(dev, D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_BUNDLE);
-	data[&i].vertex = loader.GetVertex(fileName);
 	data[&i].cRsc   = 0;
 
-	descMane.CreateHeap(dev, i, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE);
+	descMane.CreateHeap(dev, i, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, 1 + loader.GetMaterial(fileName).size());
 
-	CreateConRsc(&i, data[&i].cRsc);
-	CreateConView(&i, data[&i].cRsc);
-	Map(&i, data[&i].cRsc);
+	//WVP
+	CreateConRsc(&i, data[&i].cRsc, (sizeof(WVP) + 0xff) &~0xff);
+	CreateConView(&i, data[&i].cRsc, (sizeof(WVP) + 0xff) &~0xff);
+	Map(data[&i].cRsc, reinterpret_cast<void**>(&data[&i].wvp));
+
+	//マテリアル
+	CreateConRsc(&i, data[&i].mRsc, ((sizeof(pmd::Mat) + 0xff) &~0xff) * loader.GetMaterial(fileName).size());
+	for (unsigned int n = 0; n < loader.GetMaterial(fileName).size(); ++n)
+	{
+		CreateConView(&i, data[&i].mRsc, (sizeof(pmd::Mat) + 0xff) &~0xff, n);
+	}
+	Map(data[&i].mRsc, reinterpret_cast<void**>(&data[&i].materialData));
+
 	Bundle(fileName, &i);
 
 	DirectX::XMFLOAT4X4 tmp{};
 	DirectX::XMStoreFloat4x4(&tmp, DirectX::XMMatrixIdentity());
-	data[&i].wvp->world = tmp;
-	data[&i].wvp->view = cam.lock()->GetView();
+	data[&i].wvp->world      = tmp;
+	data[&i].wvp->view       = cam.lock()->GetView();
 	data[&i].wvp->projection = cam.lock()->GetProjection();
 }
 

@@ -71,4 +71,18 @@ namespace pmd {
 		//座標
 		DirectX::XMFLOAT3 pos;
 	};
+
+	// 送信時のマテリアル情報
+	struct Mat {
+		//基本色
+		DirectX::XMFLOAT3 diffuse;
+		//透明度
+		float alpha;
+		//反射強度
+		float specularity;
+		//反射色
+		DirectX::XMFLOAT3 specula;
+		//環境色
+		DirectX::XMFLOAT3 mirror;
+	};
 }

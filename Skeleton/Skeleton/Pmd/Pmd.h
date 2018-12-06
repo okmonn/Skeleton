@@ -24,13 +24,15 @@ class Pmd
 	struct Data {
 		//バンドル用リスト
 		std::unique_ptr<List>list;
-		//頂点データ
-		std::weak_ptr<std::vector<pmd::Vertex>>vertex;
 
 		//WVP用リソース
 		int cRsc;
-		//WVP
 		WVP* wvp;
+
+		//マテリアル用リソース
+		int mRsc;
+		pmd::Mat mat;
+		unsigned __int8* materialData;
 	};
 
 public:
@@ -50,13 +52,13 @@ public:
 
 private:
 	// 定数リソースの生成
-	long CreateConRsc(int* i, int& rsc);
+	long CreateConRsc(int* i, int& rsc, const unsigned __int64& size);
 
 	// 定数ビューの生成
-	void CreateConView(int* i, int& rsc);
+	void CreateConView(int* i, int& rsc, const unsigned int& size, const int& index = 0);
 
 	// マップ
-	long Map(int* i, int& rsc);
+	long Map(int& rsc, void** data);
 
 	// バンドルのセット
 	void Bundle(const std::string& fileName, int* i);
@@ -79,6 +81,9 @@ private:
 
 	// パイプ
 	std::weak_ptr<Pipe>pipe;
+
+	// リソース作成番号
+	int index;
 
 	// Pmdデータ
 	std::unordered_map<int*, Data>data;

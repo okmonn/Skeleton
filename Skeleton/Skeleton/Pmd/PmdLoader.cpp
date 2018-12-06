@@ -19,7 +19,7 @@ PmdLoader::~PmdLoader()
 }
 
 // 頂点リソースの生成
-long PmdLoader::CreateVertexRsc(std::weak_ptr<Device>dev, const std::string & fileName)
+long PmdLoader::CreateRsc(std::weak_ptr<Device>dev, int * i, const unsigned long long & size)
 {
 	D3D12_HEAP_PROPERTIES prop{};
 	prop.CPUPageProperty      = D3D12_CPU_PAGE_PROPERTY::D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
@@ -38,24 +38,25 @@ long PmdLoader::CreateVertexRsc(std::weak_ptr<Device>dev, const std::string & fi
 	desc.Layout           = D3D12_TEXTURE_LAYOUT::D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	desc.MipLevels        = 1;
 	desc.SampleDesc       = { 1, 0 };
-	desc.Width            = sizeof(pmd::Vertex) * data[fileName].vertex->size();
+	desc.Width            = size;
 
-	return descMane.CreateRsc(dev, data[fileName].vRsc, prop, desc);
+	return descMane.CreateRsc(dev, *i, prop, desc);
 }
 
 // マップ
-long PmdLoader::Map(const std::string & fileName)
+template<typename T>
+long PmdLoader::Map(int * i, T * data, const unsigned int & size, void ** rscData)
 {
-	auto hr = descMane.GetRsc(data[fileName].vRsc)->Map(0, nullptr, reinterpret_cast<void**>(&data[fileName].vertexData));
+	auto hr = descMane.GetRsc(*i)->Map(0, nullptr, rscData);
 	if (FAILED(hr))
 	{
 		OutputDebugString(_T("\nPMDの頂点リソースのマップ：失敗\n"));
 		return hr;
 	}
 
-	memcpy(data[fileName].vertexData, data[fileName].vertex->data(), sizeof(pmd::Vertex) * data[fileName].vertex->size());
+	memcpy(*rscData, data, sizeof(data[0]) * size);
 
-	descMane.GetRsc(data[fileName].vRsc)->Unmap(0, nullptr);
+	descMane.GetRsc(*i)->Unmap(0, nullptr);
 
 	return hr;
 }
@@ -83,8 +84,8 @@ int PmdLoader::Load(std::weak_ptr<Device>dev, const std::string & fileName)
 
 	//頂点の読み込み
 	fread(&num, sizeof(unsigned int), 1, file);
-	data[fileName].vertex = std::make_shared<std::vector<pmd::Vertex>>(num);
-	for (auto itr = data[fileName].vertex->begin(); itr != data[fileName].vertex->end(); ++itr)
+	data[fileName].vertex.resize(num);
+	for (auto itr = data[fileName].vertex.begin(); itr != data[fileName].vertex.end(); ++itr)
 	{
 		fread(&itr->pos,    sizeof(itr->pos),    1, file);
 		fread(&itr->normal, sizeof(itr->normal), 1, file);
@@ -96,16 +97,26 @@ int PmdLoader::Load(std::weak_ptr<Device>dev, const std::string & fileName)
 
 	//頂点インデックス読み込み
 	fread(&num, sizeof(unsigned int), 1, file);
-	data[fileName].index = std::make_shared<std::vector<unsigned short>>(num);
-	for (auto itr = data[fileName].index->begin(); itr != data[fileName].index->end(); ++itr)
+	data[fileName].index.resize(num);
+	for (auto itr = data[fileName].index.begin(); itr != data[fileName].index.end(); ++itr)
 	{
 		fread(&(*itr), sizeof(unsigned short), 1, file);
 	}
 
+	//マテリアルの読み込み
+	fread(&num, sizeof(unsigned int), 1, file);
+	data[fileName].material.resize(num);
+	fread(data[fileName].material.data(), sizeof(pmd::Material), num, file);
+
 	fclose(file);
 
-	CreateVertexRsc(dev, fileName);
-	Map(fileName);
+	//頂点バッファ生成
+	CreateRsc(dev, &data[fileName].vRsc, sizeof(pmd::Vertex) * data[fileName].vertex.size());
+	Map(&data[fileName].vRsc, data[fileName].vertex.data(), data[fileName].vertex.size(), &data[fileName].vertexData);
+
+	//インデックスバッファの生成
+	CreateRsc(dev, &data[fileName].iRsc, sizeof(unsigned short) * data[fileName].index.size());
+	Map(&data[fileName].iRsc, data[fileName].index.data(), data[fileName].index.size(), &data[fileName].indexData);
 
 	return 0;
 }

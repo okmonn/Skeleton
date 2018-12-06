@@ -2,6 +2,8 @@
 #define RS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
                     "DescriptorTable(CBV(b0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
                                     "visibility = SHADER_VISIBILITY_ALL),"\
+                    "DescriptorTable(CBV(b1, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
+                                    "visibility = SHADER_VISIBILITY_ALL),"\
                     "StaticSampler(s0, "\
                                   "filter         = FILTER_MIN_MAG_MIP_LINEAR, "\
                                   "addressU       = TEXTURE_ADDRESS_WRAP, "\
@@ -25,17 +27,30 @@ cbuffer WVP : register(b0)
     float4x4 projection;
 }
 
+cbuffer Mat : register(b1)
+{
+    float3 diffuse;
+    float alpha;
+    float specularity;
+    float3 specula;
+    float3 mirror;
+}
+
 // 入力
 struct Input
 {
     float4 pos : POSITION;
+    float4 normal : NORMAL;
+    float2 uv : TEXCOORD;
 };
 
 // 出力
 struct Out
 {
     float4 svpos : SV_POSITION;
-    float4 pos   : POSITION;
+    float4 pos : POSITION;
+    float4 normal : NORMAL;
+    float2 uv : TEXCOORD;
 };
 
 // 頂点シェーダ
@@ -43,34 +58,40 @@ struct Out
 Out VS(Input input)
 {
     Out o;
-    o.pos   = input.pos;
-
-    input.pos = mul(world, input.pos);
-    input.pos = mul(view, input.pos);
-    input.pos = mul(projection, input.pos);
     o.svpos = input.pos;
+    o.pos = input.pos;
+    o.normal = input.normal;
+    o.uv = input.uv;
 
     return o;
 }
 
+#define MAX_VERTEX_COUNT 9
+
 // ジオメトリーシェーダー
-[maxvertexcount(3)]
-void GS(point Out vertex[1], inout PointStream<Out> stream)
+[maxvertexcount(MAX_VERTEX_COUNT)]
+void GS(triangle Out vertex[3], inout TriangleStream<Out> stream)
 {
-    for (int i = -1; i <= 1; ++i)
+    for (int i = -1; i <= MAX_VERTEX_COUNT / 3 / 2; ++i)
     {
-        float4 pos = vertex[0].pos;
-        pos.z += 10.0f * i;
+        stream.RestartStrip();
+        for (int n = 0; n < 3; ++n)
+        {
+            float4 pos = vertex[n].pos;
+            pos.z += 10.0f * i;
 
-        Out o;
-        o.pos   = pos;
+            Out o;
+            o.pos = pos;
+            o.normal = mul(world, vertex[n].normal);
+            o.uv = vertex[n].uv;
 
-        pos = mul(world, pos);
-        pos = mul(view, pos);
-        pos = mul(projection, pos);
-        o.svpos = pos;
+            pos = mul(world, pos);
+            pos = mul(view, pos);
+            pos = mul(projection, pos);
+            o.svpos = pos;
 
-        stream.Append(o);
+            stream.Append(o);
+        }
     }
     
     stream.RestartStrip();
@@ -79,5 +100,5 @@ void GS(point Out vertex[1], inout PointStream<Out> stream)
 // ピクセルシェーダ
 float4 PS(Out o) : SV_TARGET
 {
-    return float4(o.pos.xyz, 1.0f);
+    return float4(diffuse, 1.0f);
 }

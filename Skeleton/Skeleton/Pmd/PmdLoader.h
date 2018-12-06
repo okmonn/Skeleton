@@ -13,13 +13,13 @@ class PmdLoader
 	// 読み込みデータ
 	struct Data {
 		//頂点情報
-		std::shared_ptr<std::vector<pmd::Vertex>>vertex;
+		std::vector<pmd::Vertex>vertex;
 		//インデックス情報
-		std::shared_ptr<std::vector<unsigned short>>index;
+		std::vector<unsigned short>index;
 		//マテリアル情報
-		std::shared_ptr<std::vector<pmd::Material>>material;
+		std::vector<pmd::Material>material;
 		//ボーン情報
-		std::shared_ptr<std::vector<pmd::Born>>born;
+		std::vector<pmd::Born>born;
 
 		//頂点リソース
 		int vRsc;
@@ -27,10 +27,7 @@ class PmdLoader
 		void* vertexData;
 		//インデックスリソース
 		int iRsc;
-		//マテリアル用リソース
-		int mRsc;
-		//ボーン用リソース
-		int bRsc;
+		void* indexData;
 	};
 
 public:
@@ -47,24 +44,28 @@ public:
 	int Load(std::weak_ptr<Device>dev, const std::string& fileName);
 
 	// 頂点情報の取得
-	std::shared_ptr<std::vector<pmd::Vertex>> GetVertex(const std::string& fileName) {
+	std::vector<pmd::Vertex> GetVertex(const std::string& fileName) {
 		return data[fileName].vertex;
 	}
 	// インデックス情報の取得
-	std::shared_ptr<std::vector<unsigned short>> GetIndex(const std::string& fileName) {
+	std::vector<unsigned short> GetIndex(const std::string& fileName) {
 		return data[fileName].index;
 	}
 	// マテリアル情報の取得
-	std::shared_ptr<std::vector<pmd::Material>> GetMaterial(const std::string& fileName) {
+	std::vector<pmd::Material> GetMaterial(const std::string& fileName) {
 		return data[fileName].material;
 	}
 	// ボーン情報の取得
-	std::shared_ptr<std::vector<pmd::Born>> GetBorn(const std::string& fileName) {
+	std::vector<pmd::Born> GetBorn(const std::string& fileName) {
 		return data[fileName].born;
 	}
 	// 頂点リソースIDの取得
 	int& GetVertexRsc(const std::string& fileName) {
 		return data[fileName].vRsc;
+	}
+	// インデックスリソースIDの取得
+	int& GetIndexRsc(const std::string& fileName) {
+		return data[fileName].iRsc;
 	}
 
 private:
@@ -74,10 +75,11 @@ private:
 	void operator=(const PmdLoader&) = delete;
 
 	// 頂点リソースの生成
-	long CreateVertexRsc(std::weak_ptr<Device>dev, const std::string& fileName);
+	long CreateRsc(std::weak_ptr<Device>dev, int* i, const unsigned long long& size);
 
 	// マップ
-	long Map(const std::string& fileName);
+	template<typename T>
+	long Map(int* i, T* data, const unsigned int& size, void** rscData);
 
 
 	// ディスクリプターマネージャー
