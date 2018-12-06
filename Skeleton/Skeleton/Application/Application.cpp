@@ -105,6 +105,18 @@ bool Application::InputKey(const int & i)
 void Application::Draw(void)
 {
 	un->Clear();
+	static float angle = 0.0f;
+
+	if (input->CheckKey(INPUT_D))
+	{
+		++angle;
+		un->RotatePmd(n, angle);
+	}
+	else if (input->CheckKey(INPUT_A))
+	{
+		--angle;
+		un->RotatePmd(n, angle);
+	}
 
 	//‚±‚±‚É•`‰æEˆ—
 	un->DrawPmd(n);

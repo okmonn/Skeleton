@@ -64,7 +64,7 @@ long Input::SetKeyFormat(void)
 // キーの協調レベルのセット
 long Input::SetKeyCooperative(void)
 {
-	auto hr = dev->SetCooperativeLevel(reinterpret_cast<HWND>(win.lock()->Get()), DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
+	auto hr = dev->SetCooperativeLevel(reinterpret_cast<HWND>(win.lock()->Get()), DISCL_NONEXCLUSIVE | DISCL_BACKGROUND);
 	if (FAILED(hr))
 	{
 		OutputDebugString(_T("\nキーの協調レベルのセット：失敗\n"));

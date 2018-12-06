@@ -5,7 +5,7 @@
 
 // コンストラクタ
 Root::Root(std::weak_ptr<Device> dev, const std::tstring & fileName) : 
-	dev(dev), root(nullptr), sig(nullptr), error(nullptr), vertex(nullptr), pixel(nullptr)
+	dev(dev), root(nullptr), sig(nullptr), error(nullptr), vertex(nullptr), geometry(nullptr), pixel(nullptr)
 {
 	ShaderCompile(fileName);
 	Create();
@@ -29,6 +29,12 @@ long Root::ShaderCompile(const std::tstring & fileName)
 	{
 		OutputDebugString(_T("\n頂点シェーダの読み込み：失敗\n"));
 		return hr;
+	}
+
+	hr = D3DCompileFromFile(fileName.c_str(), nullptr, nullptr, "GS", "gs_5_1", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &geometry, &error);
+	if(FAILED(hr))
+	{
+		OutputDebugString(_T("\nジオメトリシェーダの読み込み：失敗\n"));
 	}
 
 	hr = D3DCompileFromFile(fileName.c_str(), nullptr, nullptr, "PS", "ps_5_1", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &pixel, &error);

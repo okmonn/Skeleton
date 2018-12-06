@@ -59,6 +59,9 @@ public:
 	// PMD‚Ì“Ç‚İ‚İ
 	void LoadPmd(const std::string& fileName, int& i);
 
+	// PMD‚ÌY²‰ñ“]
+	void RotatePmd(int& i, const float& angle);
+
 	// PMD‚Ì•`‰æ
 	void DrawPmd(int& i);
 

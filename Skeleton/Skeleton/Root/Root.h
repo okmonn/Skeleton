@@ -31,6 +31,10 @@ public:
 	ID3DBlob* GetVertex(void) const {
 		return vertex;
 	}
+	// ジオメトリシェーダの取得
+	ID3DBlob* GetGeometry(void) const {
+		return geometry;
+	}
 	// ピクセルシェーダの取得
 	ID3DBlob* GetPixel(void) const {
 		return pixel;
@@ -58,6 +62,9 @@ private:
 
 	// 頂点シェーダ
 	ID3DBlob* vertex;
+
+	// ジオメトリーシェーダー
+	ID3DBlob* geometry;
 
 	// ピクセルシェーダ
 	ID3DBlob* pixel;

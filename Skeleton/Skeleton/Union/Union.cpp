@@ -172,6 +172,12 @@ void Union::LoadPmd(const std::string & fileName, int & i)
 	pmd->Load(fileName, i);
 }
 
+// PMD‚ÌYŽ²‰ñ“]
+void Union::RotatePmd(int & i, const float & angle)
+{
+	pmd->Rotate(i, angle);
+}
+
 // PMD‚Ì•`‰æ
 void Union::DrawPmd(int & i)
 {

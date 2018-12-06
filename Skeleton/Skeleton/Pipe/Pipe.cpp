@@ -62,6 +62,11 @@ long Pipe::Create(const D3D12_INPUT_ELEMENT_DESC & input, const unsigned int & n
 	desc.DepthStencilState.DepthFunc      = D3D12_COMPARISON_FUNC::D3D12_COMPARISON_FUNC_LESS;
 	desc.DepthStencilState.StencilEnable  = FALSE;
 	desc.DSVFormat                        = DXGI_FORMAT::DXGI_FORMAT_D32_FLOAT;
+	if (root.lock()->GetGeometry() != nullptr)
+	{
+		desc.GS.pShaderBytecode           = root.lock()->GetGeometry()->GetBufferPointer();
+		desc.GS.BytecodeLength            = root.lock()->GetGeometry()->GetBufferSize();
+	}
 	desc.InputLayout                      = { &input, num };
 	desc.NumRenderTargets                 = 1;
 	desc.PrimitiveTopologyType            = type;

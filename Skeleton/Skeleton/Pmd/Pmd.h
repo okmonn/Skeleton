@@ -41,6 +41,9 @@ public:
 
 	// “Ç‚İ‚İ
 	void Load(const std::string& fileName, int& i);
+
+	// ‰ñ“]
+	void Rotate(int& i, const float& angle);
 	
 	// •`‰æ
 	void Draw(std::weak_ptr<List>list, int& i);

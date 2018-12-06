@@ -42,19 +42,42 @@ struct Out
 [RootSignature(RS)]
 Out VS(Input input)
 {
+    Out o;
+    o.pos   = input.pos;
+
     input.pos = mul(world, input.pos);
     input.pos = mul(view, input.pos);
     input.pos = mul(projection, input.pos);
-
-    Out o;
     o.svpos = input.pos;
-    o.pos   = input.pos;
 
     return o;
+}
+
+// ジオメトリーシェーダー
+[maxvertexcount(3)]
+void GS(point Out vertex[1], inout PointStream<Out> stream)
+{
+    for (int i = -1; i <= 1; ++i)
+    {
+        float4 pos = vertex[0].pos;
+        pos.z += 10.0f * i;
+
+        Out o;
+        o.pos   = pos;
+
+        pos = mul(world, pos);
+        pos = mul(view, pos);
+        pos = mul(projection, pos);
+        o.svpos = pos;
+
+        stream.Append(o);
+    }
+    
+    stream.RestartStrip();
 }
 
 // ピクセルシェーダ
 float4 PS(Out o) : SV_TARGET
 {
-    return float4(1.0f, 0.0f, 0.0f, 1.0f);
+    return float4(o.pos.xyz, 1.0f);
 }

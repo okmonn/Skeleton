@@ -7,6 +7,7 @@
 #include "../Root/Root.h"
 #include "../Pipe/Pipe.h"
 #include "../etc/Release.h"
+#include "../etc/Func.h"
 
 // コンストラクタ
 Pmd::Pmd(std::weak_ptr<Device>dev, std::weak_ptr<Camera>cam, std::weak_ptr<Root>root, std::weak_ptr<Pipe>pipe) :
@@ -91,8 +92,8 @@ void Pmd::Bundle(const std::string & fileName, int * i)
 	//頂点のセット
 	D3D12_VERTEX_BUFFER_VIEW view{};
 	view.BufferLocation = descMane.GetRsc(loader.GetVertexRsc(fileName))->GetGPUVirtualAddress();
-	view.SizeInBytes    = 38 * data[i].vertex.lock()->size();
-	view.StrideInBytes  = 38;
+	view.SizeInBytes    = sizeof(pmd::Vertex) * data[i].vertex.lock()->size();
+	view.StrideInBytes  = sizeof(pmd::Vertex);
 	data[i].list->GetList()->IASetVertexBuffers(0, 1, &view);
 
 	data[i].list->GetList()->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
@@ -123,6 +124,15 @@ void Pmd::Load(const std::string & fileName, int & i)
 	data[&i].wvp->world = tmp;
 	data[&i].wvp->view = cam.lock()->GetView();
 	data[&i].wvp->projection = cam.lock()->GetProjection();
+}
+
+// 回転
+void Pmd::Rotate(int & i, const float & angle)
+{
+	DirectX::XMFLOAT4X4 tmp;
+	DirectX::XMStoreFloat4x4(&tmp, DirectX::XMMatrixRotationY(RAD(angle)));
+
+	data[&i].wvp->world = tmp;
 }
 
 // 描画
