@@ -1,10 +1,12 @@
 #include "PmdLoader.h"
+#include "../Texture/TextureLoader.h"
 #include "../DescriptorMane/DescriptorMane.h"
 #include "../etc/Release.h"
+#include "../etc/Func.h"
 
 // コンストラクタ
 PmdLoader::PmdLoader() : 
-	descMane(DescriptorMane::Get())
+	tex(TextureLoader::Get()), descMane(DescriptorMane::Get())
 {
 	data.clear();
 }
@@ -15,6 +17,44 @@ PmdLoader::~PmdLoader()
 	for (auto itr = data.begin(); itr != data.end(); ++itr)
 	{
 		descMane.DeleteRsc(itr->second.vRsc);
+	}
+}
+
+// テクスチャの読み込み
+void PmdLoader::LoadTex(std::weak_ptr<Device>dev, const std::string & fileName)
+{
+	for (unsigned int i = 0; i < data[fileName].material.size(); ++i)
+	{
+		if (data[fileName].material[i].texPath[0] == '\0')
+		{
+			continue;
+		}
+
+		std::string tmp = (char*)data[fileName].material[i].texPath;
+		auto tmp1 = tmp.substr(0, tmp.find_first_of('*'));
+		auto tmp2 = tmp.substr(tmp.find_last_of('*'), tmp.size());
+
+		auto path = func::FindString(fileName, '/') + tmp1;
+
+		tex.Load(dev, path);
+		data[fileName].tex.emplace(i, path);
+	}
+}
+
+// 加算テクスチャの読み込み
+void PmdLoader::LoadSpa(std::weak_ptr<Device> dev, const std::string & fileName)
+{
+}
+
+// トゥーンテクスチャの読み込み
+void PmdLoader::LoadToon(std::weak_ptr<Device> dev, const std::string & fileName)
+{
+	for (unsigned int i = 0; i < toonName.size(); ++i)
+	{
+		std::string tmp = toonName[i];
+		auto path = func::FindString(fileName, '/') + "toon/" + tmp;
+		tex.Load(dev, path);
+		data[fileName].toon.emplace(i, path);
 	}
 }
 
@@ -108,7 +148,64 @@ int PmdLoader::Load(std::weak_ptr<Device>dev, const std::string & fileName)
 	data[fileName].material.resize(num);
 	fread(data[fileName].material.data(), sizeof(pmd::Material), num, file);
 
+	//ボーン 
+	unsigned short boneNum = 0; fread(&boneNum, sizeof(boneNum), 1, file);
+	//いったんすっ飛ばす(39バイト…またけったいな) 
+	fseek(file, boneNum * 39, SEEK_CUR);
+
+	//IK 
+	unsigned short ikNum = 0; fread(&ikNum, sizeof(ikNum), 1, file); //モチロンすっ飛ばす 
+	for (int i = 0; i < ikNum; ++i) {
+		fseek(file, 4, SEEK_CUR);  unsigned char ikchainNum;//ぶっ殺すぞ 
+		fread(&ikchainNum, sizeof(ikchainNum), 1, file);
+		fseek(file, 6, SEEK_CUR);  fseek(file, ikchainNum * sizeof(unsigned short), SEEK_CUR);
+	}
+
+	//表情 
+	unsigned short skinNum = 0; fread(&skinNum, sizeof(skinNum), 1, file); //当然の権利のようにすっ飛ばすで 
+	for (int i = 0; i < skinNum; ++i) {
+		fseek(file, 20, SEEK_CUR);
+		unsigned int vertNum = 0;
+		fread(&vertNum, sizeof(vertNum), 1, file);
+		fseek(file, 1, SEEK_CUR);  fseek(file, 16 * vertNum, SEEK_CUR);
+	}
+
+	//表示用表情 
+	unsigned char skinDispNum = 0;
+	fread(&skinDispNum, sizeof(skinDispNum), 1, file); 
+	fseek(file, skinDispNum * sizeof(unsigned short), SEEK_CUR);
+
+	//表示用ボーン名 
+	unsigned char boneDispNum = 0;
+	fread(&boneDispNum, sizeof(boneDispNum), 1, file); 
+	fseek(file, 50 * boneDispNum, SEEK_CUR);
+
+	//表示ボーンリスト 
+	unsigned int dispBoneNum = 0;
+	fread(&dispBoneNum, sizeof(dispBoneNum), 1, file);
+	fseek(file, 3 * dispBoneNum, SEEK_CUR);
+
+	//英名 //英名対応フラグ 
+	unsigned char englishFlg = 0;
+	fread(&englishFlg, sizeof(englishFlg), 1, file);
+	if (englishFlg) {
+		//モデル名20バイト+256バイトコメント 
+		fseek(file, 20 + 256, SEEK_CUR);
+		//ボーン名20バイト*ボーン数 
+		fseek(file, boneNum * 20, SEEK_CUR);
+		//(表情数-1)*20バイト。-1なのはベース部分ぶん 
+		fseek(file, (skinNum - 1) * 20, SEEK_CUR);
+		//ボーン数*50バイト。 
+		fseek(file, boneDispNum * 50, SEEK_CUR);
+	}
+
+	fread(toonName.data(), sizeof(char) * 100, toonName.size(), file);
+
 	fclose(file);
+
+	//テクスチャ読み込み
+	LoadTex(dev, fileName);
+	LoadToon(dev, fileName);
 
 	//頂点バッファ生成
 	CreateRsc(dev, &data[fileName].vRsc, sizeof(pmd::Vertex) * data[fileName].vertex.size());

@@ -84,5 +84,7 @@ namespace pmd {
 		DirectX::XMFLOAT3 specula;
 		//環境色
 		DirectX::XMFLOAT3 mirror;
+		//テクスチャフラグ
+		bool tex;
 	};
 }

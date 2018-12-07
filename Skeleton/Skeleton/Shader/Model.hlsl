@@ -1,5 +1,9 @@
 // ルートシグネチャの定義
 #define RS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
+                    "DescriptorTable(SRV(t0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
+                                    "visibility = SHADER_VISIBILITY_ALL),"\
+                    "DescriptorTable(SRV(t1, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
+                                    "visibility = SHADER_VISIBILITY_ALL),"\
                     "DescriptorTable(CBV(b0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
                                     "visibility = SHADER_VISIBILITY_ALL),"\
                     "DescriptorTable(CBV(b1, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
@@ -18,7 +22,9 @@
                                   "space          = 0, "\
                                   "visibility     = SHADER_VISIBILITY_ALL)"
 
-SamplerState smp : register(s0);
+Texture2D<float4> tex : register(t0);
+Texture2D<float4> toon: register(t1);
+SamplerState smp      : register(s0);
 
 cbuffer WVP : register(b0)
 {
@@ -34,23 +40,24 @@ cbuffer Mat : register(b1)
     float specularity;
     float3 specula;
     float3 mirror;
+    int texFlag;
 }
 
 // 入力
 struct Input
 {
-    float4 pos : POSITION;
+    float4 pos    : POSITION;
     float4 normal : NORMAL;
-    float2 uv : TEXCOORD;
+    float2 uv     : TEXCOORD;
 };
 
 // 出力
 struct Out
 {
-    float4 svpos : SV_POSITION;
-    float4 pos : POSITION;
+    float4 svpos  : SV_POSITION;
+    float4 pos    : POSITION;
     float4 normal : NORMAL;
-    float2 uv : TEXCOORD;
+    float2 uv     : TEXCOORD;
 };
 
 // 頂点シェーダ
@@ -78,7 +85,7 @@ void GS(triangle Out vertex[3], inout TriangleStream<Out> stream)
         for (int n = 0; n < 3; ++n)
         {
             float4 pos = vertex[n].pos;
-            pos.z += 10.0f * i;
+            pos.x += 10.0f * i;
 
             Out o;
             o.pos = pos;
@@ -100,5 +107,26 @@ void GS(triangle Out vertex[3], inout TriangleStream<Out> stream)
 // ピクセルシェーダ
 float4 PS(Out o) : SV_TARGET
 {
-    return float4(diffuse, 1.0f);
+    //ライトの色
+    float3 lightColor = float3(1.0f, 1.0f, 1.0f);
+    //視線ベクトル
+    float3 eye = float3(0.0f, 10.0f, -15.0f);
+    float3 eyeVec = normalize(o.pos.xyz - eye);
+    //光源ベクトル
+    float3 light = normalize(float3(-1.0f, 1.0f, -1.0f));
+    //反射ベクトル
+    float3 ref = reflect(-light, o.normal.xyz);
+    //スぺキュラ
+    float3 spec = pow(saturate(dot(ref, eyeVec)), specularity);
+    //光源ベクトルと法線との内積
+    float bright = saturate(dot(light, o.normal.xyz));
+    //ランバート
+    bright = saturate(acos(bright) / 3.14159265f);
+    float3 toonColor = toon.Sample(smp, float2(0.0f, 1.0f - bright)).rgb;
+
+    //return float4(toonColor, 1.0f);
+
+    float3 color = (texFlag == false) ? saturate((toonColor * diffuse) * bright + specula * spec + mirror * lightColor) : tex.Sample(smp, o.uv).rgb;
+
+    return float4(color, alpha);
 }

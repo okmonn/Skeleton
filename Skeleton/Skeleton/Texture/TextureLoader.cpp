@@ -5,13 +5,13 @@
 #include "../etc/Func.h"
 
 // コンストラクタ
-TextureLoad::TextureLoad()
+TextureLoader::TextureLoader()
 {
 	origin.clear();
 }
 
 // デストラクタ
-TextureLoad::~TextureLoad()
+TextureLoader::~TextureLoader()
 {
 	for (auto itr = origin.begin(); itr != origin.end(); ++itr)
 	{
@@ -20,14 +20,8 @@ TextureLoad::~TextureLoad()
 	}
 }
 
-// 頂点リソースの生成
-long TextureLoad::CreateVrsc(const std::string & fileName)
-{
-	return 0;
-}
-
 // 読み込み
-long TextureLoad::Load(std::weak_ptr<Device>dev, const std::string & fileName)
+long TextureLoader::Load(std::weak_ptr<Device>dev, const std::string & fileName)
 {
 	if (origin.find(fileName) != origin.end())
 	{
@@ -47,19 +41,19 @@ long TextureLoad::Load(std::weak_ptr<Device>dev, const std::string & fileName)
 }
 
 // 画像の横幅の取得
-unsigned int TextureLoad::GetWidth(const std::string & fileName)
+unsigned int TextureLoader::GetWidth(const std::string & fileName)
 {
 	return static_cast<unsigned int>(origin[fileName].rsc->GetDesc().Width);
 }
 
 // 画像の横幅の取得
-unsigned int TextureLoad::GetHeight(const std::string & fileName)
+unsigned int TextureLoader::GetHeight(const std::string & fileName)
 {
 	return origin[fileName].rsc->GetDesc().Height;
 }
 
 // データの削除
-void TextureLoad::Delete(const std::string & fileName)
+void TextureLoader::Delete(const std::string & fileName)
 {
 	if (origin.find(fileName) != origin.end())
 	{

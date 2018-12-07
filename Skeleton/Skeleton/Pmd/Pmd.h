@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 class PmdLoader;
+class TextureLoader;
 class DescriptorMane;
 class Device;
 class List;
@@ -51,6 +52,12 @@ public:
 	void Draw(std::weak_ptr<List>list, int& i);
 
 private:
+	// シェーダービューの生成
+	void CreateShaderView(const std::string& fileName, int* i, const int& index = 0);
+
+	// サブリソースに書き込み
+	long WriteSub(const std::string& fileName);
+
 	// 定数リソースの生成
 	long CreateConRsc(int* i, int& rsc, const unsigned __int64& size);
 
@@ -66,6 +73,9 @@ private:
 
 	// PMDローダー
 	PmdLoader& loader;
+
+	// テクスチャローダー
+	TextureLoader& tex;
 
 	// ディスクリプターマネージャー
 	DescriptorMane& descMane;

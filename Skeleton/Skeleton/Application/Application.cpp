@@ -36,7 +36,7 @@ void Application::Create(void)
 	sound->Load("animal.wav");
 	sound->Play(true);
 
-	un->LoadPmd("model/初音ミク.pmd", n);
+	un->LoadPmd("model/巡音ルカ.pmd", n);
 }
 
 // テスト

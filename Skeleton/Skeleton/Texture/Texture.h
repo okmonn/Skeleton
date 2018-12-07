@@ -9,7 +9,7 @@ struct ID3D12GraphicsCommandList;
 struct D3D12_SUBRESOURCE_DATA;
 struct ID3D12Resource;
 class DescriptorMane;
-class TextureLoad;
+class TextureLoader;
 class Window;
 class Device;
 class List;
@@ -119,7 +119,7 @@ private:
 	DescriptorMane& descMane;
 
 	// テクスチャローダー
-	TextureLoad& loader;
+	TextureLoader& loader;
 
 	// ウィンドウ
 	std::weak_ptr<Window>win;

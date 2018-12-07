@@ -1,5 +1,6 @@
 #include "Pmd.h"
 #include "PmdLoader.h"
+#include "../Texture/TextureLoader.h"
 #include "../DescriptorMane/DescriptorMane.h"
 #include "../Device/Device.h"
 #include "../List/List.h"
@@ -14,7 +15,7 @@
 
 // コンストラクタ
 Pmd::Pmd(std::weak_ptr<Device>dev, std::weak_ptr<Camera>cam, std::weak_ptr<Root>root, std::weak_ptr<Pipe>pipe) :
-	loader(PmdLoader::Get()), descMane(DescriptorMane::Get()), dev(dev), cam(cam), root(root), pipe(pipe), index(0)
+	loader(PmdLoader::Get()), tex(TextureLoader::Get()), descMane(DescriptorMane::Get()), dev(dev), cam(cam), root(root), pipe(pipe), index(0)
 {
 	data.clear();
 }
@@ -31,6 +32,42 @@ Pmd::~Pmd()
 
 		descMane.DeleteHeap(*itr->first);
 	}
+}
+
+// シェーダービューの生成
+void Pmd::CreateShaderView(const std::string & fileName, int * i, const int & index)
+{
+	D3D12_SHADER_RESOURCE_VIEW_DESC desc{};
+	desc.Format                    = tex.GetRsc(fileName)->GetDesc().Format;
+	desc.ViewDimension             = D3D12_SRV_DIMENSION::D3D12_SRV_DIMENSION_TEXTURE2D;
+	desc.Texture2D.MipLevels       = 1;
+	desc.Texture2D.MostDetailedMip = 0;
+	desc.Shader4ComponentMapping   = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+
+	auto handle = descMane.GetHeap(*i)->GetCPUDescriptorHandleForHeapStart();
+	handle.ptr += dev.lock()->Get()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * index;
+	dev.lock()->Get()->CreateShaderResourceView(tex.GetRsc(fileName), &desc, handle);
+	this->index++;
+}
+
+// サブリソースに書き込み
+long Pmd::WriteSub(const std::string & fileName)
+{
+	D3D12_BOX box{};
+	box.back   = 1;
+	box.bottom = tex.GetRsc(fileName)->GetDesc().Height;
+	box.front  = 0;
+	box.left   = 0;
+	box.right  = static_cast<UINT>(tex.GetRsc(fileName)->GetDesc().Width);
+	box.top    = 0;
+
+	auto hr = tex.GetRsc(fileName)->WriteToSubresource(0, &box, &tex.GetDecode(fileName)[0], tex.GetSub(fileName)->RowPitch, static_cast<UINT>(tex.GetSub(fileName)->SlicePitch));
+	if (FAILED(hr))
+	{
+		OutputDebugString(_T("\nサブリソースの更新：失敗"));
+	}
+
+	return hr;
 }
 
 // 定数リソースの生成
@@ -100,8 +137,8 @@ void Pmd::Bundle(const std::string & fileName, int * i)
 	data[i].list->GetList()->SetDescriptorHeaps(1, &heap);
 
 	//WVPのセット
-	handle.ptr += size * data[i].cRsc;
-	data[i].list->GetList()->SetGraphicsRootDescriptorTable(0, handle);
+	handle.ptr = heap->GetGPUDescriptorHandleForHeapStart().ptr + (size * data[i].cRsc);
+	data[i].list->GetList()->SetGraphicsRootDescriptorTable(2, handle);
 
 	//頂点のセット
 	D3D12_VERTEX_BUFFER_VIEW view{};
@@ -123,8 +160,10 @@ void Pmd::Bundle(const std::string & fileName, int * i)
 	unsigned __int8* d = data[i].materialData;
 	//オフセット
 	unsigned int offset = 0;
+	//テクスチャ番号
+	int texIndex = 0;
 
-	handle.ptr += size * data[i].mRsc;
+	handle.ptr = heap->GetGPUDescriptorHandleForHeapStart().ptr + (size * data[i].mRsc);
 	for (unsigned int n = 0; n < loader.GetMaterial(fileName).size(); ++n)
 	{
 		data[i].mat.diffuse     = loader.GetMaterial(fileName)[n].diffuse;
@@ -132,9 +171,26 @@ void Pmd::Bundle(const std::string & fileName, int * i)
 		data[i].mat.specularity = loader.GetMaterial(fileName)[n].specularity;
 		data[i].mat.specula     = loader.GetMaterial(fileName)[n].specula;
 		data[i].mat.mirror      = loader.GetMaterial(fileName)[n].mirror;
+		data[i].mat.tex         = false;
+
+		if (loader.GetTexture(fileName).find(n) != loader.GetTexture(fileName).end())
+		{
+			data[i].mat.tex = true;
+			auto texHandle = heap->GetGPUDescriptorHandleForHeapStart();
+			texHandle.ptr += size * texIndex++;
+			data[i].list->GetList()->SetGraphicsRootDescriptorTable(0, texHandle);
+		}
+
+		if (loader.GetToon(fileName).find(n) != loader.GetToon(fileName).end())
+		{
+			auto toonHandle = heap->GetGPUDescriptorHandleForHeapStart();
+			toonHandle.ptr += size * (loader.GetTexture(fileName).size() + loader.GetMaterial(fileName)[n].toonIndex);
+			data[i].list->GetList()->SetGraphicsRootDescriptorTable(1, toonHandle);
+		}
+
 		memcpy(d, &data[i].mat, sizeof(pmd::Mat));
 
-		data[i].list->GetList()->SetGraphicsRootDescriptorTable(1, handle);
+		data[i].list->GetList()->SetGraphicsRootDescriptorTable(3, handle);
 
 		data[i].list->GetList()->DrawIndexedInstanced(loader.GetMaterial(fileName)[n].indexNum, 1, offset, 0, 0);
 
@@ -144,8 +200,6 @@ void Pmd::Bundle(const std::string & fileName, int * i)
 
 		offset += loader.GetMaterial(fileName)[n].indexNum;
 	}
-
-	//data[i].list->GetList()->DrawIndexedInstanced(loader.GetIndex(fileName).size(), 1, 0, 0, 0);
 
 	data[i].list->GetList()->Close();
 }
@@ -158,7 +212,20 @@ void Pmd::Load(const std::string & fileName, int & i)
 	data[&i].list   = std::make_unique<List>(dev, D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_BUNDLE);
 	data[&i].cRsc   = 0;
 
-	descMane.CreateHeap(dev, i, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, 1 + loader.GetMaterial(fileName).size());
+	descMane.CreateHeap(dev, i, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, 
+		loader.GetTexture(fileName).size() + loader.GetToon(fileName).size() + 1 + loader.GetMaterial(fileName).size());
+
+	//テクスチャ
+	for (auto& n : loader.GetTexture(fileName))
+	{
+		CreateShaderView(n.second, &i, index);
+		WriteSub(n.second);
+	}
+	for (auto& n : loader.GetToon(fileName))
+	{
+		CreateShaderView(n.second, &i, index);
+		WriteSub(n.second);
+	}
 
 	//WVP
 	CreateConRsc(&i, data[&i].cRsc, (sizeof(WVP) + 0xff) &~0xff);

@@ -7,7 +7,7 @@ struct D3D12_SUBRESOURCE_DATA;
 struct ID3D12Resource;
 class Device;
 
-class TextureLoad
+class TextureLoader
 {
 	// 元データ
 	struct Origin {
@@ -23,11 +23,11 @@ class TextureLoad
 
 public:
 	// デストラクタ
-	~TextureLoad();
+	~TextureLoader();
 
 	// インスタンス変数の取得
-	static TextureLoad& Get(void) {
-		static TextureLoad instance;
+	static TextureLoader& Get(void) {
+		static TextureLoader instance;
 		return instance;
 	}
 
@@ -58,12 +58,9 @@ public:
 
 private:
 	// コンストラクタ
-	TextureLoad();
-	TextureLoad(const TextureLoad&)    = delete;
-	void operator=(const TextureLoad&) = delete;
-
-	// 頂点リソースの生成
-	long CreateVrsc(const std::string& fileName);
+	TextureLoader();
+	TextureLoader(const TextureLoader&)    = delete;
+	void operator=(const TextureLoader&) = delete;
 
 
 	// オリジンデータ

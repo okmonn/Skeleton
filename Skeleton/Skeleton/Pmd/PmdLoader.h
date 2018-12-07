@@ -2,9 +2,11 @@
 #include "PmdData.h"
 #include <string>
 #include <vector>
+#include <array>
 #include <memory>
 #include <unordered_map>
 
+class TextureLoader;
 class DescriptorMane;
 class Device;
 
@@ -23,11 +25,19 @@ class PmdLoader
 
 		//頂点リソース
 		int vRsc;
-		//頂点送信データ
 		void* vertexData;
 		//インデックスリソース
 		int iRsc;
 		void* indexData;
+
+		//テクスチャID
+		std::unordered_map<int, std::string>tex;
+		//加算テクスチャID
+		std::unordered_map<int, std::string>spa;
+		//乗算テクスチャID
+		std::unordered_map<int, std::string>sph;
+		//トゥーンテクスチャID
+		std::unordered_map<int, std::string>toon;
 	};
 
 public:
@@ -67,12 +77,29 @@ public:
 	int& GetIndexRsc(const std::string& fileName) {
 		return data[fileName].iRsc;
 	}
+	// テクスチャIDの取得
+	std::unordered_map<int, std::string>& GetTexture(const std::string& fileName) {
+		return data[fileName].tex;
+	}
+	// トゥーンテクスチャIDの取得
+	std::unordered_map<int, std::string>& GetToon(const std::string& fileName) {
+		return data[fileName].toon;
+	}
 
 private:
 	// コンストラクタ
 	PmdLoader();
 	PmdLoader(const PmdLoader&)      = delete;
 	void operator=(const PmdLoader&) = delete;
+
+	// テクスチャの読み込み
+	void LoadTex(std::weak_ptr<Device>dev, const std::string& fileName);
+
+	// 加算テクスチャの読み込み
+	void LoadSpa(std::weak_ptr<Device>dev, const std::string& fileName);
+
+	// トゥーンテクスチャの読み込み
+	void LoadToon(std::weak_ptr<Device>dev, const std::string& fileName);
 
 	// 頂点リソースの生成
 	long CreateRsc(std::weak_ptr<Device>dev, int* i, const unsigned long long& size);
@@ -82,8 +109,14 @@ private:
 	long Map(int* i, T* data, const unsigned int& size, void** rscData);
 
 
+	// テクスチャローダー
+	TextureLoader& tex;
+
 	// ディスクリプターマネージャー
 	DescriptorMane& descMane;
+
+	// トゥーンテクスチャ名
+	std::array<char[100], 10>toonName;
 
 	// 読み込みデータ
 	std::unordered_map<std::string, Data>data;

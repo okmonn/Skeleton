@@ -19,7 +19,7 @@
 
 // コンストラクタ
 Texture::Texture(std::weak_ptr<Window>win, std::weak_ptr<Device>dev, std::weak_ptr<Root>root, std::weak_ptr<Pipe>pipe) :
-	descMane(DescriptorMane::Get()), loader(TextureLoad::Get()), win(win), dev(dev), root(root), pipe(pipe),
+	descMane(DescriptorMane::Get()), loader(TextureLoader::Get()), win(win), dev(dev), root(root), pipe(pipe),
 	vRsc(0), vertexData(nullptr)
 {
 	vertex.resize(VERTEX_MAX);
