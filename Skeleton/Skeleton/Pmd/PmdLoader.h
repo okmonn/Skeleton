@@ -81,6 +81,14 @@ public:
 	std::unordered_map<int, std::string>& GetTexture(const std::string& fileName) {
 		return data[fileName].tex;
 	}
+	// 加算テクスチャIDの取得
+	std::unordered_map<int, std::string>& GetSpa(const std::string& fileName) {
+		return data[fileName].spa;
+	}
+	// 乗算テクスチャIDの取得
+	std::unordered_map<int, std::string>& GetSph(const std::string& fileName) {
+		return data[fileName].sph;
+	}
 	// トゥーンテクスチャIDの取得
 	std::unordered_map<int, std::string>& GetToon(const std::string& fileName) {
 		return data[fileName].toon;
@@ -96,7 +104,10 @@ private:
 	void LoadTex(std::weak_ptr<Device>dev, const std::string& fileName);
 
 	// 加算テクスチャの読み込み
-	void LoadSpa(std::weak_ptr<Device>dev, const std::string& fileName);
+	void LoadSpa(std::weak_ptr<Device>dev, const std::string& fileName, const std::string& pass, const unsigned int& index);
+
+	// 乗算テクスチャの読み込み
+	void LoadSph(std::weak_ptr<Device>dev, const std::string& fileName, const std::string& pass, const unsigned int& index);
 
 	// トゥーンテクスチャの読み込み
 	void LoadToon(std::weak_ptr<Device>dev, const std::string& fileName);

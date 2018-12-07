@@ -5,6 +5,7 @@
 #include "../Device/Device.h"
 #include "../List/List.h"
 #include "../Camera/Camera.h"
+#include "../Light/Light.h"
 #include "../Root/Root.h"
 #include "../Pipe/Pipe.h"
 #include "../etc/Release.h"
@@ -14,8 +15,9 @@
 #define UnMap(X) { if((X) != nullptr) (X)->Unmap(0, nullptr);  }
 
 // コンストラクタ
-Pmd::Pmd(std::weak_ptr<Device>dev, std::weak_ptr<Camera>cam, std::weak_ptr<Root>root, std::weak_ptr<Pipe>pipe) :
-	loader(PmdLoader::Get()), tex(TextureLoader::Get()), descMane(DescriptorMane::Get()), dev(dev), cam(cam), root(root), pipe(pipe), index(0)
+Pmd::Pmd(std::weak_ptr<Device>dev, std::weak_ptr<Camera>cam, std::weak_ptr<Light>light, std::weak_ptr<Root>root, std::weak_ptr<Pipe>pipe) :
+	loader(PmdLoader::Get()), tex(TextureLoader::Get()), descMane(DescriptorMane::Get()), 
+	dev(dev), cam(cam), light(light), root(root), pipe(pipe), index(0)
 {
 	data.clear();
 }
@@ -138,7 +140,7 @@ void Pmd::Bundle(const std::string & fileName, int * i)
 
 	//WVPのセット
 	handle.ptr = heap->GetGPUDescriptorHandleForHeapStart().ptr + (size * data[i].cRsc);
-	data[i].list->GetList()->SetGraphicsRootDescriptorTable(2, handle);
+	data[i].list->GetList()->SetGraphicsRootDescriptorTable(4, handle);
 
 	//頂点のセット
 	D3D12_VERTEX_BUFFER_VIEW view{};
@@ -162,6 +164,10 @@ void Pmd::Bundle(const std::string & fileName, int * i)
 	unsigned int offset = 0;
 	//テクスチャ番号
 	int texIndex = 0;
+	//加算テクスチャ番号
+	int spaIndex = 0;
+	//乗算テクスチャ番号
+	int sphIndex = 0;
 
 	handle.ptr = heap->GetGPUDescriptorHandleForHeapStart().ptr + (size * data[i].mRsc);
 	for (unsigned int n = 0; n < loader.GetMaterial(fileName).size(); ++n)
@@ -172,25 +178,52 @@ void Pmd::Bundle(const std::string & fileName, int * i)
 		data[i].mat.specula     = loader.GetMaterial(fileName)[n].specula;
 		data[i].mat.mirror      = loader.GetMaterial(fileName)[n].mirror;
 		data[i].mat.tex         = false;
+		data[i].mat.spa			= false;
+		data[i].mat.sph			= false;
 
 		if (loader.GetTexture(fileName).find(n) != loader.GetTexture(fileName).end())
 		{
 			data[i].mat.tex = true;
 			auto texHandle = heap->GetGPUDescriptorHandleForHeapStart();
-			texHandle.ptr += size * texIndex++;
+			texHandle.ptr += size * texIndex;
 			data[i].list->GetList()->SetGraphicsRootDescriptorTable(0, texHandle);
 		}
-
+		else
+		{
+			data[i].list->GetList()->SetGraphicsRootDescriptorTable(0, heap->GetGPUDescriptorHandleForHeapStart());
+		}
+		if (loader.GetSpa(fileName).find(n) != loader.GetSpa(fileName).end())
+		{
+			data[i].mat.spa = true;
+			auto spaHandle = heap->GetGPUDescriptorHandleForHeapStart();
+			spaHandle.ptr += size * (loader.GetTexture(fileName).size() + spaIndex++);
+			data[i].list->GetList()->SetGraphicsRootDescriptorTable(1, spaHandle);
+		}
+		else
+		{
+			data[i].list->GetList()->SetGraphicsRootDescriptorTable(1, heap->GetGPUDescriptorHandleForHeapStart());
+		}
+		if (loader.GetSph(fileName).find(n) != loader.GetSph(fileName).end())
+		{
+			data[i].mat.sph = true;
+			auto sphHandle = heap->GetGPUDescriptorHandleForHeapStart();
+			sphHandle.ptr += size * (loader.GetTexture(fileName).size() + loader.GetSpa(fileName).size() + sphIndex++);
+			data[i].list->GetList()->SetGraphicsRootDescriptorTable(2, sphHandle);
+		}
+		else
+		{
+			data[i].list->GetList()->SetGraphicsRootDescriptorTable(2, heap->GetGPUDescriptorHandleForHeapStart());
+		}
 		if (loader.GetToon(fileName).find(n) != loader.GetToon(fileName).end())
 		{
 			auto toonHandle = heap->GetGPUDescriptorHandleForHeapStart();
-			toonHandle.ptr += size * (loader.GetTexture(fileName).size() + loader.GetMaterial(fileName)[n].toonIndex);
-			data[i].list->GetList()->SetGraphicsRootDescriptorTable(1, toonHandle);
+			toonHandle.ptr += size * (loader.GetTexture(fileName).size() + loader.GetSpa(fileName).size() + loader.GetSph(fileName).size() + loader.GetMaterial(fileName)[n].toonIndex);
+			data[i].list->GetList()->SetGraphicsRootDescriptorTable(3, toonHandle);
 		}
 
 		memcpy(d, &data[i].mat, sizeof(pmd::Mat));
 
-		data[i].list->GetList()->SetGraphicsRootDescriptorTable(3, handle);
+		data[i].list->GetList()->SetGraphicsRootDescriptorTable(5, handle);
 
 		data[i].list->GetList()->DrawIndexedInstanced(loader.GetMaterial(fileName)[n].indexNum, 1, offset, 0, 0);
 
@@ -212,11 +245,22 @@ void Pmd::Load(const std::string & fileName, int & i)
 	data[&i].list   = std::make_unique<List>(dev, D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_BUNDLE);
 	data[&i].cRsc   = 0;
 
-	descMane.CreateHeap(dev, i, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, 
-		loader.GetTexture(fileName).size() + loader.GetToon(fileName).size() + 1 + loader.GetMaterial(fileName).size());
+	descMane.CreateHeap(dev, i, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
+		loader.GetTexture(fileName).size() + loader.GetSpa(fileName).size() + loader.GetSph(fileName).size() + 
+		loader.GetToon(fileName).size() + 1 + loader.GetMaterial(fileName).size());
 
 	//テクスチャ
 	for (auto& n : loader.GetTexture(fileName))
+	{
+		CreateShaderView(n.second, &i, index);
+		WriteSub(n.second);
+	}
+	for (auto& n : loader.GetSpa(fileName))
+	{
+		CreateShaderView(n.second, &i, index);
+		WriteSub(n.second);
+	}
+	for (auto& n : loader.GetSph(fileName))
 	{
 		CreateShaderView(n.second, &i, index);
 		WriteSub(n.second);
@@ -247,6 +291,8 @@ void Pmd::Load(const std::string & fileName, int & i)
 	data[&i].wvp->world      = tmp;
 	data[&i].wvp->view       = cam.lock()->GetView();
 	data[&i].wvp->projection = cam.lock()->GetProjection();
+	data[&i].wvp->eyePos     = cam.lock()->GetEye();
+	data[&i].wvp->lightPos   = light.lock()->GetPos();
 }
 
 // 回転
@@ -261,7 +307,9 @@ void Pmd::Rotate(int & i, const float & angle)
 // 描画
 void Pmd::Draw(std::weak_ptr<List>list, int & i)
 {
-	data[&i].wvp->view = cam.lock()->GetView();
+	data[&i].wvp->view     = cam.lock()->GetView();
+	data[&i].wvp->eyePos   = cam.lock()->GetEye();
+	data[&i].wvp->lightPos = light.lock()->GetPos();
 
 	auto heap = descMane.GetHeap(i);
 	list.lock()->GetList()->SetDescriptorHeaps(1, &heap);

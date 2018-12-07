@@ -36,7 +36,7 @@ void Application::Create(void)
 	sound->Load("animal.wav");
 	sound->Play(true);
 
-	un->LoadPmd("model/巡音ルカ.pmd", n);
+	un->LoadPmd("model/初音ミク.pmd", n);
 }
 
 // テスト
@@ -106,6 +106,7 @@ void Application::Draw(void)
 {
 	un->Clear();
 	static float angle = 0.0f;
+	static float target = 10.0f;
 
 	if (input->CheckKey(INPUT_D))
 	{
@@ -116,6 +117,16 @@ void Application::Draw(void)
 	{
 		--angle;
 		un->RotatePmd(n, angle);
+	}
+	else if (input->CheckKey(INPUT_W))
+	{
+		++target;
+		un->SetCamera(0, 10, -15, 0, target, 0);
+	}
+	else if (input->CheckKey(INPUT_S))
+	{
+		--target;
+		un->SetCamera(0, 10, -15, 0, target, 0);
 	}
 
 	//ここに描画・処理

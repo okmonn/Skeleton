@@ -10,6 +10,7 @@ class DescriptorMane;
 class Device;
 class List;
 class Camera;
+class Light;
 class Root;
 class Pipe;
 
@@ -19,6 +20,8 @@ class Pmd
 		DirectX::XMFLOAT4X4 world;
 		DirectX::XMFLOAT4X4 view;
 		DirectX::XMFLOAT4X4 projection;
+		DirectX::XMFLOAT3 eyePos;
+		DirectX::XMFLOAT3 lightPos;
 	};
 
 	// データ
@@ -38,7 +41,7 @@ class Pmd
 
 public:
 	// コンストラクタ
-	Pmd(std::weak_ptr<Device>dev, std::weak_ptr<Camera>cam, std::weak_ptr<Root>root, std::weak_ptr<Pipe>pipe);
+	Pmd(std::weak_ptr<Device>dev, std::weak_ptr<Camera>cam, std::weak_ptr<Light>light, std::weak_ptr<Root>root, std::weak_ptr<Pipe>pipe);
 	// デストラクタ
 	~Pmd();
 
@@ -85,6 +88,9 @@ private:
 
 	// カメラ
 	std::weak_ptr<Camera>cam;
+
+	// ライト
+	std::weak_ptr<Light>light;
 
 	// ルート
 	std::weak_ptr<Root>root;

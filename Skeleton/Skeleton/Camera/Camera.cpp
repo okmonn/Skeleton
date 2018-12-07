@@ -32,6 +32,7 @@ void Camera::InitVP(void)
 
 	DirectX::XMStoreFloat4x4(&vp.view, DirectX::XMMatrixLookAtLH(eye, target, upper));
 	DirectX::XMStoreFloat4x4(&vp.projection, DirectX::XMMatrixPerspectiveFovLH(RAD(90.0f), (float)win.lock()->GetX() / (float)win.lock()->GetY(), 0.5f, 500.0f));
+	vp.eye = { 0.0f, pos, -1.0f };;
 }
 
 // ビューの更新
@@ -45,4 +46,5 @@ void Camera::ChangeView(const DirectX::XMFLOAT3 & eye, const DirectX::XMFLOAT3 &
 	DirectX::XMVECTOR upVec  = { up.x,     up.y,     up.z };
 
 	DirectX::XMStoreFloat4x4(&vp.view, DirectX::XMMatrixLookAtLH(eyeVec, tarVec, upVec));
+	vp.eye = eye;
 }

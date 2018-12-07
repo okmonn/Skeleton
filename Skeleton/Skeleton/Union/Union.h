@@ -21,6 +21,7 @@ class Point;
 class Line;
 class Triangle;
 class Camera;
+class Light;
 class Pmd;
 
 class Union
@@ -30,6 +31,9 @@ public:
 	Union(std::weak_ptr<Window>win);
 	// デストラクタ
 	~Union();
+
+	// カメラの位置・ターゲット
+	void SetCamera(const float& x, const float& y, const float& z, const float& targetX, const float& targetY, const float& targetZ);
 
 	// 画像の読み込み
 	void LoadImg(const std::string& fileName, int& i);
@@ -139,6 +143,9 @@ private:
 
 	// カメラ
 	std::shared_ptr<Camera>cam;
+
+	// ライト
+	std::shared_ptr<Light>light;
 
 	// PMD
 	std::unique_ptr<Pmd>pmd;

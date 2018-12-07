@@ -13,6 +13,8 @@ class Camera
 		DirectX::XMFLOAT4X4 view;
 		//プロジェクション
 		DirectX::XMFLOAT4X4 projection;
+		//視線座標
+		DirectX::XMFLOAT3 eye;
 	};
 
 public:
@@ -31,6 +33,10 @@ public:
 	// プロジェクションの取得
 	DirectX::XMFLOAT4X4 GetProjection(void) const {
 		return vp.projection;
+	}
+	// 視線座標の取得
+	DirectX::XMFLOAT3 GetEye(void) const {
+		return vp.eye;
 	}
 
 private:

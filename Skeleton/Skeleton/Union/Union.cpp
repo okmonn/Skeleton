@@ -16,6 +16,7 @@
 #include "../Primitive/Line.h"
 #include "../Primitive/Triangle.h"
 #include "../Camera/Camera.h"
+#include "../Light/Light.h"
 #include "../Pmd/Pmd.h"
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -45,6 +46,12 @@ Union::Union(std::weak_ptr<Window>win) :
 // デストラクタ
 Union::~Union()
 {
+}
+
+// カメラの位置・ターゲット
+void Union::SetCamera(const float & x, const float & y, const float & z, const float & targetX, const float & targetY, const float & targetZ)
+{
+	cam->ChangeView({ x, y, z }, { targetX, targetY, targetZ });
 }
 
 // ルートシグネチャの生成
@@ -106,8 +113,9 @@ void Union::Create(void)
 
 	cam = std::make_shared<Camera>(win, dev);
 	cam->ChangeView({ 0.0f, 10.0f, -15.0f }, {0.0f, 10.0f, 0.0f});
+	light = std::make_shared<Light>();
 	tex = std::make_unique<Texture>(win, dev, root.Get(rootNo["texture"]), pipe.Get(pipeNo["texture"]));
-	pmd = std::make_unique<Pmd>(dev, cam, root.Get(rootNo["model"]), pipe.Get(pipeNo["model"]));
+	pmd = std::make_unique<Pmd>(dev, cam, light, root.Get(rootNo["model"]), pipe.Get(pipeNo["model"]));
 }
 
 // 画像の読み込み

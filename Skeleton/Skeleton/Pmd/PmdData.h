@@ -85,6 +85,10 @@ namespace pmd {
 		//環境色
 		DirectX::XMFLOAT3 mirror;
 		//テクスチャフラグ
-		bool tex;
+		int tex;
+		//加算テクスチャフラグ
+		int spa;
+		//乗算テクスチャフラグ
+		int sph;
 	};
 }

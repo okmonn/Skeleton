@@ -3,6 +3,7 @@
 #include "../DescriptorMane/DescriptorMane.h"
 #include "../etc/Release.h"
 #include "../etc/Func.h"
+#include <iostream>
 
 // コンストラクタ
 PmdLoader::PmdLoader() : 
@@ -31,19 +32,52 @@ void PmdLoader::LoadTex(std::weak_ptr<Device>dev, const std::string & fileName)
 		}
 
 		std::string tmp = (char*)data[fileName].material[i].texPath;
-		auto tmp1 = tmp.substr(0, tmp.find_first_of('*'));
-		auto tmp2 = tmp.substr(tmp.find_last_of('*'), tmp.size());
 
-		auto path = func::FindString(fileName, '/') + tmp1;
+		std::string pass;
+		if (tmp.find("*") != std::string::npos)
+		{
+			auto tmp1 = tmp.substr(0, tmp.find_first_of('*'));
+			pass = func::FindString(fileName, '/') + tmp1;
+			tex.Load(dev, pass);
+			data[fileName].tex.emplace(i, pass);
 
-		tex.Load(dev, path);
-		data[fileName].tex.emplace(i, path);
+			tmp1 = tmp.substr(tmp.find_first_of('*') + 1, tmp.size());
+			pass = func::FindString(fileName, '/') + tmp1;
+			LoadSph(dev, fileName, pass, i);
+
+			continue;
+		}
+
+		pass = func::FindString(fileName, '/') + tmp;
+		if (pass.find(".spa") != std::string::npos)
+		{
+			LoadSpa(dev, fileName, pass, i);
+			continue;
+		}
+
+		if (pass.find(".sph") != std::string::npos)
+		{
+			LoadSph(dev, fileName, pass, i);
+			continue;
+		}
+
+		tex.Load(dev, pass);
+		data[fileName].tex.emplace(i, pass);
 	}
 }
 
 // 加算テクスチャの読み込み
-void PmdLoader::LoadSpa(std::weak_ptr<Device> dev, const std::string & fileName)
+void PmdLoader::LoadSpa(std::weak_ptr<Device> dev, const std::string & fileName, const std::string & pass, const unsigned int & index)
 {
+	tex.Load(dev, pass);
+	data[fileName].spa.emplace(index, pass);
+}
+
+// 乗算テクスチャの読み込み
+void PmdLoader::LoadSph(std::weak_ptr<Device> dev, const std::string & fileName, const std::string & pass, const unsigned int & index)
+{
+	tex.Load(dev, pass);
+	data[fileName].sph.emplace(index, pass);
 }
 
 // トゥーンテクスチャの読み込み
