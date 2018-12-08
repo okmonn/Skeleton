@@ -16,6 +16,7 @@ class Swap;
 class Render;
 class Depth;
 class Fence;
+class MultiPass;
 class Texture;
 class Point;
 class Line;
@@ -118,10 +119,13 @@ private:
 	std::unique_ptr<Render>ren;
 
 	// 深度
-	std::unique_ptr<Depth>depth;
+	std::shared_ptr<Depth>depth;
 
 	// フェンス
-	std::unique_ptr<Fence>fence;
+	std::shared_ptr<Fence>fence;
+
+	// マルチパス
+	std::unique_ptr<MultiPass>multi;
 
 	// ルートシグネチャID
 	std::map<std::string, int>rootNo;

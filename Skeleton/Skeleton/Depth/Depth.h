@@ -15,7 +15,7 @@ public:
 	~Depth();
 
 	// 深度のクリア
-	void Clear(std::shared_ptr<List>list);
+	void Clear(std::weak_ptr<List>list);
 
 	// ヒープの取得
 	ID3D12DescriptorHeap* GetHeap(void) const {

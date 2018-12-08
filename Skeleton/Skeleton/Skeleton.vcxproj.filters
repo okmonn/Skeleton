@@ -118,6 +118,12 @@
     <Filter Include="Light">
       <UniqueIdentifier>{6bedadc2-7f43-442c-9c89-8a78eec55b96}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MultiPass">
+      <UniqueIdentifier>{925e02b0-fb2e-4251-ae92-3b634eecf726}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShadowMap">
+      <UniqueIdentifier>{e97e30e3-cb13-4a73-b5a0-231c193e03b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -221,6 +227,12 @@
     </ClCompile>
     <ClCompile Include="Light\Light.cpp">
       <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiPass\MultiPass.cpp">
+      <Filter>MultiPass</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowMap\ShadowMap.cpp">
+      <Filter>ShadowMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -344,6 +356,12 @@
     <ClInclude Include="Light\Light.h">
       <Filter>Light</Filter>
     </ClInclude>
+    <ClInclude Include="MultiPass\MultiPass.h">
+      <Filter>MultiPass</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowMap\ShadowMap.h">
+      <Filter>ShadowMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Window\Icon.rc">
@@ -361,6 +379,9 @@
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="Shader\Model.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\MultiPass.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>

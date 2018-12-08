@@ -7,6 +7,7 @@
 #include "../Render/Render.h"
 #include "../Depth/Depth.h"
 #include "../Fence/Fence.h"
+#include "../MultiPass/MultiPass.h"
 #include "../Root/RootMane.h"
 #include "../Root/Root.h"
 #include "../Pipe/PipeMane.h"
@@ -69,6 +70,7 @@ void Union::CreateRoot(const std::string & name, const std::tstring & fileName)
 // ルートシグネチャの生成
 void Union::CreateRoot(void)
 {
+	CreateRoot("multipass", L"Shader/MultiPass.hlsl");
 	CreateRoot("texture",   L"Shader/Texture.hlsl");
 	CreateRoot("primitive", L"Shader/Primitive.hlsl");
 	CreateRoot("model",     L"Shader/Model.hlsl");
@@ -90,6 +92,7 @@ void Union::CreatePipe(const std::string & name, const std::string & rootName, c
 // パイプラインの生成
 void Union::CreatePipe(void)
 {
+	CreatePipe("multipass", "multipass", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 2 }, false);
 	CreatePipe("texture",  "texture",   D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 2 },    false);
 	CreatePipe("point",    "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT,    { 0, 3 },    false);
 	CreatePipe("line",     "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE,     { 0, 3 },    false);
@@ -105,8 +108,10 @@ void Union::Create(void)
 	list  = std::make_shared<List>(dev);
 	swap  = std::make_shared<Swap>(win, queue);
 	ren   = std::make_unique<Render>(dev, swap);
-	depth = std::make_unique<Depth>(dev, win.lock()->GetX(), win.lock()->GetY());
-	fence = std::make_unique<Fence>(dev, queue);
+	depth = std::make_shared<Depth>(dev, win.lock()->GetX(), win.lock()->GetY());
+	fence = std::make_shared<Fence>(dev, queue);
+
+	multi = std::make_unique<MultiPass>(win, dev, list);
 
 	CreateRoot();
 	CreatePipe();
@@ -195,6 +200,25 @@ void Union::DrawPmd(int & i)
 // 画面クリア
 void Union::Clear(void)
 {
+	/*list->Reset();
+
+	list->SetView(win.lock()->GetX(), win.lock()->GetY());
+	list->SetScissor(win.lock()->GetX(), win.lock()->GetY());
+
+	list->SetBarrier(D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_RENDER_TARGET, ren->Get());
+
+	depth->Clear(list);
+	ren->Clear(list, depth->GetHeap());*/
+
+
+	multi->Set(depth);
+}
+
+// 実行
+void Union::Execution(void)
+{
+	multi->Execution(queue, fence);
+
 	list->Reset();
 
 	list->SetView(win.lock()->GetX(), win.lock()->GetY());
@@ -204,11 +228,12 @@ void Union::Clear(void)
 
 	depth->Clear(list);
 	ren->Clear(list, depth->GetHeap());
-}
 
-// 実行
-void Union::Execution(void)
-{
+
+	multi->Draw(list, root.Get(rootNo["multipass"]), pipe.Get(pipeNo["multipass"]));
+
+
+
 	list->SetBarrier(D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PRESENT, ren->Get());
 
 	list->GetList()->Close();

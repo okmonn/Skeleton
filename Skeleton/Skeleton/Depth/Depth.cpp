@@ -91,7 +91,7 @@ void Depth::CreateView(void)
 }
 
 // [“x‚ÌƒNƒŠƒA
-void Depth::Clear(std::shared_ptr<List>list)
+void Depth::Clear(std::weak_ptr<List>list)
 {
-	list->GetList()->ClearDepthStencilView(heap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	list.lock()->GetList()->ClearDepthStencilView(heap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
