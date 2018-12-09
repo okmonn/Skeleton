@@ -22,6 +22,7 @@ class Pmd
 		DirectX::XMFLOAT4X4 projection;
 		DirectX::XMFLOAT3 eyePos;
 		DirectX::XMFLOAT3 lightPos;
+		DirectX::XMFLOAT4X4 lightViewProje;
 	};
 
 	// ÉfÅ[É^

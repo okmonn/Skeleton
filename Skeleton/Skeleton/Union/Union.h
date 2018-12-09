@@ -17,6 +17,7 @@ class Render;
 class Depth;
 class Fence;
 class MultiPass;
+class ShadowMap;
 class Texture;
 class Point;
 class Line;
@@ -126,6 +127,9 @@ private:
 
 	// マルチパス
 	std::unique_ptr<MultiPass>multi;
+
+	// シャドウ
+	std::shared_ptr<ShadowMap>shadow;
 
 	// ルートシグネチャID
 	std::map<std::string, int>rootNo;

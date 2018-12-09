@@ -2,6 +2,8 @@
 #define RS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
                     "DescriptorTable(SRV(t0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
                                     "visibility = SHADER_VISIBILITY_ALL),"\
+                    "DescriptorTable(SRV(t1, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
+                                    "visibility = SHADER_VISIBILITY_ALL),"\
                     "StaticSampler(s0, "\
                                   "filter         = FILTER_MIN_MAG_MIP_LINEAR, "\
                                   "addressU       = TEXTURE_ADDRESS_WRAP, "\
@@ -17,6 +19,7 @@
                                   "visibility     = SHADER_VISIBILITY_ALL)"
 
 Texture2D<float4> tex : register(t0);
+Texture2D<float> depth : register(t1);
 SamplerState smp      : register(s0);
 
 // 入力
@@ -49,5 +52,6 @@ Out VS(Input input)
 // ピクセルシェーダ
 float4 PS(Out o) : SV_TARGET
 {
+    return depth.Sample(smp, o.uv);
     return tex.Sample(smp, o.uv);
 }

@@ -8,6 +8,7 @@
 #include "../Depth/Depth.h"
 #include "../Fence/Fence.h"
 #include "../MultiPass/MultiPass.h"
+#include "../ShadowMap/ShadowMap.h"
 #include "../Root/RootMane.h"
 #include "../Root/Root.h"
 #include "../Pipe/PipeMane.h"
@@ -112,6 +113,7 @@ void Union::Create(void)
 	fence = std::make_shared<Fence>(dev, queue);
 
 	multi = std::make_unique<MultiPass>(win, dev, list);
+	shadow = std::make_shared<ShadowMap>(win, dev, list);
 
 	CreateRoot();
 	CreatePipe();
@@ -211,13 +213,13 @@ void Union::Clear(void)
 	ren->Clear(list, depth->GetHeap());*/
 
 
-	multi->Set(depth);
+	shadow->Set();
 }
 
 // ŽÀs
 void Union::Execution(void)
 {
-	multi->Execution(queue, fence);
+	shadow->Execution(queue, fence);
 
 	list->Reset();
 
@@ -230,7 +232,7 @@ void Union::Execution(void)
 	ren->Clear(list, depth->GetHeap());
 
 
-	multi->Draw(list, root.Get(rootNo["multipass"]), pipe.Get(pipeNo["multipass"]));
+	multi->Draw(list, root.Get(rootNo["multipass"]), pipe.Get(pipeNo["multipass"]), shadow);
 
 
 

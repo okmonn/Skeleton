@@ -8,6 +8,7 @@ class List;
 class Queue;
 class Depth;
 class Fence;
+class ShadowMap;
 class Root;
 class Pipe;
 
@@ -26,7 +27,7 @@ public:
 	void Execution(std::weak_ptr<Queue>queue, std::weak_ptr<Fence>fence);
 
 	// ï`âÊ
-	void Draw(std::weak_ptr<List>list, std::weak_ptr<Root>root, std::weak_ptr<Pipe>pipe);
+	void Draw(std::weak_ptr<List>list, std::weak_ptr<Root>root, std::weak_ptr<Pipe>pipe, std::weak_ptr<ShadowMap>shadow);
 
 private:
 	// ÉäÉ\Å[ÉXÇÃê∂ê¨

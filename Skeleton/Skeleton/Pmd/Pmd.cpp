@@ -292,7 +292,8 @@ void Pmd::Load(const std::string & fileName, int & i)
 	data[&i].wvp->view       = cam.lock()->GetView();
 	data[&i].wvp->projection = cam.lock()->GetProjection();
 	data[&i].wvp->eyePos     = cam.lock()->GetEye();
-	data[&i].wvp->lightPos   = light.lock()->GetPos();
+	data[&i].wvp->lightPos   = cam.lock()->GetLightPos();
+	data[&i].wvp->lightViewProje = cam.lock()->GetLightViewProje();
 }
 
 // ‰ñ“]
@@ -309,7 +310,8 @@ void Pmd::Draw(std::weak_ptr<List>list, int & i)
 {
 	data[&i].wvp->view     = cam.lock()->GetView();
 	data[&i].wvp->eyePos   = cam.lock()->GetEye();
-	data[&i].wvp->lightPos = light.lock()->GetPos();
+	data[&i].wvp->lightPos = cam.lock()->GetLightPos();
+	data[&i].wvp->lightViewProje = cam.lock()->GetLightViewProje();
 
 	auto heap = descMane.GetHeap(i);
 	list.lock()->GetList()->SetDescriptorHeaps(1, &heap);

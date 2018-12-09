@@ -15,6 +15,10 @@ class Camera
 		DirectX::XMFLOAT4X4 projection;
 		//視線座標
 		DirectX::XMFLOAT3 eye;
+		//ライト座標
+		DirectX::XMFLOAT3 lightPos;
+		//ライトビュープロジェクション
+		DirectX::XMFLOAT4X4 lightViewProje;
 	};
 
 public:
@@ -38,10 +42,22 @@ public:
 	DirectX::XMFLOAT3 GetEye(void) const {
 		return vp.eye;
 	}
+	// ライト座標の取得
+	DirectX::XMFLOAT3 GetLightPos(void) const {
+		return vp.lightPos;
+	}
+	// ライトビュープロジェクションの取得
+	DirectX::XMFLOAT4X4 GetLightViewProje(void) const {
+		return vp.lightViewProje;
+	}
 
 private:
 	// VPの初期化
 	void InitVP(void);
+
+	float Magnitude(const DirectX::XMFLOAT3 &i);
+
+	DirectX::XMFLOAT3 Normal(const DirectX::XMFLOAT3& i);
 
 	// ウィンドウ
 	std::weak_ptr<Window>win;

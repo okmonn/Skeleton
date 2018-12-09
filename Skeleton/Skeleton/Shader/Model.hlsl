@@ -39,6 +39,7 @@ cbuffer WVP : register(b0)
     float4x4 projection;
     float3 eyePos;
     float3 lightPos;
+    float4x4 lightViewProje;
 }
 
 cbuffer Mat : register(b1)
@@ -98,14 +99,14 @@ void GS(triangle Out vertex[3], inout TriangleStream<Out> stream)
             pos.x += 10.0f * i;
 
             Out o;
-            o.pos = pos;
+            o.pos    = pos;
             o.normal = mul(world, vertex[n].normal);
-            o.uv = vertex[n].uv;
+            o.uv     = vertex[n].uv;
 
             pos = mul(world, pos);
             pos = mul(view, pos);
             pos = mul(projection, pos);
-            o.svpos = pos;
+            o.svpos = mul(lightViewProje, o.pos);
 
             stream.Append(o);
         }

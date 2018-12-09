@@ -6,6 +6,7 @@
 #include "../Queue/Queue.h"
 #include "../Depth/Depth.h"
 #include "../Fence/Fence.h"
+#include "../ShadowMap/ShadowMap.h"
 #include "../Root/Root.h"
 #include "../Pipe/Pipe.h"
 #include "../etc/Release.h"
@@ -198,7 +199,7 @@ void MultiPass::Execution(std::weak_ptr<Queue> queue, std::weak_ptr<Fence> fence
 }
 
 // •`‰æ
-void MultiPass::Draw(std::weak_ptr<List> list, std::weak_ptr<Root> root, std::weak_ptr<Pipe> pipe)
+void MultiPass::Draw(std::weak_ptr<List> list, std::weak_ptr<Root> root, std::weak_ptr<Pipe> pipe, std::weak_ptr<ShadowMap>shadow)
 {
 	list.lock()->GetList()->SetGraphicsRootSignature(root.lock()->Get());
 	list.lock()->GetList()->SetPipelineState(pipe.lock()->Get());
@@ -214,6 +215,9 @@ void MultiPass::Draw(std::weak_ptr<List> list, std::weak_ptr<Root> root, std::we
 	auto heap = descMane.GetHeap(sHeap);
 	list.lock()->GetList()->SetDescriptorHeaps(1, &heap);
 	list.lock()->GetList()->SetGraphicsRootDescriptorTable(0, heap->GetGPUDescriptorHandleForHeapStart());
+	heap = descMane.GetHeap(shadow.lock()->GetShaderHeap());
+	list.lock()->GetList()->SetDescriptorHeaps(1, &heap);
+	list.lock()->GetList()->SetGraphicsRootDescriptorTable(1, heap->GetGPUDescriptorHandleForHeapStart());
 
 	list.lock()->GetList()->DrawInstanced(4, 1, 0, 0);
 }
