@@ -102,7 +102,7 @@ void Union::CreatePipe(void)
 	CreatePipe("line",       "primitive",   D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE,     { 0, 3 },    false);
 	CreatePipe("triangle",   "primitive",   D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 3 },    false);
 	CreatePipe("plane",      "primitive3D", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 2, 3 }, false);
-	CreatePipe("model",      "model",       D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 1, 2 }, true);
+	CreatePipe("model",      "model",       D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 1, 2, 5, 6 }, true);
 	CreatePipe("shadow",     "shadow",      D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 1, 2 }, true);
 }
 

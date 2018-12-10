@@ -12,6 +12,8 @@
                                     "visibility = SHADER_VISIBILITY_ALL),"\
                     "DescriptorTable(CBV(b1, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
                                     "visibility = SHADER_VISIBILITY_ALL),"\
+                    "DescriptorTable(CBV(b2, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
+                                    "visibility = SHADER_VISIBILITY_ALL),"\
                     "StaticSampler(s0, "\
                                   "filter         = FILTER_MIN_MAG_MIP_LINEAR, "\
                                   "addressU       = TEXTURE_ADDRESS_WRAP, "\
@@ -55,12 +57,19 @@ cbuffer Mat : register(b1)
     int sphFlag;
 }
 
+cbuffer Born : register(b2)
+{
+    matrix mtx[256];
+}
+
 // 入力
 struct Input
 {
     float4 pos    : POSITION;
     float4 normal : NORMAL;
     float2 uv     : TEXCOORD;
+    min16uint2 born : BORN;
+    min16uint weight : WEIGHT;
 };
 
 // 出力
@@ -70,6 +79,8 @@ struct Out
     float4 pos    : POSITION;
     float4 normal : NORMAL;
     float2 uv     : TEXCOORD;
+    min16uint2 born : BORN;
+    min16uint weight : WEIGHT;
 };
 
 // 頂点シェーダ
@@ -81,6 +92,8 @@ Out VS(Input input)
     o.pos    = input.pos;
     o.normal = input.normal;
     o.uv     = input.uv;
+    o.born   = input.born;
+    o.weight = input.weight;
 
     return o;
 }
@@ -103,7 +116,13 @@ void GS(triangle Out vertex[3], inout TriangleStream<Out> stream)
             o.pos    = pos;
             o.normal = mul(world, vertex[n].normal);
             o.uv     = vertex[n].uv;
+            o.born   = vertex[n].born;
+            o.weight = vertex[n].weight;
 
+            float w = o.weight / 100.0f;
+            matrix m = mtx[o.born.x] * w + mtx[o.born.y] * (1.0f - w);
+
+            pos = mul(m, pos);
             pos = mul(world, pos);
             pos = mul(view, pos);
             pos = mul(projection, pos);

@@ -30,6 +30,9 @@ class PmdLoader
 		int iRsc;
 		void* indexData;
 
+		//ボーンノード
+		std::unordered_map<std::string, pmd::BornNode>node;
+
 		//テクスチャID
 		std::unordered_map<int, std::string>tex;
 		//加算テクスチャID
@@ -77,6 +80,10 @@ public:
 	int& GetIndexRsc(const std::string& fileName) {
 		return data[fileName].iRsc;
 	}
+	// ボーンノードの取得
+	std::unordered_map<std::string, pmd::BornNode> GetBornNode(const std::string& fileName) {
+		return data[fileName].node;
+	}
 	// テクスチャIDの取得
 	std::unordered_map<int, std::string>& GetTexture(const std::string& fileName) {
 		return data[fileName].tex;
@@ -118,6 +125,9 @@ private:
 	// マップ
 	template<typename T>
 	long Map(int* i, T* data, const unsigned int& size, void** rscData);
+
+	// ボーンノードのセット
+	void SetBornNode(const std::string& fileName);
 
 
 	// テクスチャローダー

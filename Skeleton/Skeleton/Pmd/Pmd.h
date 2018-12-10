@@ -35,15 +35,15 @@ class Pmd
 		int cRsc;
 		WVP* wvp;
 
-		//マテリアル用リソース
-		int mRsc;
-		pmd::Mat mat;
-		unsigned __int8* materialData;
-
 		//ボーン用リソース
 		int bRsc;
 		std::vector<DirectX::XMMATRIX>mtx;
 		void* bornData;
+
+		//マテリアル用リソース
+		int mRsc;
+		pmd::Mat mat;
+		unsigned __int8* materialData;
 	};
 
 public:
@@ -86,6 +86,8 @@ private:
 
 	// 影用バンドルのセット
 	void ShadowBundle(const std::string& fileName, int* i);
+
+	// 
 
 
 	// PMDローダー

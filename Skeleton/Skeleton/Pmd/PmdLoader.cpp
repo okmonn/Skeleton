@@ -135,6 +135,27 @@ long PmdLoader::Map(int * i, T * data, const unsigned int & size, void ** rscDat
 	return hr;
 }
 
+// ボーンノードのセット
+void PmdLoader::SetBornNode(const std::string & fileName)
+{
+	for (unsigned int i = 0; i < data[fileName].born.size(); ++i)
+	{
+		data[fileName].node[data[fileName].born[i].name].index = i;
+		data[fileName].node[data[fileName].born[i].name].start = data[fileName].born[i].pos;
+	}
+
+	for (auto& n : data[fileName].node)
+	{
+		if (data[fileName].born[n.second.index].pIndex >= data[fileName].born.size())
+		{
+			continue;
+		}
+
+		auto name = data[fileName].born[data[fileName].born[n.second.index].pIndex].name;
+		data[fileName].node[name].child.push_back(&n.second);
+	}
+}
+
 // 読み込み
 int PmdLoader::Load(std::weak_ptr<Device>dev, const std::string & fileName)
 {
@@ -257,6 +278,8 @@ int PmdLoader::Load(std::weak_ptr<Device>dev, const std::string & fileName)
 	//インデックスバッファの生成
 	CreateRsc(dev, &data[fileName].iRsc, sizeof(unsigned short) * data[fileName].index.size());
 	Map(&data[fileName].iRsc, data[fileName].index.data(), data[fileName].index.size(), &data[fileName].indexData);
+
+	SetBornNode(fileName);
 
 	return 0;
 }

@@ -127,6 +127,9 @@
     <Filter Include="Primitive3D\Plane">
       <UniqueIdentifier>{2231ef19-8182-432e-bd3b-1dd7679c4ffd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="VMD">
+      <UniqueIdentifier>{d5ef66b0-c6f5-41d1-b348-a395510e5df6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -239,6 +242,9 @@
     </ClCompile>
     <ClCompile Include="Primitive3D\Plane.cpp">
       <Filter>Primitive3D\Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="Vmd\Vmd.cpp">
+      <Filter>VMD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -370,6 +376,9 @@
     </ClInclude>
     <ClInclude Include="Primitive3D\Plane.h">
       <Filter>Primitive3D\Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="Vmd\Vmd.h">
+      <Filter>VMD</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include <DirectXMath.h>
 
 namespace pmd {
@@ -90,5 +91,15 @@ namespace pmd {
 		int spa;
 		//乗算テクスチャフラグ
 		int sph;
+	};
+
+	// ボーンノード
+	struct BornNode {
+		//配列番号
+		unsigned int index;
+		//ボーン始点
+		DirectX::XMFLOAT3 start;
+		//子ボーン
+		std::vector<BornNode*>child;
 	};
 }

@@ -144,6 +144,10 @@ void Pmd::Bundle(const std::string & fileName, int * i)
 	handle.ptr = heap->GetGPUDescriptorHandleForHeapStart().ptr + (size * data[i].cRsc);
 	data[i].list->GetList()->SetGraphicsRootDescriptorTable(4, handle);
 
+	//ボーンのセット
+	handle.ptr = heap->GetGPUDescriptorHandleForHeapStart().ptr + (size * data[i].bRsc);
+	data[i].list->GetList()->SetGraphicsRootDescriptorTable(6, handle);
+
 	//頂点のセット
 	D3D12_VERTEX_BUFFER_VIEW view{};
 	view.BufferLocation = descMane.GetRsc(loader.GetVertexRsc(fileName))->GetGPUVirtualAddress();
@@ -256,6 +260,10 @@ void Pmd::ShadowBundle(const std::string & fileName, int * i)
 	//WVPのセット
 	handle.ptr = heap->GetGPUDescriptorHandleForHeapStart().ptr + (size * data[i].cRsc);
 	data[i].sList->GetList()->SetGraphicsRootDescriptorTable(4, handle);
+
+	//ボーンのセット
+	handle.ptr = heap->GetGPUDescriptorHandleForHeapStart().ptr + (size * data[i].bRsc);
+	data[i].sList->GetList()->SetGraphicsRootDescriptorTable(6, handle);
 
 	//頂点のセット
 	D3D12_VERTEX_BUFFER_VIEW view{};
@@ -392,6 +400,16 @@ void Pmd::Load(const std::string & fileName, int & i)
 	CreateConView(&i, data[&i].cRsc, (sizeof(WVP) + 0xff) &~0xff);
 	Map(data[&i].cRsc, reinterpret_cast<void**>(&data[&i].wvp));
 
+	//ボーン
+	for (auto& n : loader.GetBorn(fileName))
+	{
+		data[&i].mtx.push_back(DirectX::XMMatrixIdentity());
+	}
+	CreateConRsc(&i, data[&i].bRsc, (sizeof(DirectX::XMMATRIX) * loader.GetBorn(fileName).size() + 0xff) &~0xff);
+	CreateConView(&i, data[&i].bRsc, (sizeof(DirectX::XMMATRIX) * loader.GetBorn(fileName).size() + 0xff) &~0xff);
+	Map(data[&i].bRsc, &data[&i].bornData);
+	memcpy(data[&i].bornData, &data[&i].mtx[0], (sizeof(DirectX::XMMATRIX) * loader.GetBorn(fileName).size() + 0xff) &~0xff);
+
 	//マテリアル
 	CreateConRsc(&i, data[&i].mRsc, ((sizeof(pmd::Mat) + 0xff) &~0xff) * loader.GetMaterial(fileName).size());
 	for (unsigned int n = 0; n < loader.GetMaterial(fileName).size(); ++n)
@@ -399,11 +417,6 @@ void Pmd::Load(const std::string & fileName, int & i)
 		CreateConView(&i, data[&i].mRsc, (sizeof(pmd::Mat) + 0xff) &~0xff, n);
 	}
 	Map(data[&i].mRsc, reinterpret_cast<void**>(&data[&i].materialData));
-
-	//ボーン
-	CreateConRsc(&i, data[&i].bRsc, (sizeof(DirectX::XMMATRIX) * loader.GetBorn(fileName).size() + 0xff) &~0xff);
-	CreateConView(&i, data[&i].bRsc, (sizeof(DirectX::XMMATRIX) * loader.GetBorn(fileName).size() + 0xff) &~0xff);
-	Map(data[&i].bRsc, reinterpret_cast<void**>(&data[&i].bornData));
 
 	Bundle(fileName, &i);
 	ShadowBundle(fileName, &i);
