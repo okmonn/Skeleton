@@ -29,8 +29,10 @@ Pmd::~Pmd()
 	{
 		UnMap(descMane.GetRsc(itr->second.cRsc));
 		UnMap(descMane.GetRsc(itr->second.mRsc));
+		UnMap(descMane.GetRsc(itr->second.bRsc));
 		descMane.DeleteRsc(itr->second.cRsc);
 		descMane.DeleteRsc(itr->second.mRsc);
+		descMane.DeleteRsc(itr->second.bRsc);
 
 		descMane.DeleteHeap(*itr->first);
 	}
@@ -361,7 +363,7 @@ void Pmd::Load(const std::string & fileName, int & i)
 
 	descMane.CreateHeap(dev, i, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
 		loader.GetTexture(fileName).size() + loader.GetSpa(fileName).size() + loader.GetSph(fileName).size() + 
-		loader.GetToon(fileName).size() + 1 + loader.GetMaterial(fileName).size());
+		loader.GetToon(fileName).size() + 1 + loader.GetMaterial(fileName).size() + 1);
 
 	//テクスチャ
 	for (auto& n : loader.GetTexture(fileName))
@@ -397,6 +399,11 @@ void Pmd::Load(const std::string & fileName, int & i)
 		CreateConView(&i, data[&i].mRsc, (sizeof(pmd::Mat) + 0xff) &~0xff, n);
 	}
 	Map(data[&i].mRsc, reinterpret_cast<void**>(&data[&i].materialData));
+
+	//ボーン
+	CreateConRsc(&i, data[&i].bRsc, (sizeof(DirectX::XMMATRIX) * loader.GetBorn(fileName).size() + 0xff) &~0xff);
+	CreateConView(&i, data[&i].bRsc, (sizeof(DirectX::XMMATRIX) * loader.GetBorn(fileName).size() + 0xff) &~0xff);
+	Map(data[&i].bRsc, reinterpret_cast<void**>(&data[&i].bornData));
 
 	Bundle(fileName, &i);
 	ShadowBundle(fileName, &i);

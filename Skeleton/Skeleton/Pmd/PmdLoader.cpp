@@ -182,10 +182,19 @@ int PmdLoader::Load(std::weak_ptr<Device>dev, const std::string & fileName)
 	data[fileName].material.resize(num);
 	fread(data[fileName].material.data(), sizeof(pmd::Material), num, file);
 
-	//ボーン 
-	unsigned short boneNum = 0; fread(&boneNum, sizeof(boneNum), 1, file);
-	//いったんすっ飛ばす(39バイト…またけったいな) 
-	fseek(file, boneNum * 39, SEEK_CUR);
+	//ボーンの読み込み
+	unsigned short bornNum = 0;
+	fread(&bornNum, sizeof(unsigned short), 1, file);
+	data[fileName].born.resize(bornNum);
+	for (auto& i : data[fileName].born)
+	{
+		fread(&i.name,     sizeof(i.name),     1, file);
+		fread(&i.pIndex,   sizeof(i.pIndex),   1, file);
+		fread(&i.cIndex,   sizeof(i.cIndex),   1, file);
+		fread(&i.type,     sizeof(i.type),     1, file);
+		fread(&i.IKpIndex, sizeof(i.IKpIndex), 1, file);
+		fread(&i.pos,      sizeof(i.pos),      1, file);
+	}
 
 	//IK 
 	unsigned short ikNum = 0; fread(&ikNum, sizeof(ikNum), 1, file); //モチロンすっ飛ばす 
@@ -226,7 +235,7 @@ int PmdLoader::Load(std::weak_ptr<Device>dev, const std::string & fileName)
 		//モデル名20バイト+256バイトコメント 
 		fseek(file, 20 + 256, SEEK_CUR);
 		//ボーン名20バイト*ボーン数 
-		fseek(file, boneNum * 20, SEEK_CUR);
+		fseek(file, bornNum * 20, SEEK_CUR);
 		//(表情数-1)*20バイト。-1なのはベース部分ぶん 
 		fseek(file, (skinNum - 1) * 20, SEEK_CUR);
 		//ボーン数*50バイト。 

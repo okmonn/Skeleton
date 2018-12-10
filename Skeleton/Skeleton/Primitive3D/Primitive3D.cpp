@@ -69,6 +69,8 @@ long Primitive3D::Map(void)
 	DirectX::XMStoreFloat4x4(&wvp.world, DirectX::XMMatrixIdentity());
 	wvp.view       = cam.lock()->GetView();
 	wvp.projection = cam.lock()->GetProjection();
+	wvp.lightView = cam.lock()->GetLightView();
+	wvp.lightProjection = cam.lock()->GetLightProjection();
 
 	memcpy(data, &wvp, sizeof(WVP));
 

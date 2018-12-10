@@ -23,6 +23,7 @@ class Point;
 class Line;
 class Triangle;
 class Camera;
+class Plane;
 class Pmd;
 
 class Union
@@ -59,6 +60,10 @@ public:
 
 	// lŠpŒ`‚Ì•`‰æ
 	void DrawBox(const float& x, const float& y, const float& sizeX, const float& sizeY,
+		const float& r, const float& g, const float& b, const float& alpha = 1.0f);
+
+	// °‚Ì•`‰æ
+	void DrawPlane(const float& x, const float& y, const float& z, const float& sizeX, const float& sizeY, const float& sizeZ,
 		const float& r, const float& g, const float& b, const float& alpha = 1.0f);
 
 	// PMD‚Ì“Ç‚İ‚İ
@@ -159,6 +164,9 @@ private:
 
 	// ƒJƒƒ‰
 	std::shared_ptr<Camera>cam;
+
+	// °
+	std::list<std::shared_ptr<Plane>>plane;
 
 	// PMD
 	std::unique_ptr<Pmd>pmd;

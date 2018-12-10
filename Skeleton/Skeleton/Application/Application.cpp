@@ -136,6 +136,7 @@ void Application::Draw(void)
 	}
 
 	//‚±‚±‚É•`‰æEˆ—
+	un->DrawPlane(-25, 0, -25, 50, 1, 50, 1, 0, 0);
 	un->DrawPmd(n);
 
 	un->Execution();

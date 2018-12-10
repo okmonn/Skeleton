@@ -18,6 +18,7 @@
 #include "../Primitive/Line.h"
 #include "../Primitive/Triangle.h"
 #include "../Camera/Camera.h"
+#include "../Primitive3D/Plane.h"
 #include "../Pmd/Pmd.h"
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -40,6 +41,7 @@ Union::Union(std::weak_ptr<Window>win) :
 	point.clear();
 	line.clear();
 	triangle.clear();
+	plane.clear();
 
 	Create();
 }
@@ -99,7 +101,7 @@ void Union::CreatePipe(void)
 	CreatePipe("point",      "primitive",   D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT,    { 0, 3 },    false);
 	CreatePipe("line",       "primitive",   D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE,     { 0, 3 },    false);
 	CreatePipe("triangle",   "primitive",   D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 3 },    false);
-	CreatePipe("triangle3D", "primitive3D", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 2, 3 }, false);
+	CreatePipe("plane",      "primitive3D", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 2, 3 }, false);
 	CreatePipe("model",      "model",       D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 1, 2 }, true);
 	CreatePipe("shadow",     "shadow",      D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 1, 2 }, true);
 }
@@ -181,6 +183,15 @@ void Union::DrawBox(const float & x, const float & y, const float & sizeX, const
 	triangle.push_back(std::make_shared<Triangle>(win, dev, root.Get(rootNo["primitive"]), pipe.Get(pipeNo["triangle"])));
 	triangle.back()->SetVertex({ x + sizeX, y }, { x + sizeX, y + sizeY }, { x, y + sizeY }, { r, g, b }, alpha);
 	triangle.back()->Draw(list);
+}
+
+// è∞ÇÃï`âÊ
+void Union::DrawPlane(const float & x, const float & y, const float& z, const float & sizeX, const float & sizeY, const float & sizeZ,
+	const float & r, const float & g, const float & b, const float & alpha)
+{
+	plane.push_back(std::make_shared<Plane>(dev, cam, root.Get(rootNo["primitive3D"]), pipe.Get(pipeNo["plane"])));
+	plane.back()->SetVertex({ x, y, z }, { sizeX, sizeY, sizeZ }, { r, g, b }, alpha);
+	plane.back()->Draw(list, shadow);
 }
 
 // PMDÇÃì«Ç›çûÇ›
@@ -272,4 +283,5 @@ void Union::Execution(void)
 	point.clear();
 	line.clear();
 	triangle.clear();
+	plane.clear();
 }

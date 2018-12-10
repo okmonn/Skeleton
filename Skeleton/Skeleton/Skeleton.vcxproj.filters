@@ -124,6 +124,9 @@
     <Filter Include="Primitive3D">
       <UniqueIdentifier>{84eb5e44-43f1-4948-be4b-f59c6ab1b6af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Primitive3D\Plane">
+      <UniqueIdentifier>{2231ef19-8182-432e-bd3b-1dd7679c4ffd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -233,6 +236,9 @@
     </ClCompile>
     <ClCompile Include="Primitive3D\Primitive3D.cpp">
       <Filter>Primitive3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitive3D\Plane.cpp">
+      <Filter>Primitive3D\Plane</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -361,6 +367,9 @@
     </ClInclude>
     <ClInclude Include="Primitive3D\Primitive3D.h">
       <Filter>Primitive3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitive3D\Plane.h">
+      <Filter>Primitive3D\Plane</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

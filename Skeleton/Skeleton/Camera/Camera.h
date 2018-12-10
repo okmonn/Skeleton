@@ -31,7 +31,7 @@ public:
 
 	// ビューの更新
 	void ChangeView(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& target, 
-		const DirectX::XMFLOAT3& up = { 0.0f, 1.0f, 0.0f }, const DirectX::XMFLOAT3& lightPos = { -10.0f, 10.0f, -10.0f });
+		const DirectX::XMFLOAT3& up = { 0.0f, 1.0f, 0.0f }, const DirectX::XMFLOAT3& lightPos = { 0.0f, 10.0f, -10.0f });
 
 	// ビューの取得
 	DirectX::XMFLOAT4X4 GetView(void) const {

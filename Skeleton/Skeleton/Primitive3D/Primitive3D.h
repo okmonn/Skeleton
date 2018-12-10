@@ -28,6 +28,8 @@ class Primitive3D
 		DirectX::XMFLOAT4X4 world;
 		DirectX::XMFLOAT4X4 view;
 		DirectX::XMFLOAT4X4 projection;
+		DirectX::XMFLOAT4X4 lightView;
+		DirectX::XMFLOAT4X4 lightProjection;
 	};
 
 public:
@@ -36,7 +38,7 @@ public:
 	// デストラクタ
 	virtual ~Primitive3D();
 
-private:
+protected:
 	// 定数リソースの生成
 	long CreateRsc(void);
 
@@ -54,9 +56,6 @@ private:
 
 	// デバイス
 	std::weak_ptr<Device>dev;
-
-	// リスト
-	std::unique_ptr<List>list;
 
 	// カメラ
 	std::weak_ptr<Camera>cam;

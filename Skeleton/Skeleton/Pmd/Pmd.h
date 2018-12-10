@@ -39,6 +39,11 @@ class Pmd
 		int mRsc;
 		pmd::Mat mat;
 		unsigned __int8* materialData;
+
+		//ボーン用リソース
+		int bRsc;
+		std::vector<DirectX::XMMATRIX>mtx;
+		void* bornData;
 	};
 
 public:

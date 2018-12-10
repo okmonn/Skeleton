@@ -6,9 +6,9 @@
                                     "visibility = SHADER_VISIBILITY_ALL),"\
                     "StaticSampler(s0, "\
                                   "filter         = FILTER_MIN_MAG_MIP_LINEAR, "\
-                                  "addressU       = TEXTURE_ADDRESS_WRAP, "\
-                                  "addressV       = TEXTURE_ADDRESS_WRAP, "\
-                                  "addressW       = TEXTURE_ADDRESS_WRAP, "\
+                                  "addressU       = TEXTURE_ADDRESS_CLAMP, "\
+                                  "addressV       = TEXTURE_ADDRESS_CLAMP, "\
+                                  "addressW       = TEXTURE_ADDRESS_CLAMP, "\
                                   "mipLodBias     = 0.0f, "\
                                   "maxAnisotropy  = 0, "\
                                   "comparisonFunc = COMPARISON_NEVER, "\
@@ -27,6 +27,8 @@ cbuffer Info : register(b0)
     float4x4 world;
     float4x4 view;
     float4x4 projection;
+    float4x4 lightView;
+    float4x4 lightProjection;
 }
 
 // 入力
@@ -40,10 +42,11 @@ struct Input
 // 出力
 struct Out
 {
-    float4 svpos : SV_POSITION;
-    float4 pos   : POSITION;
-    float2 uv    : TEXCOORD;
-    float4 color : COLOR;
+    float4 svpos    : SV_POSITION;
+    float4 pos      : POSITION;
+    float4 lightPos : LIGHTPOS;
+    float2 uv       : TEXCOORD;
+    float4 color    : COLOR;
 };
 
 // 頂点シェーダ
@@ -51,9 +54,10 @@ struct Out
 Out VS(Input input)
 {
     Out o;
-    o.pos   = input.pos;
-    o.uv    = input.uv;
-    o.color = input.color;
+    o.pos      = mul(world, input.pos);
+    o.lightPos = mul(lightProjection, mul(lightView, input.pos));
+    o.uv       = input.uv;
+    o.color    = input.color;
 
     input.pos = mul(world, input.pos);
     input.pos = mul(view, input.pos);
@@ -63,6 +67,8 @@ Out VS(Input input)
     return o;
 }
 
+#define EPSILON 0.0005f
+
 // ピクセルシェーダ
 float4 PS(Out o) : SV_TARGET
 {
@@ -71,5 +77,14 @@ float4 PS(Out o) : SV_TARGET
         discard;
     }
 
-    return float4(o.color);
+    float2 uv = (float2(1.0f, -1.0f) + o.lightPos.xy) * float2(0.5f, -0.5f);
+
+   
+    float bright = 1.0f;
+    if (o.lightPos.z > depth.Sample(smp, uv) + EPSILON)
+    {
+        bright *= 0.7f;
+    }
+
+    return float4(o.color.rgb * bright, o.color.a);
 }
