@@ -31,17 +31,18 @@ void Camera::InitVP(void)
 	DirectX::XMVECTOR upper  = { 0.0f, 1.0f, 0.0f };
 
 	DirectX::XMStoreFloat4x4(&vp.view, DirectX::XMMatrixLookAtLH(eye, target, upper));
-	DirectX::XMStoreFloat4x4(&vp.projection, DirectX::XMMatrixPerspectiveFovLH(RAD(90.0f), (float)win.lock()->GetX() / (float)win.lock()->GetY(), 0.5f, 500.0f));
+	DirectX::XMStoreFloat4x4(&vp.projection, DirectX::XMMatrixPerspectiveFovLH(RAD(90.0f), (float)win.lock()->GetX() / (float)win.lock()->GetY(), 0.01f, 500.0f));
 
 	vp.eye = { 0.0f, pos, -1.0f };
 
-	vp.lightPos = {};
-	vp.lightViewProje = {};
+	vp.lightPos = vp.eye;
+	DirectX::XMStoreFloat4x4(&vp.lightView, DirectX::XMMatrixLookAtLH(eye, target, upper));
+	DirectX::XMStoreFloat4x4(&vp.lightProjection, DirectX::XMMatrixOrthographicLH(40.0f, 40.0f, 0.01f, 500.0f));
 }
 
 float Camera::Magnitude(const DirectX::XMFLOAT3 & i)
 {
-	return std::sqrtf(i.x * i.x + i.y * i.y + i.z * i.z);
+	return std::sqrt(i.x * i.x + i.y * i.y + i.z * i.z);
 }
 
 DirectX::XMFLOAT3 Camera::Normal(const DirectX::XMFLOAT3 & i)
@@ -51,7 +52,7 @@ DirectX::XMFLOAT3 Camera::Normal(const DirectX::XMFLOAT3 & i)
 }
 
 // ビューの更新
-void Camera::ChangeView(const DirectX::XMFLOAT3 & eye, const DirectX::XMFLOAT3 & target, const DirectX::XMFLOAT3 & up)
+void Camera::ChangeView(const DirectX::XMFLOAT3 & eye, const DirectX::XMFLOAT3 & target, const DirectX::XMFLOAT3 & up, const DirectX::XMFLOAT3 & lightPos)
 {
 	//カメラの位置
 	DirectX::XMVECTOR eyeVec = { eye.x,    eye.y,    eye.z };
@@ -63,14 +64,12 @@ void Camera::ChangeView(const DirectX::XMFLOAT3 & eye, const DirectX::XMFLOAT3 &
 	DirectX::XMStoreFloat4x4(&vp.view, DirectX::XMMatrixLookAtLH(eyeVec, tarVec, upVec));
 	vp.eye = eye;
 
-	auto norm = Normal({ -1.0f, 1.0f, -1.0f });
-	auto m = Magnitude({ target.x - eye.x, target.y - eye.y, target.z - eye.z });
-	vp.lightPos = { norm.x * m, norm.y * m, norm.z * m };
-	/*vp.lightPos.x += target.x;
-	vp.lightPos.y += target.y;
-	vp.lightPos.z += target.z;*/
+	DirectX::XMFLOAT3 vec = Normal(lightPos);
+	float m = Magnitude({ target.x - eye.x, target.y - eye.y, target.z - eye.z });
+	vp.lightPos = target;
+	vp.lightPos.x += vec.x * m;
+	vp.lightPos.y += vec.y * m;
+	vp.lightPos.z += vec.z * m;
 
-	auto view = DirectX::XMMatrixLookAtLH(DirectX::XMLoadFloat3(&vp.lightPos), tarVec, upVec);
-	auto proje = DirectX::XMMatrixOrthographicLH(40.0f, 40.0f, 0.01f, 500.0f);
-	DirectX::XMStoreFloat4x4(&vp.lightViewProje, view * proje);
+	DirectX::XMStoreFloat4x4(&vp.lightView, DirectX::XMMatrixLookAtLH(DirectX::XMLoadFloat3(&vp.lightPos), tarVec, upVec));
 }

@@ -5,7 +5,6 @@
 #include "../Device/Device.h"
 #include "../List/List.h"
 #include "../Camera/Camera.h"
-#include "../Light/Light.h"
 #include "../Root/Root.h"
 #include "../Pipe/Pipe.h"
 #include "../etc/Release.h"
@@ -15,9 +14,10 @@
 #define UnMap(X) { if((X) != nullptr) (X)->Unmap(0, nullptr);  }
 
 // コンストラクタ
-Pmd::Pmd(std::weak_ptr<Device>dev, std::weak_ptr<Camera>cam, std::weak_ptr<Light>light, std::weak_ptr<Root>root, std::weak_ptr<Pipe>pipe) :
+Pmd::Pmd(std::weak_ptr<Device>dev, std::weak_ptr<Camera>cam, std::weak_ptr<Root>root, std::weak_ptr<Pipe>pipe, 
+	std::weak_ptr<Root>sRoot, std::weak_ptr<Pipe>sPipe) :
 	loader(PmdLoader::Get()), tex(TextureLoader::Get()), descMane(DescriptorMane::Get()), 
-	dev(dev), cam(cam), light(light), root(root), pipe(pipe), index(0)
+	dev(dev), cam(cam), root(root), pipe(pipe), sRoot(sRoot), sPipe(sPipe), index(0)
 {
 	data.clear();
 }
@@ -237,12 +237,126 @@ void Pmd::Bundle(const std::string & fileName, int * i)
 	data[i].list->GetList()->Close();
 }
 
+// 影用バンドルのセット
+void Pmd::ShadowBundle(const std::string & fileName, int * i)
+{
+	data[i].sList->Reset(pipe.lock()->Get());
+
+	data[i].sList->GetList()->SetGraphicsRootSignature(sRoot.lock()->Get());
+	data[i].sList->GetList()->SetPipelineState(sPipe.lock()->Get());
+
+	auto heap = descMane.GetHeap(*i);
+	auto handle = heap->GetGPUDescriptorHandleForHeapStart();
+	auto size = dev.lock()->Get()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	data[i].sList->GetList()->SetDescriptorHeaps(1, &heap);
+
+	//WVPのセット
+	handle.ptr = heap->GetGPUDescriptorHandleForHeapStart().ptr + (size * data[i].cRsc);
+	data[i].sList->GetList()->SetGraphicsRootDescriptorTable(4, handle);
+
+	//頂点のセット
+	D3D12_VERTEX_BUFFER_VIEW view{};
+	view.BufferLocation = descMane.GetRsc(loader.GetVertexRsc(fileName))->GetGPUVirtualAddress();
+	view.SizeInBytes = sizeof(pmd::Vertex) * loader.GetVertex(fileName).size();
+	view.StrideInBytes = sizeof(pmd::Vertex);
+	data[i].sList->GetList()->IASetVertexBuffers(0, 1, &view);
+
+	//インデックスのセット
+	D3D12_INDEX_BUFFER_VIEW iView{};
+	iView.BufferLocation = descMane.GetRsc(loader.GetIndexRsc(fileName))->GetGPUVirtualAddress();
+	iView.Format = DXGI_FORMAT::DXGI_FORMAT_R16_UINT;;
+	iView.SizeInBytes = sizeof(unsigned short) * loader.GetIndex(fileName).size();
+	data[i].sList->GetList()->IASetIndexBuffer(&iView);
+
+	data[i].sList->GetList()->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	//送信データ
+	unsigned __int8* d = data[i].materialData;
+	//オフセット
+	unsigned int offset = 0;
+	//テクスチャ番号
+	int texIndex = 0;
+	//加算テクスチャ番号
+	int spaIndex = 0;
+	//乗算テクスチャ番号
+	int sphIndex = 0;
+
+	handle.ptr = heap->GetGPUDescriptorHandleForHeapStart().ptr + (size * data[i].mRsc);
+	for (unsigned int n = 0; n < loader.GetMaterial(fileName).size(); ++n)
+	{
+		data[i].mat.diffuse = loader.GetMaterial(fileName)[n].diffuse;
+		data[i].mat.alpha = loader.GetMaterial(fileName)[n].alpha;
+		data[i].mat.specularity = loader.GetMaterial(fileName)[n].specularity;
+		data[i].mat.specula = loader.GetMaterial(fileName)[n].specula;
+		data[i].mat.mirror = loader.GetMaterial(fileName)[n].mirror;
+		data[i].mat.tex = false;
+		data[i].mat.spa = false;
+		data[i].mat.sph = false;
+
+		if (loader.GetTexture(fileName).find(n) != loader.GetTexture(fileName).end())
+		{
+			data[i].mat.tex = true;
+			auto texHandle = heap->GetGPUDescriptorHandleForHeapStart();
+			texHandle.ptr += size * texIndex;
+			data[i].sList->GetList()->SetGraphicsRootDescriptorTable(0, texHandle);
+		}
+		else
+		{
+			data[i].sList->GetList()->SetGraphicsRootDescriptorTable(0, heap->GetGPUDescriptorHandleForHeapStart());
+		}
+		if (loader.GetSpa(fileName).find(n) != loader.GetSpa(fileName).end())
+		{
+			data[i].mat.spa = true;
+			auto spaHandle = heap->GetGPUDescriptorHandleForHeapStart();
+			spaHandle.ptr += size * (loader.GetTexture(fileName).size() + spaIndex++);
+			data[i].sList->GetList()->SetGraphicsRootDescriptorTable(1, spaHandle);
+		}
+		else
+		{
+			data[i].sList->GetList()->SetGraphicsRootDescriptorTable(1, heap->GetGPUDescriptorHandleForHeapStart());
+		}
+		if (loader.GetSph(fileName).find(n) != loader.GetSph(fileName).end())
+		{
+			data[i].mat.sph = true;
+			auto sphHandle = heap->GetGPUDescriptorHandleForHeapStart();
+			sphHandle.ptr += size * (loader.GetTexture(fileName).size() + loader.GetSpa(fileName).size() + sphIndex++);
+			data[i].sList->GetList()->SetGraphicsRootDescriptorTable(2, sphHandle);
+		}
+		else
+		{
+			data[i].sList->GetList()->SetGraphicsRootDescriptorTable(2, heap->GetGPUDescriptorHandleForHeapStart());
+		}
+		if (loader.GetToon(fileName).find(n) != loader.GetToon(fileName).end())
+		{
+			auto toonHandle = heap->GetGPUDescriptorHandleForHeapStart();
+			toonHandle.ptr += size * (loader.GetTexture(fileName).size() + loader.GetSpa(fileName).size() + loader.GetSph(fileName).size() + loader.GetMaterial(fileName)[n].toonIndex);
+			data[i].sList->GetList()->SetGraphicsRootDescriptorTable(3, toonHandle);
+		}
+
+		memcpy(d, &data[i].mat, sizeof(pmd::Mat));
+
+		data[i].sList->GetList()->SetGraphicsRootDescriptorTable(5, handle);
+
+		data[i].sList->GetList()->DrawIndexedInstanced(loader.GetMaterial(fileName)[n].indexNum, 1, offset, 0, 0);
+
+		handle.ptr += size;
+
+		d = (unsigned __int8*)(((sizeof(pmd::Mat) + 0xff) &~0xff) + (char*)(d));
+
+		offset += loader.GetMaterial(fileName)[n].indexNum;
+	}
+
+	data[i].sList->GetList()->Close();
+}
+
 // 読み込み
 void Pmd::Load(const std::string & fileName, int & i)
 {
 	loader.Load(dev, fileName);
 
 	data[&i].list   = std::make_unique<List>(dev, D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_BUNDLE);
+	data[&i].sList  = std::make_unique<List>(dev, D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_BUNDLE);
 	data[&i].cRsc   = 0;
 
 	descMane.CreateHeap(dev, i, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
@@ -285,15 +399,17 @@ void Pmd::Load(const std::string & fileName, int & i)
 	Map(data[&i].mRsc, reinterpret_cast<void**>(&data[&i].materialData));
 
 	Bundle(fileName, &i);
+	ShadowBundle(fileName, &i);
 
 	DirectX::XMFLOAT4X4 tmp{};
 	DirectX::XMStoreFloat4x4(&tmp, DirectX::XMMatrixIdentity());
-	data[&i].wvp->world      = tmp;
-	data[&i].wvp->view       = cam.lock()->GetView();
-	data[&i].wvp->projection = cam.lock()->GetProjection();
-	data[&i].wvp->eyePos     = cam.lock()->GetEye();
-	data[&i].wvp->lightPos   = cam.lock()->GetLightPos();
-	data[&i].wvp->lightViewProje = cam.lock()->GetLightViewProje();
+	data[&i].wvp->world           = tmp;
+	data[&i].wvp->view            = cam.lock()->GetView();
+	data[&i].wvp->projection      = cam.lock()->GetProjection();
+	data[&i].wvp->lightView       = cam.lock()->GetLightView();
+	data[&i].wvp->lightProjection = cam.lock()->GetLightProjection();
+	data[&i].wvp->eyePos          = cam.lock()->GetEye();
+	data[&i].wvp->lightPos        = cam.lock()->GetLightPos();
 }
 
 // 回転
@@ -308,12 +424,25 @@ void Pmd::Rotate(int & i, const float & angle)
 // 描画
 void Pmd::Draw(std::weak_ptr<List>list, int & i)
 {
-	data[&i].wvp->view     = cam.lock()->GetView();
-	data[&i].wvp->eyePos   = cam.lock()->GetEye();
-	data[&i].wvp->lightPos = cam.lock()->GetLightPos();
-	data[&i].wvp->lightViewProje = cam.lock()->GetLightViewProje();
+	data[&i].wvp->view      = cam.lock()->GetView();
+	data[&i].wvp->lightView = cam.lock()->GetLightView();
+	data[&i].wvp->eyePos    = cam.lock()->GetEye();
+	data[&i].wvp->lightPos  = cam.lock()->GetLightPos();
 
 	auto heap = descMane.GetHeap(i);
 	list.lock()->GetList()->SetDescriptorHeaps(1, &heap);
 	list.lock()->GetList()->ExecuteBundle(data[&i].list->GetList());
+}
+
+// 影描画
+void Pmd::DrawShadow(std::weak_ptr<List> list, int & i)
+{
+	data[&i].wvp->view = cam.lock()->GetView();
+	data[&i].wvp->lightView = cam.lock()->GetLightView();
+	data[&i].wvp->eyePos = cam.lock()->GetEye();
+	data[&i].wvp->lightPos = cam.lock()->GetLightPos();
+
+	auto heap = descMane.GetHeap(i);
+	list.lock()->GetList()->SetDescriptorHeaps(1, &heap);
+	list.lock()->GetList()->ExecuteBundle(data[&i].sList->GetList());
 }

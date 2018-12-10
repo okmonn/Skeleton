@@ -115,14 +115,14 @@
     <Filter Include="Camera">
       <UniqueIdentifier>{d2c40864-be5e-4df2-8791-e6989368c9c8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Light">
-      <UniqueIdentifier>{6bedadc2-7f43-442c-9c89-8a78eec55b96}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MultiPass">
       <UniqueIdentifier>{925e02b0-fb2e-4251-ae92-3b634eecf726}</UniqueIdentifier>
     </Filter>
     <Filter Include="ShadowMap">
       <UniqueIdentifier>{e97e30e3-cb13-4a73-b5a0-231c193e03b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Primitive3D">
+      <UniqueIdentifier>{84eb5e44-43f1-4948-be4b-f59c6ab1b6af}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -225,14 +225,14 @@
     <ClCompile Include="Camera\Camera.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Light\Light.cpp">
-      <Filter>Light</Filter>
-    </ClCompile>
     <ClCompile Include="MultiPass\MultiPass.cpp">
       <Filter>MultiPass</Filter>
     </ClCompile>
     <ClCompile Include="ShadowMap\ShadowMap.cpp">
       <Filter>ShadowMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitive3D\Primitive3D.cpp">
+      <Filter>Primitive3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -353,14 +353,14 @@
     <ClInclude Include="Camera\Camera.h">
       <Filter>Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Light\Light.h">
-      <Filter>Light</Filter>
-    </ClInclude>
     <ClInclude Include="MultiPass\MultiPass.h">
       <Filter>MultiPass</Filter>
     </ClInclude>
     <ClInclude Include="ShadowMap\ShadowMap.h">
       <Filter>ShadowMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitive3D\Primitive3D.h">
+      <Filter>Primitive3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -382,6 +382,12 @@
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="Shader\MultiPass.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\Shadow.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\Primitive3D.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>

@@ -24,7 +24,7 @@ public:
 	void Set(std::weak_ptr<Depth>depth);
 
 	// 実行
-	void Execution(std::weak_ptr<Queue>queue, std::weak_ptr<Fence>fence);
+	void Execution(void);
 
 	// 描画
 	void Draw(std::weak_ptr<List>list, std::weak_ptr<Root>root, std::weak_ptr<Pipe>pipe, std::weak_ptr<ShadowMap>shadow);
@@ -61,8 +61,14 @@ private:
 	// デバイス
 	std::weak_ptr<Device>dev;
 
+	// キュー
+	std::shared_ptr<Queue>queue;
+
 	// リスト
 	std::weak_ptr<List>list;
+
+	// フェンス
+	std::unique_ptr<Fence>fence;
 
 	// レンダーヒープ
 	int rHeap;

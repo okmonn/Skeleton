@@ -13,12 +13,14 @@ class Camera
 		DirectX::XMFLOAT4X4 view;
 		//プロジェクション
 		DirectX::XMFLOAT4X4 projection;
+		//ライトビュー
+		DirectX::XMFLOAT4X4 lightView;
+		//ライトプロジェクション
+		DirectX::XMFLOAT4X4 lightProjection;
 		//視線座標
 		DirectX::XMFLOAT3 eye;
 		//ライト座標
 		DirectX::XMFLOAT3 lightPos;
-		//ライトビュープロジェクション
-		DirectX::XMFLOAT4X4 lightViewProje;
 	};
 
 public:
@@ -28,7 +30,8 @@ public:
 	~Camera();
 
 	// ビューの更新
-	void ChangeView(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& target, const DirectX::XMFLOAT3& up = { 0.0f, 1.0f, 0.0f });
+	void ChangeView(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& target, 
+		const DirectX::XMFLOAT3& up = { 0.0f, 1.0f, 0.0f }, const DirectX::XMFLOAT3& lightPos = { -10.0f, 10.0f, -10.0f });
 
 	// ビューの取得
 	DirectX::XMFLOAT4X4 GetView(void) const {
@@ -38,6 +41,14 @@ public:
 	DirectX::XMFLOAT4X4 GetProjection(void) const {
 		return vp.projection;
 	}
+	// ライトビューの取得
+	DirectX::XMFLOAT4X4 GetLightView(void) const {
+		return vp.lightView;
+	}
+	// ライトプロジェクションの取得
+	DirectX::XMFLOAT4X4 GetLightProjection(void) const {
+		return vp.lightProjection;
+	}
 	// 視線座標の取得
 	DirectX::XMFLOAT3 GetEye(void) const {
 		return vp.eye;
@@ -45,10 +56,6 @@ public:
 	// ライト座標の取得
 	DirectX::XMFLOAT3 GetLightPos(void) const {
 		return vp.lightPos;
-	}
-	// ライトビュープロジェクションの取得
-	DirectX::XMFLOAT4X4 GetLightViewProje(void) const {
-		return vp.lightViewProje;
 	}
 
 private:

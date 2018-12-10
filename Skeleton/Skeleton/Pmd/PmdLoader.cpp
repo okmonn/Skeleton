@@ -124,7 +124,7 @@ long PmdLoader::Map(int * i, T * data, const unsigned int & size, void ** rscDat
 	auto hr = descMane.GetRsc(*i)->Map(0, nullptr, rscData);
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nPMDの頂点リソースのマップ：失敗\n"));
+		OutputDebugString(_T("\nPMDのマップ：失敗\n"));
 		return hr;
 	}
 

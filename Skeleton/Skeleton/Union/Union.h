@@ -23,7 +23,6 @@ class Point;
 class Line;
 class Triangle;
 class Camera;
-class Light;
 class Pmd;
 
 class Union
@@ -70,6 +69,15 @@ public:
 
 	// PMDの描画
 	void DrawPmd(int& i);
+
+	// PMDの影描画
+	void DrawPmdShadow(int& i);
+
+	// 影情報のクリア
+	void ClearShadow(void);
+
+	// 影の実行
+	void ExecutionShadow(void);
 
 	// 画面クリア
 	void Clear(void);
@@ -151,9 +159,6 @@ private:
 
 	// カメラ
 	std::shared_ptr<Camera>cam;
-
-	// ライト
-	std::shared_ptr<Light>light;
 
 	// PMD
 	std::unique_ptr<Pmd>pmd;

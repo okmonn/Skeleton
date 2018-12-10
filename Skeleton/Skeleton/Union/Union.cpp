@@ -18,7 +18,6 @@
 #include "../Primitive/Line.h"
 #include "../Primitive/Triangle.h"
 #include "../Camera/Camera.h"
-#include "../Light/Light.h"
 #include "../Pmd/Pmd.h"
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -71,10 +70,12 @@ void Union::CreateRoot(const std::string & name, const std::tstring & fileName)
 // ルートシグネチャの生成
 void Union::CreateRoot(void)
 {
-	CreateRoot("multipass", L"Shader/MultiPass.hlsl");
-	CreateRoot("texture",   L"Shader/Texture.hlsl");
-	CreateRoot("primitive", L"Shader/Primitive.hlsl");
-	CreateRoot("model",     L"Shader/Model.hlsl");
+	CreateRoot("multipass",   L"Shader/MultiPass.hlsl");
+	CreateRoot("texture",     L"Shader/Texture.hlsl");
+	CreateRoot("primitive",   L"Shader/Primitive.hlsl");
+	CreateRoot("primitive3D", L"Shader/Primitive3D.hlsl");
+	CreateRoot("model",       L"Shader/Model.hlsl");
+	CreateRoot("shadow",      L"Shader/Shadow.hlsl");
 }
 
 // パイプラインの生成
@@ -93,12 +94,14 @@ void Union::CreatePipe(const std::string & name, const std::string & rootName, c
 // パイプラインの生成
 void Union::CreatePipe(void)
 {
-	CreatePipe("multipass", "multipass", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 2 }, false);
-	CreatePipe("texture",  "texture",   D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 2 },    false);
-	CreatePipe("point",    "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT,    { 0, 3 },    false);
-	CreatePipe("line",     "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE,     { 0, 3 },    false);
-	CreatePipe("triangle", "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 3 },    false);
-	CreatePipe("model",    "model",     D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 1, 2 }, true);
+	CreatePipe("multipass",  "multipass",   D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 2 },    false);
+	CreatePipe("texture",    "texture",     D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 2 },    false);
+	CreatePipe("point",      "primitive",   D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT,    { 0, 3 },    false);
+	CreatePipe("line",       "primitive",   D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE,     { 0, 3 },    false);
+	CreatePipe("triangle",   "primitive",   D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 3 },    false);
+	CreatePipe("triangle3D", "primitive3D", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 2, 3 }, false);
+	CreatePipe("model",      "model",       D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 1, 2 }, true);
+	CreatePipe("shadow",     "shadow",      D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 1, 2 }, true);
 }
 
 // クラスの生成
@@ -120,9 +123,8 @@ void Union::Create(void)
 
 	cam = std::make_shared<Camera>(win, dev);
 	cam->ChangeView({ 0.0f, 10.0f, -15.0f }, {0.0f, 10.0f, 0.0f});
-	light = std::make_shared<Light>();
 	tex = std::make_unique<Texture>(win, dev, root.Get(rootNo["texture"]), pipe.Get(pipeNo["texture"]));
-	pmd = std::make_unique<Pmd>(dev, cam, light, root.Get(rootNo["model"]), pipe.Get(pipeNo["model"]));
+	pmd = std::make_unique<Pmd>(dev, cam, root.Get(rootNo["model"]), pipe.Get(pipeNo["model"]), root.Get(rootNo["shadow"]), pipe.Get(pipeNo["shadow"]));
 }
 
 // 画像の読み込み
@@ -199,6 +201,24 @@ void Union::DrawPmd(int & i)
 	pmd->Draw(list, i);
 }
 
+// PMDの影描画
+void Union::DrawPmdShadow(int & i)
+{
+	pmd->DrawShadow(list, i);
+}
+
+// 影情報のクリア
+void Union::ClearShadow(void)
+{
+	shadow->Set();
+}
+
+// 影の実行
+void Union::ExecutionShadow(void)
+{
+	shadow->Execution();
+}
+
 // 画面クリア
 void Union::Clear(void)
 {
@@ -213,13 +233,13 @@ void Union::Clear(void)
 	ren->Clear(list, depth->GetHeap());*/
 
 
-	shadow->Set();
+	multi->Set(depth);
 }
 
 // 実行
 void Union::Execution(void)
 {
-	shadow->Execution(queue, fence);
+	multi->Execution();
 
 	list->Reset();
 

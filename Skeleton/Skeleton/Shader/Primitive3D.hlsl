@@ -2,7 +2,7 @@
 #define RS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
                     "DescriptorTable(SRV(t0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
                                     "visibility = SHADER_VISIBILITY_ALL),"\
-                    "DescriptorTable(SRV(t1, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
+                    "DescriptorTable(CBV(b0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
                                     "visibility = SHADER_VISIBILITY_ALL),"\
                     "StaticSampler(s0, "\
                                   "filter         = FILTER_MIN_MAG_MIP_LINEAR, "\
@@ -18,15 +18,23 @@
                                   "space          = 0, "\
                                   "visibility     = SHADER_VISIBILITY_ALL)"
 
-Texture2D<float4> tex : register(t0);
-Texture2D<float> depth : register(t1);
-SamplerState smp      : register(s0);
+Texture2D<float> depth : register(t0);
+SamplerState smp       : register(s0);
+
+// 情報
+cbuffer Info : register(b0)
+{
+    float4x4 world;
+    float4x4 view;
+    float4x4 projection;
+}
 
 // 入力
 struct Input
 {
-    float4 pos : POSITION;
-    float2 uv  : TEXCOORD;
+    float4 pos   : POSITION;
+    float2 uv    : TEXCOORD;
+    float4 color : COLOR;
 };
 
 // 出力
@@ -35,6 +43,7 @@ struct Out
     float4 svpos : SV_POSITION;
     float4 pos   : POSITION;
     float2 uv    : TEXCOORD;
+    float4 color : COLOR;
 };
 
 // 頂点シェーダ
@@ -42,9 +51,14 @@ struct Out
 Out VS(Input input)
 {
     Out o;
-    o.svpos = input.pos;
     o.pos   = input.pos;
     o.uv    = input.uv;
+    o.color = input.color;
+
+    input.pos = mul(world, input.pos);
+    input.pos = mul(view, input.pos);
+    input.pos = mul(projection, input.pos);
+    o.svpos = input.pos;
 
     return o;
 }
@@ -52,6 +66,10 @@ Out VS(Input input)
 // ピクセルシェーダ
 float4 PS(Out o) : SV_TARGET
 {
-    //return depth.Sample(smp, o.uv);
-    return tex.Sample(smp, o.uv);
+    if (o.color.w <= 0.0f)
+    {
+        discard;
+    }
+
+    return float4(o.color);
 }

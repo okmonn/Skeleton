@@ -104,6 +104,12 @@ bool Application::InputKey(const int & i)
 // •`‰æ
 void Application::Draw(void)
 {
+	un->ClearShadow();
+
+	un->DrawPmdShadow(n);
+
+	un->ExecutionShadow();
+
 	un->Clear();
 	static float angle = 0.0f;
 	static float target = 10.0f;

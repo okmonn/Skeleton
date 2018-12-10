@@ -9,8 +9,11 @@
 
 // コンストラクタ
 ShadowMap::ShadowMap(std::weak_ptr<Window>win, std::weak_ptr<Device>dev, std::weak_ptr<List>list) :
-	descMane(DescriptorMane::Get()), win(win), dev(dev), list(list), dHeap(0), sHeap(0), rsc(0)
+	descMane(DescriptorMane::Get()), win(win), dev(dev), queue(queue), list(list), dHeap(0), sHeap(0), rsc(0)
 {
+	queue = std::make_shared<Queue>(dev);
+	fence = std::make_unique<Fence>(dev, queue);
+
 	Init();
 }
 
@@ -97,8 +100,8 @@ void ShadowMap::Set(void)
 {
 	list.lock()->Reset();
 
-	list.lock()->SetView(descMane.GetRsc(rsc)->GetDesc().Width, descMane.GetRsc(rsc)->GetDesc().Height);
-	list.lock()->SetScissor(descMane.GetRsc(rsc)->GetDesc().Width, descMane.GetRsc(rsc)->GetDesc().Height);
+	list.lock()->SetView((unsigned int)descMane.GetRsc(rsc)->GetDesc().Width, descMane.GetRsc(rsc)->GetDesc().Height);
+	list.lock()->SetScissor((unsigned int)descMane.GetRsc(rsc)->GetDesc().Width, descMane.GetRsc(rsc)->GetDesc().Height);
 
 	list.lock()->SetBarrier(D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_DEPTH_WRITE,
 		descMane.GetRsc(rsc));
@@ -108,7 +111,7 @@ void ShadowMap::Set(void)
 }
 
 // 描画実行
-void ShadowMap::Execution(std::weak_ptr<Queue> queue, std::weak_ptr<Fence> fence)
+void ShadowMap::Execution(void)
 {
 	list.lock()->SetBarrier(D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PRESENT,
 		descMane.GetRsc(rsc));
@@ -119,7 +122,7 @@ void ShadowMap::Execution(std::weak_ptr<Queue> queue, std::weak_ptr<Fence> fence
 	ID3D12CommandList* ppCmdLists[] = {
 		list.lock()->GetList(),
 	};
-	queue.lock()->Get()->ExecuteCommandLists(_countof(ppCmdLists), ppCmdLists);
+	queue->Get()->ExecuteCommandLists(_countof(ppCmdLists), ppCmdLists);
 
-	fence.lock()->Wait();
+	fence->Wait();
 }

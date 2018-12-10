@@ -25,6 +25,9 @@ struct Vertex {
 MultiPass::MultiPass(std::weak_ptr<Window>win, std::weak_ptr<Device>dev, std::weak_ptr<List>list) :
 	descMane(DescriptorMane::Get()), win(win), dev(dev), list(list), rHeap(0), sHeap(0), rsc(0), vRsc(0)
 {
+	queue = std::make_shared<Queue>(dev);
+	fence = std::make_unique<Fence>(dev, queue);
+
 	Init();
 }
 
@@ -182,7 +185,7 @@ void MultiPass::Set(std::weak_ptr<Depth> depth)
 }
 
 // é¿çs
-void MultiPass::Execution(std::weak_ptr<Queue> queue, std::weak_ptr<Fence> fence)
+void MultiPass::Execution(void)
 {
 	list.lock()->SetBarrier(D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PRESENT,
 		descMane.GetRsc(rsc));
@@ -193,9 +196,9 @@ void MultiPass::Execution(std::weak_ptr<Queue> queue, std::weak_ptr<Fence> fence
 	ID3D12CommandList* ppCmdLists[] = {
 		list.lock()->GetList(),
 	};
-	queue.lock()->Get()->ExecuteCommandLists(_countof(ppCmdLists), ppCmdLists);
+	queue->Get()->ExecuteCommandLists(_countof(ppCmdLists), ppCmdLists);
 
-	fence.lock()->Wait();
+	fence->Wait();
 }
 
 // ï`âÊ

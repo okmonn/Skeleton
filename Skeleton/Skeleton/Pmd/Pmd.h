@@ -10,7 +10,6 @@ class DescriptorMane;
 class Device;
 class List;
 class Camera;
-class Light;
 class Root;
 class Pipe;
 
@@ -20,15 +19,17 @@ class Pmd
 		DirectX::XMFLOAT4X4 world;
 		DirectX::XMFLOAT4X4 view;
 		DirectX::XMFLOAT4X4 projection;
+		DirectX::XMFLOAT4X4 lightView;
+		DirectX::XMFLOAT4X4 lightProjection;
 		DirectX::XMFLOAT3 eyePos;
 		DirectX::XMFLOAT3 lightPos;
-		DirectX::XMFLOAT4X4 lightViewProje;
 	};
 
 	// データ
 	struct Data {
 		//バンドル用リスト
 		std::unique_ptr<List>list;
+		std::unique_ptr<List>sList;
 
 		//WVP用リソース
 		int cRsc;
@@ -42,7 +43,8 @@ class Pmd
 
 public:
 	// コンストラクタ
-	Pmd(std::weak_ptr<Device>dev, std::weak_ptr<Camera>cam, std::weak_ptr<Light>light, std::weak_ptr<Root>root, std::weak_ptr<Pipe>pipe);
+	Pmd(std::weak_ptr<Device>dev, std::weak_ptr<Camera>cam, std::weak_ptr<Root>root, std::weak_ptr<Pipe>pipe,
+		std::weak_ptr<Root>sRoot, std::weak_ptr<Pipe>sPipe);
 	// デストラクタ
 	~Pmd();
 
@@ -54,6 +56,9 @@ public:
 	
 	// 描画
 	void Draw(std::weak_ptr<List>list, int& i);
+
+	// 影描画
+	void DrawShadow(std::weak_ptr<List>list, int& i);
 
 private:
 	// シェーダービューの生成
@@ -74,6 +79,9 @@ private:
 	// バンドルのセット
 	void Bundle(const std::string& fileName, int* i);
 
+	// 影用バンドルのセット
+	void ShadowBundle(const std::string& fileName, int* i);
+
 
 	// PMDローダー
 	PmdLoader& loader;
@@ -90,14 +98,17 @@ private:
 	// カメラ
 	std::weak_ptr<Camera>cam;
 
-	// ライト
-	std::weak_ptr<Light>light;
-
 	// ルート
 	std::weak_ptr<Root>root;
 
 	// パイプ
 	std::weak_ptr<Pipe>pipe;
+
+	// 影用ルート
+	std::weak_ptr<Root>sRoot;
+
+	// 影用パイプ
+	std::weak_ptr<Pipe>sPipe;
 
 	// リソース作成番号
 	int index;

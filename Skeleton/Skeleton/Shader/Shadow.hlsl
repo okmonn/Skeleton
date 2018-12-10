@@ -29,8 +29,8 @@
 Texture2D<float4> tex : register(t0);
 Texture2D<float4> spa : register(t1);
 Texture2D<float4> sph : register(t2);
-Texture2D<float4> toon: register(t3);
-SamplerState smp      : register(s0);
+Texture2D<float4> toon : register(t3);
+SamplerState smp : register(s0);
 
 cbuffer WVP : register(b0)
 {
@@ -58,18 +58,18 @@ cbuffer Mat : register(b1)
 // 入力
 struct Input
 {
-    float4 pos    : POSITION;
+    float4 pos : POSITION;
     float4 normal : NORMAL;
-    float2 uv     : TEXCOORD;
+    float2 uv : TEXCOORD;
 };
 
 // 出力
 struct Out
 {
-    float4 svpos  : SV_POSITION;
-    float4 pos    : POSITION;
+    float4 svpos : SV_POSITION;
+    float4 pos : POSITION;
     float4 normal : NORMAL;
-    float2 uv     : TEXCOORD;
+    float2 uv : TEXCOORD;
 };
 
 // 頂点シェーダ
@@ -77,10 +77,10 @@ struct Out
 Out VS(Input input)
 {
     Out o;
-    o.svpos  = input.pos;
-    o.pos    = input.pos;
+    o.svpos = input.pos;
+    o.pos = input.pos;
     o.normal = input.normal;
-    o.uv     = input.uv;
+    o.uv = input.uv;
 
     return o;
 }
@@ -100,13 +100,13 @@ void GS(triangle Out vertex[3], inout TriangleStream<Out> stream)
             pos.x += 10.0f * i;
 
             Out o;
-            o.pos    = pos;
+            o.pos = pos;
             o.normal = mul(world, vertex[n].normal);
-            o.uv     = vertex[n].uv;
+            o.uv = vertex[n].uv;
 
             pos = mul(world, pos);
-            pos = mul(view, pos);
-            pos = mul(projection, pos);
+            pos = mul(lightView, pos);
+            pos = mul(lightProjection, pos);
             o.svpos = pos;
 
             stream.Append(o);
