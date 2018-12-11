@@ -83,7 +83,7 @@ float4 PS(Out o) : SV_TARGET
     float bright = 1.0f;
     if (o.lightPos.z > depth.Sample(smp, uv) + EPSILON)
     {
-        bright *= 0.7f;
+        bright *= 0.0f;
     }
 
     return float4(o.color.rgb * bright, o.color.a);

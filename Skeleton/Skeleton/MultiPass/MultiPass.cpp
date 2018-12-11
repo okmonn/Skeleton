@@ -1,4 +1,5 @@
 #include "MultiPass.h"
+#include "../Texture/TextureLoader.h"
 #include "../DescriptorMane/DescriptorMane.h"
 #include "../Window/Window.h"
 #include "../Device/Device.h"
@@ -23,7 +24,7 @@ struct Vertex {
 
 // コンストラクタ
 MultiPass::MultiPass(std::weak_ptr<Window>win, std::weak_ptr<Device>dev, std::weak_ptr<List>list) :
-	descMane(DescriptorMane::Get()), win(win), dev(dev), list(list), rHeap(0), sHeap(0), rsc(0), vRsc(0)
+	tex(TextureLoader::Get()), descMane(DescriptorMane::Get()), win(win), dev(dev), list(list), rHeap(0), sHeap(0), rsc(0), vRsc(0)
 {
 	queue = std::make_shared<Queue>(dev);
 	fence = std::make_unique<Fence>(dev, queue);
@@ -216,8 +217,10 @@ void MultiPass::Draw(std::weak_ptr<List> list, std::weak_ptr<Root> root, std::we
 	list.lock()->GetList()->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	auto heap = descMane.GetHeap(sHeap);
+	auto handle = heap->GetGPUDescriptorHandleForHeapStart();
 	list.lock()->GetList()->SetDescriptorHeaps(1, &heap);
-	list.lock()->GetList()->SetGraphicsRootDescriptorTable(0, heap->GetGPUDescriptorHandleForHeapStart());
+	list.lock()->GetList()->SetGraphicsRootDescriptorTable(0, handle);
+
 	heap = descMane.GetHeap(shadow.lock()->GetShaderHeap());
 	list.lock()->GetList()->SetDescriptorHeaps(1, &heap);
 	list.lock()->GetList()->SetGraphicsRootDescriptorTable(1, heap->GetGPUDescriptorHandleForHeapStart());

@@ -36,7 +36,7 @@ void Application::Create(void)
 	sound->Load("animal.wav");
 	sound->Play(true);
 
-	un->LoadPmd("model/初音ミク.pmd", n);
+	un->LoadPmd("model/巡音ルカ.pmd", n);
 	un->Attach("ヤゴコロダンス.vmd", n);
 }
 
@@ -105,6 +105,8 @@ bool Application::InputKey(const int & i)
 // 描画
 void Application::Draw(void)
 {
+	un->Animation(n, true, 0.5f);
+
 	un->ClearShadow();
 
 	un->DrawPmdShadow(n);
@@ -141,6 +143,4 @@ void Application::Draw(void)
 	un->DrawPmd(n);
 
 	un->Execution();
-
-	un->Animation(n);
 }

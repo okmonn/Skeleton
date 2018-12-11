@@ -542,38 +542,42 @@ void Pmd::Animation(int & i, const bool & loop, const float & animSpeed)
 {
 	std::fill(data[&i].mtx.begin(), data[&i].mtx.end(), DirectX::XMMatrixIdentity());
 
+	DirectX::XMVECTOR nowVec{};
+	float nowFlam = 0.0f;
+	DirectX::XMVECTOR nexVec{};
+	float nexFlam = 0.0f;
+
+	float time = 0.0f;
+	DirectX::XMMATRIX trans;
+
 	for(auto itr = data[&i].motion.lock()->begin(); itr != data[&i].motion.lock()->end(); ++itr)
 	{
-		auto& key = itr->second;
-
-		auto now = std::find_if(key.rbegin(), key.rend(),
-			[&](const vmd::Motion& m) {return m.flam <= (unsigned long)data[&i].flam; });
-		if (now == key.rend())
+		auto now = std::find_if(itr->second.rbegin(), itr->second.rend(),
+			[&](const vmd::Motion& m) {return m.flam <= static_cast<unsigned long>(data[&i].flam); });
+		if (now == itr->second.rend())
 		{
 			continue;
 		}
-		auto nowVec = DirectX::XMLoadFloat4(&now->rotation);
-		float nowFlam = (float)now->flam;
+		nowVec  = DirectX::XMLoadFloat4(&now->rotation);
+		nowFlam = static_cast<float>(now->flam);
 
-
-		auto next = now.base();
-		if (next == key.end())
+		if (now.base() == itr->second.end())
 		{
 			RotateBorn(&i, itr->first, DirectX::XMMatrixRotationQuaternion(nowVec));
 		}
 		else
 		{
-			auto nextVec = DirectX::XMLoadFloat4(&next->rotation);
-			float nextFlam = (float)next->flam;
-			float time = (data[&i].flam - nowFlam) / (nextFlam - nowFlam);
+			nexVec  = DirectX::XMLoadFloat4(&now.base()->rotation);
+			nexFlam = static_cast<float>(now.base()->flam);
 
-			time = func::Newton(time, next->a.x, next->a.y, next->b.x, next->b.y);
+			time = func::Newton((data[&i].flam - nowFlam) / (nexFlam - nowFlam), 
+				now.base()->a.x, now.base()->a.y, now.base()->b.x, now.base()->b.y);
 
-			auto trans = (DirectX::XMMatrixTranslation(now->pos.x, now->pos.y, now->pos.z) * (1.0f - time))
-				+ (DirectX::XMMatrixTranslation(next->pos.x, next->pos.y, next->pos.z) * time);
+			trans = (DirectX::XMMatrixTranslation(now->pos.x, now->pos.y, now->pos.z) * (1.0f - time))
+				+ (DirectX::XMMatrixTranslation(now.base()->pos.x, now.base()->pos.y, now.base()->pos.z) * time);
 
 			RotateBorn(&i, itr->first, DirectX::XMMatrixRotationQuaternion(
-				DirectX::XMQuaternionSlerp(nowVec, nextVec, time)) * trans);
+				DirectX::XMQuaternionSlerp(nowVec, nexVec, time)) * trans);
 		}
 	}
 

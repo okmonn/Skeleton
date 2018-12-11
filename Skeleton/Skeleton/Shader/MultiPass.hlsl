@@ -18,9 +18,9 @@
                                   "space          = 0, "\
                                   "visibility     = SHADER_VISIBILITY_ALL)"
 
-Texture2D<float4> tex : register(t0);
+Texture2D<float4> tex  : register(t0);
 Texture2D<float> depth : register(t1);
-SamplerState smp      : register(s0);
+SamplerState smp       : register(s0);
 
 // 入力
 struct Input
@@ -52,6 +52,26 @@ Out VS(Input input)
 // ピクセルシェーダ
 float4 PS(Out o) : SV_TARGET
 {
-    //return depth.Sample(smp, o.uv);
-    return tex.Sample(smp, o.uv);
+    float2 size;
+    tex.GetDimensions(size.x, size.y);
+    //隣接するピクセル
+    float2 adjacent = float2(1.0f / size.x, 1.0f / size.y);
+    float4 ret = 0.0f;
+
+    //上
+    ret += tex.Sample(smp, o.uv + float2(-2.0f * adjacent.x, 2.0f * adjacent.y)) / 9.0f;
+    ret += tex.Sample(smp, o.uv + float2( 2.0f * adjacent.x, 2.0f * adjacent.y)) / 9.0f;
+    ret += tex.Sample(smp, o.uv + float2( 0.0f * adjacent.x, 2.0f * adjacent.y)) / 9.0f;
+    //真ん中
+    ret += tex.Sample(smp, o.uv + float2(-2.0f * adjacent.x, 0.0f * adjacent.y)) / 9.0f;
+    ret += tex.Sample(smp, o.uv + float2( 0.0f * adjacent.x, 0.0f * adjacent.y)) / 9.0f;
+    ret += tex.Sample(smp, o.uv + float2( 2.0f * adjacent.x, 0.0f * adjacent.y)) / 9.0f;
+    //下
+    ret += tex.Sample(smp, o.uv + float2(-2.0f * adjacent.x, -2.0f * adjacent.y)) / 9.0f;
+    ret += tex.Sample(smp, o.uv + float2( 2.0f * adjacent.x, -2.0f * adjacent.y)) / 9.0f;
+    ret += tex.Sample(smp, o.uv + float2( 0.0f * adjacent.x, -2.0f * adjacent.y)) / 9.0f;
+
+    float4 test = tex.Sample(smp, o.uv) + ret;
+
+    return tex.Sample(smp, o.uv) * test;
 }

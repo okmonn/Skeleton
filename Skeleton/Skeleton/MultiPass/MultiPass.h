@@ -1,6 +1,8 @@
 #pragma once
+#include <string>
 #include <memory>
 
+class TextureLoader;
 class DescriptorMane;
 class Window;
 class Device;
@@ -51,6 +53,9 @@ private:
 	// レンダーターゲットのクリア
 	void Clear(std::weak_ptr<Depth> depth);
 
+
+	// テクスチャローダー
+	TextureLoader& tex;
 
 	// ディスクリプタマネージャー
 	DescriptorMane& descMane;
