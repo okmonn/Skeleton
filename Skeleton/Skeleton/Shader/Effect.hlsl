@@ -52,27 +52,17 @@ RWStructuredBuffer<float> real : register(u1);
 // ディレイ
 void Delay(uint index)
 {
-    //real[index] = origin[index];
-    //uint2 size;
-    //origin.GetDimensions(size.x, size.y);
-
-    //uint num = size.x * waveIndex + index;
-
-    //for (int i = 1; i <= 10; ++i)
-    //{
-    //    int m = (int) (num - i * (sample * 0.05f));
-
-    //    real[index] += (m >= 0) ? pow(0.75f, i) * origin[index] : 0.0f;
-    //}
-
     real[index] = 0.0f;
+
+    uint2 size;
+    origin.GetDimensions(size.x, size.y);
 
     //減衰率
     float amplitude = 0.5f;
     //遅延時間
-    int delayTime = 441;
+    int delayTime = size.x * 0.05f;
     //ループ回数
-    int loop = 10;
+    int loop = 20;
 
     for (int i = 1; i <= loop; ++i)
     {
@@ -87,10 +77,33 @@ void Delay(uint index)
     {
         real[index] = 1.0f;
     }
+    else if(real[index] < -1.0f)
+    {
+        real[index] = -1.0f;
+    }
 }
 
 // ディストーション
 void Distortion(uint index)
+{
+    //増幅率
+    float gain = 5.0f;
+    //音量レベル
+    float level = 0.7f;
+
+    real[index] = origin[index] * gain;
+    if(real[index] > 1.0f)
+    {
+        real[index] = 1.0f;
+    }
+    else if(real[index] < -1.0f)
+    {
+        real[index] = -1.0f;
+    }
+}
+
+// オーバードライブ
+void OverDrive(uint index)
 {
     //増幅率
     float gain = 2.0f;
@@ -100,11 +113,11 @@ void Distortion(uint index)
     real[index] = origin[index] * gain;
     
     //クリッピング
-    if(real[index] >= 0.0f)
+    if (real[index] >= 0.0f)
     {
         real[index] = atan(real[index]) / (PI / 2.0f);
     }
-    else if(real[index] < -0.0f)
+    else if (real[index] < -0.0f)
     {
         real[index] = atan(real[index]) / (PI / 2.0f) * 0.1f;
     }
@@ -313,6 +326,7 @@ void CS(uint3 gID : SV_GroupID, uint3 gtID : SV_GroupThreadID, uint3 disID : SV_
     }
     else
     {
+        //Distortion(gID.x);
         //Delay(gID.x);
         real[gID.x] = origin[gID.x];
     }

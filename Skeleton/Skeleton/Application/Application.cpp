@@ -33,7 +33,7 @@ void Application::Create(void)
 	th = std::thread(&Application::Test, this);
 
 	sound = std::make_shared<Sound>(effector);
-	sound->Load("animal.wav");
+	sound->Load("mtgx.wav");
 	sound->Play(true);
 
 	un->LoadPmd("model/„‰¹ƒ‹ƒJ.pmd", n);
