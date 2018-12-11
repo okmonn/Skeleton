@@ -103,7 +103,7 @@ void Union::CreatePipe(void)
 	CreatePipe("triangle",   "primitive",   D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 3 },    false);
 	CreatePipe("plane",      "primitive3D", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 2, 3 }, false);
 	CreatePipe("model",      "model",       D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 1, 2, 5, 6 }, true);
-	CreatePipe("shadow",     "shadow",      D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 1, 2 }, true);
+	CreatePipe("shadow",     "shadow",      D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 1, 2, 5, 6 }, true);
 }
 
 // クラスの生成
@@ -216,6 +216,18 @@ void Union::DrawPmd(int & i)
 void Union::DrawPmdShadow(int & i)
 {
 	pmd->DrawShadow(list, i);
+}
+
+// モーションの適応
+void Union::Attach(const std::string & fileName, int & i)
+{
+	pmd->Attach(fileName, i);
+}
+
+// アニメーション
+void Union::Animation(int & i, const bool & loop, const float & animSpeed)
+{
+	pmd->Animation(i, loop, animSpeed);
 }
 
 // 影情報のクリア

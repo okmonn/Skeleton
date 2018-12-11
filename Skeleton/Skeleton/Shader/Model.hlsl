@@ -65,21 +65,21 @@ cbuffer Born : register(b2)
 // 入力
 struct Input
 {
-    float4 pos    : POSITION;
-    float4 normal : NORMAL;
-    float2 uv     : TEXCOORD;
-    min16uint2 born : BORN;
+    float4 pos       : POSITION;
+    float4 normal    : NORMAL;
+    float2 uv        : TEXCOORD;
+    min16uint2 born  : BORN;
     min16uint weight : WEIGHT;
 };
 
 // 出力
 struct Out
 {
-    float4 svpos  : SV_POSITION;
-    float4 pos    : POSITION;
-    float4 normal : NORMAL;
-    float2 uv     : TEXCOORD;
-    min16uint2 born : BORN;
+    float4 svpos     : SV_POSITION;
+    float4 pos       : POSITION;
+    float4 normal    : NORMAL;
+    float2 uv        : TEXCOORD;
+    min16uint2 born  : BORN;
     min16uint weight : WEIGHT;
 };
 
@@ -121,8 +121,20 @@ void GS(triangle Out vertex[3], inout TriangleStream<Out> stream)
 
             float w = o.weight / 100.0f;
             matrix m = mtx[o.born.x] * w + mtx[o.born.y] * (1.0f - w);
+            //原点に平行移動
+            matrix vec1 = float4x4(1.0f, 0.0f, 0.0f, vertex[n].pos.x - pos.x,
+                                   0.0f, 1.0f, 0.0f, vertex[n].pos.y - pos.y,
+                                   0.0f, 0.0f, 1.0f, vertex[n].pos.z - pos.z,
+                                   0.0f, 0.0f, 0.0f, 1.0f);
+            //指定位置に平行移動
+            matrix vec2 = float4x4(1.0f, 0.0f, 0.0f, pos.x - vertex[n].pos.x, 
+                                   0.0f, 1.0f, 0.0f, pos.y - vertex[n].pos.y, 
+                                   0.0f, 0.0f, 1.0f, pos.z - vertex[n].pos.z, 
+                                   0.0f, 0.0f, 0.0f, 1.0f);
 
+            pos = mul(vec1, pos);
             pos = mul(m, pos);
+            pos = mul(vec2, pos);
             pos = mul(world, pos);
             pos = mul(view, pos);
             pos = mul(projection, pos);

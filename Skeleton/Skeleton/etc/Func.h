@@ -11,4 +11,7 @@ namespace func
 
 	// 文字列の検索
 	std::string FindString(const std::string& path, const char& find, const unsigned int& offset = 1, const bool& end = true);
+
+	// ニュートン法
+	float Newton(const float& input, const float& pos1X, const float& pos1Y, const float& pos2X, const float& pos2Y, const unsigned int& loop = 16);
 }

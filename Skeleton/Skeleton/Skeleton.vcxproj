@@ -201,6 +201,7 @@
     <ClInclude Include="Texture\WICTextureLoader12.h" />
     <ClInclude Include="Union\Union.h" />
     <ClInclude Include="Vmd\Vmd.h" />
+    <ClInclude Include="Vmd\VmdData.h" />
     <ClInclude Include="Window\Icon.h" />
     <ClInclude Include="Window\Window.h" />
   </ItemGroup>

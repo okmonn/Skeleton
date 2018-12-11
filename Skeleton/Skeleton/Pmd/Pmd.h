@@ -1,11 +1,14 @@
 #pragma once
 #include "PmdData.h"
+#include "../Vmd/VmdData.h"
+#include <map>
 #include <string>
 #include <memory>
 #include <unordered_map>
 
 class PmdLoader;
 class TextureLoader;
+class Vmd;
 class DescriptorMane;
 class Device;
 class List;
@@ -27,6 +30,9 @@ class Pmd
 
 	// データ
 	struct Data {
+		//モデルファイル名
+		std::string model;
+
 		//バンドル用リスト
 		std::unique_ptr<List>list;
 		std::unique_ptr<List>sList;
@@ -44,6 +50,11 @@ class Pmd
 		int mRsc;
 		pmd::Mat mat;
 		unsigned __int8* materialData;
+
+		//モーション
+		std::weak_ptr<std::map<std::string, std::vector<vmd::Motion>>>motion;
+		float flam;
+		float animTime;
 	};
 
 public:
@@ -56,6 +67,9 @@ public:
 	// 読み込み
 	void Load(const std::string& fileName, int& i);
 
+	// モーションの適応
+	void Attach(const std::string& fileName, int& i);
+
 	// 回転
 	void Rotate(int& i, const float& angle);
 	
@@ -64,6 +78,15 @@ public:
 
 	// 影描画
 	void DrawShadow(std::weak_ptr<List>list, int& i);
+
+	// アニメーション
+	void Animation(int& i, const bool& loop, const float& animSpeed);
+
+	// アニメーション終了確認
+	bool CheckAnimEnd(int& i);
+
+	// モデルの削除
+	void Delete(int& i);
 
 private:
 	// シェーダービューの生成
@@ -87,7 +110,14 @@ private:
 	// 影用バンドルのセット
 	void ShadowBundle(const std::string& fileName, int* i);
 
-	// 
+	// ボーンの回転
+	void RotateBorn(int* i, const std::string& name, const DirectX::XMMATRIX& mtx);
+
+	// ボーンの再帰処理
+	void RecursiveBorn(int* i, pmd::BornNode& node, const DirectX::XMMATRIX& mtx);
+
+	// アニメーションのリセット
+	void ResetAnim(int* i);
 
 
 	// PMDローダー
@@ -95,6 +125,9 @@ private:
 
 	// テクスチャローダー
 	TextureLoader& tex;
+
+	// VMD
+	Vmd& motion;
 
 	// ディスクリプターマネージャー
 	DescriptorMane& descMane;

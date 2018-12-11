@@ -1,6 +1,7 @@
 #include "Pmd.h"
 #include "PmdLoader.h"
 #include "../Texture/TextureLoader.h"
+#include "../Vmd/Vmd.h"
 #include "../DescriptorMane/DescriptorMane.h"
 #include "../Device/Device.h"
 #include "../List/List.h"
@@ -9,6 +10,7 @@
 #include "../Pipe/Pipe.h"
 #include "../etc/Release.h"
 #include "../etc/Func.h"
+#include <algorithm>
 
 // アンマップ
 #define UnMap(X) { if((X) != nullptr) (X)->Unmap(0, nullptr);  }
@@ -16,7 +18,7 @@
 // コンストラクタ
 Pmd::Pmd(std::weak_ptr<Device>dev, std::weak_ptr<Camera>cam, std::weak_ptr<Root>root, std::weak_ptr<Pipe>pipe, 
 	std::weak_ptr<Root>sRoot, std::weak_ptr<Pipe>sPipe) :
-	loader(PmdLoader::Get()), tex(TextureLoader::Get()), descMane(DescriptorMane::Get()), 
+	loader(PmdLoader::Get()), tex(TextureLoader::Get()), motion(Vmd::Get()), descMane(DescriptorMane::Get()), 
 	dev(dev), cam(cam), root(root), pipe(pipe), sRoot(sRoot), sPipe(sPipe), index(0)
 {
 	data.clear();
@@ -365,10 +367,11 @@ void Pmd::Load(const std::string & fileName, int & i)
 {
 	loader.Load(dev, fileName);
 
+	data[&i].model  = fileName;
 	data[&i].list   = std::make_unique<List>(dev, D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_BUNDLE);
 	data[&i].sList  = std::make_unique<List>(dev, D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_BUNDLE);
 	data[&i].cRsc   = 0;
-
+	
 	descMane.CreateHeap(dev, i, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
 		loader.GetTexture(fileName).size() + loader.GetSpa(fileName).size() + loader.GetSph(fileName).size() + 
 		loader.GetToon(fileName).size() + 1 + loader.GetMaterial(fileName).size() + 1);
@@ -432,6 +435,17 @@ void Pmd::Load(const std::string & fileName, int & i)
 	data[&i].wvp->lightPos        = cam.lock()->GetLightPos();
 }
 
+// モーションの適応
+void Pmd::Attach(const std::string & fileName, int & i)
+{
+	if (motion.Load(fileName) == 0)
+	{
+		data[&i].motion   = motion.GetMotion(fileName);
+		data[&i].flam     = 0.0f;
+		data[&i].animTime = motion.GetAnimTime(fileName);
+	}
+}
+
 // 回転
 void Pmd::Rotate(int & i, const float & angle)
 {
@@ -465,4 +479,138 @@ void Pmd::DrawShadow(std::weak_ptr<List> list, int & i)
 	auto heap = descMane.GetHeap(i);
 	list.lock()->GetList()->SetDescriptorHeaps(1, &heap);
 	list.lock()->GetList()->ExecuteBundle(data[&i].sList->GetList());
+}
+
+// ボーンの回転
+void Pmd::RotateBorn(int * i, const std::string & name, const DirectX::XMMATRIX & mtx)
+{
+	auto& node = loader.GetBornNode(data[i].model);
+
+	if (node.find(name) == node.end())
+	{
+		return;
+	}
+
+	auto vec = DirectX::XMLoadFloat3(&node[name].start);
+
+	data[i].mtx[node[name].index] = DirectX::XMMatrixTranslationFromVector(
+		DirectX::XMVectorScale(vec, -1.0f)) *
+		mtx *
+		DirectX::XMMatrixTranslationFromVector(vec);
+}
+
+// ボーンの再帰処理
+void Pmd::RecursiveBorn(int * i, pmd::BornNode & node, const DirectX::XMMATRIX & mtx)
+{
+	data[i].mtx[node.index] *= mtx;
+
+	for (auto& child : node.child)
+	{
+		RecursiveBorn(i, *child, data[i].mtx[node.index]);
+	}
+}
+
+// アニメーションのリセット
+void Pmd::ResetAnim(int * i)
+{
+	data[i].flam = 0.0f;
+
+	std::fill(data[i].mtx.begin(), data[i].mtx.end(), DirectX::XMMatrixIdentity());
+
+	for (auto itr = data[i].motion.lock()->begin(); itr != data[i].motion.lock()->end(); ++itr)
+	{
+		auto& key = itr->second;
+
+		auto now = std::find_if(key.rbegin(), key.rend(),
+			[&](const vmd::Motion& m) {return m.flam <= (unsigned int)data[i].flam; });
+		if (now == key.rend())
+		{
+			continue;
+		}
+		auto nowVec = DirectX::XMLoadFloat4(&now->rotation);
+
+		RotateBorn(i, itr->first, DirectX::XMMatrixRotationQuaternion(nowVec));
+	}
+
+	RecursiveBorn(i, loader.GetBornNode(data[i].model)["センター"], data[i].mtx[loader.GetBornNode(data[i].model)["センター"].index]);
+
+	memcpy(data[i].bornData, data[i].mtx.data(), ((sizeof(DirectX::XMMATRIX) * data[i].mtx.size() + 0xff) &~0xff));
+}
+
+// アニメーション
+void Pmd::Animation(int & i, const bool & loop, const float & animSpeed)
+{
+	std::fill(data[&i].mtx.begin(), data[&i].mtx.end(), DirectX::XMMatrixIdentity());
+
+	for(auto itr = data[&i].motion.lock()->begin(); itr != data[&i].motion.lock()->end(); ++itr)
+	{
+		auto& key = itr->second;
+
+		auto now = std::find_if(key.rbegin(), key.rend(),
+			[&](const vmd::Motion& m) {return m.flam <= (unsigned long)data[&i].flam; });
+		if (now == key.rend())
+		{
+			continue;
+		}
+		auto nowVec = DirectX::XMLoadFloat4(&now->rotation);
+		float nowFlam = (float)now->flam;
+
+
+		auto next = now.base();
+		if (next == key.end())
+		{
+			RotateBorn(&i, itr->first, DirectX::XMMatrixRotationQuaternion(nowVec));
+		}
+		else
+		{
+			auto nextVec = DirectX::XMLoadFloat4(&next->rotation);
+			float nextFlam = (float)next->flam;
+			float time = (data[&i].flam - nowFlam) / (nextFlam - nowFlam);
+
+			time = func::Newton(time, next->a.x, next->a.y, next->b.x, next->b.y);
+
+			auto trans = (DirectX::XMMatrixTranslation(now->pos.x, now->pos.y, now->pos.z) * (1.0f - time))
+				+ (DirectX::XMMatrixTranslation(next->pos.x, next->pos.y, next->pos.z) * time);
+
+			RotateBorn(&i, itr->first, DirectX::XMMatrixRotationQuaternion(
+				DirectX::XMQuaternionSlerp(nowVec, nextVec, time)) * trans);
+		}
+	}
+
+	RecursiveBorn(&i, loader.GetBornNode(data[&i].model)["センター"], data[&i].mtx[loader.GetBornNode(data[&i].model)["センター"].index]);
+
+	memcpy(data[&i].bornData, data[&i].mtx.data(), ((sizeof(DirectX::XMMATRIX) * data[&i].mtx.size() + 0xff) &~0xff));
+
+	data[&i].flam += animSpeed;
+
+	if (loop == true && CheckAnimEnd(i))
+	{
+		ResetAnim(&i);
+	}
+}
+
+// アニメーション終了確認
+bool Pmd::CheckAnimEnd(int & i)
+{
+	return (data[&i].flam >= data[&i].animTime + 10.0f);
+}
+
+// モデルの削除
+void Pmd::Delete(int & i)
+{
+	if (data.find(&i) == data.end())
+	{
+		return;
+	}
+
+	UnMap(descMane.GetRsc(data[&i].cRsc));
+	UnMap(descMane.GetRsc(data[&i].mRsc));
+	UnMap(descMane.GetRsc(data[&i].bRsc));
+	descMane.DeleteRsc(data[&i].cRsc);
+	descMane.DeleteRsc(data[&i].mRsc);
+	descMane.DeleteRsc(data[&i].bRsc);
+
+	descMane.DeleteHeap(i);
+
+	data.erase(data.find(&i));
 }

@@ -77,6 +77,12 @@ public:
 
 	// PMDの影描画
 	void DrawPmdShadow(int& i);
+	
+	// モーションの適応
+	void Attach(const std::string& fileName, int& i);
+
+	// アニメーション
+	void Animation(int& i, const bool& loop = true, const float& animSpeed = 1.0f);
 
 	// 影情報のクリア
 	void ClearShadow(void);

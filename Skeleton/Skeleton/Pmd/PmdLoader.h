@@ -1,5 +1,6 @@
 #pragma once
 #include "PmdData.h"
+#include <map>
 #include <string>
 #include <vector>
 #include <array>
@@ -31,7 +32,7 @@ class PmdLoader
 		void* indexData;
 
 		//ボーンノード
-		std::unordered_map<std::string, pmd::BornNode>node;
+		std::map<std::string, pmd::BornNode>node;
 
 		//テクスチャID
 		std::unordered_map<int, std::string>tex;
@@ -81,7 +82,7 @@ public:
 		return data[fileName].iRsc;
 	}
 	// ボーンノードの取得
-	std::unordered_map<std::string, pmd::BornNode> GetBornNode(const std::string& fileName) {
+	std::map<std::string, pmd::BornNode>& GetBornNode(const std::string& fileName) {
 		return data[fileName].node;
 	}
 	// テクスチャIDの取得

@@ -37,6 +37,7 @@ void Application::Create(void)
 	sound->Play(true);
 
 	un->LoadPmd("model/初音ミク.pmd", n);
+	un->Attach("ヤゴコロダンス.vmd", n);
 }
 
 // テスト
@@ -140,4 +141,6 @@ void Application::Draw(void)
 	un->DrawPmd(n);
 
 	un->Execution();
+
+	un->Animation(n);
 }

@@ -65,18 +65,22 @@ cbuffer Born : register(b2)
 // 入力
 struct Input
 {
-    float4 pos : POSITION;
-    float4 normal : NORMAL;
-    float2 uv : TEXCOORD;
+    float4 pos       : POSITION;
+    float4 normal    : NORMAL;
+    float2 uv        : TEXCOORD;
+    min16uint2 born  : BORN;
+    min16uint weight : WEIGHT;
 };
 
 // 出力
 struct Out
 {
-    float4 svpos : SV_POSITION;
-    float4 pos : POSITION;
-    float4 normal : NORMAL;
-    float2 uv : TEXCOORD;
+    float4 svpos     : SV_POSITION;
+    float4 pos       : POSITION;
+    float4 normal    : NORMAL;
+    float2 uv        : TEXCOORD;
+    min16uint2 born  : BORN;
+    min16uint weight : WEIGHT;
 };
 
 // 頂点シェーダ
@@ -84,10 +88,12 @@ struct Out
 Out VS(Input input)
 {
     Out o;
-    o.svpos = input.pos;
-    o.pos = input.pos;
+    o.svpos  = input.pos;
+    o.pos    = input.pos;
     o.normal = input.normal;
-    o.uv = input.uv;
+    o.uv     = input.uv;
+    o.born   = input.born;
+    o.weight = input.weight;
 
     return o;
 }
@@ -107,10 +113,28 @@ void GS(triangle Out vertex[3], inout TriangleStream<Out> stream)
             pos.x += 10.0f * i;
 
             Out o;
-            o.pos = pos;
+            o.pos    = pos;
             o.normal = mul(world, vertex[n].normal);
-            o.uv = vertex[n].uv;
+            o.uv     = vertex[n].uv;
+            o.born   = vertex[n].born;
+            o.weight = vertex[n].weight;
 
+            float w = o.weight / 100.0f;
+            matrix m = mtx[o.born.x] * w + mtx[o.born.y] * (1.0f - w);
+            //原点に平行移動
+            matrix vec1 = float4x4(1.0f, 0.0f, 0.0f, vertex[n].pos.x - pos.x,
+                                   0.0f, 1.0f, 0.0f, vertex[n].pos.y - pos.y,
+                                   0.0f, 0.0f, 1.0f, vertex[n].pos.z - pos.z,
+                                   0.0f, 0.0f, 0.0f, 1.0f);
+            //指定位置に平行移動
+            matrix vec2 = float4x4(1.0f, 0.0f, 0.0f, pos.x - vertex[n].pos.x,
+                                   0.0f, 1.0f, 0.0f, pos.y - vertex[n].pos.y,
+                                   0.0f, 0.0f, 1.0f, pos.z - vertex[n].pos.z,
+                                   0.0f, 0.0f, 0.0f, 1.0f);
+
+            pos = mul(vec1, pos);
+            pos = mul(m, pos);
+            pos = mul(vec2, pos);
             pos = mul(world, pos);
             pos = mul(lightView, pos);
             pos = mul(lightProjection, pos);

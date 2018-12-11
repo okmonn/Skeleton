@@ -26,3 +26,47 @@ std::string func::FindString(const std::string & path, const char & find, const 
 
 	return tmp;
 }
+
+// ƒjƒ…[ƒgƒ“–@
+float func::Newton(const float & input, const float & pos1X, const float & pos1Y, const float & pos2X, const float & pos2Y, const unsigned int & loop)
+{
+	if (pos1X == pos1Y && pos2X == pos2Y)
+	{
+		//’¼ü‚È‚Ì‚ÅŒvZ•s—v
+		return input;
+	}
+
+	float t = input;
+	//t^3‚ÌŒW”
+	float k3 = 1 + (3 * pos1X) - (3 * pos2X);
+	//t^2‚ÌŒW”
+	float k2 = (3 * pos2X) - (6 * pos1X);
+	//t‚ÌŒW”
+	float k1 = 3 * pos1X;
+
+	const float epsilon = 0.0005f;
+
+	for (unsigned int i = 0; i < loop; ++i)
+	{
+		//f(x)
+		float ft = (t * t * t * k3) + (t * t * k2) + (t * k1) - input;
+		if (ft <= epsilon && ft >= -epsilon)
+		{
+			break;
+		}
+		//f(x)‚Ì”÷•ªŒ‹‰Ê
+		float fdt = (3 * t * t * k3) + (2 * t * k2) + k1;
+		if (fdt == 0.0f)
+		{
+			break;
+		}
+		t = t - ft / fdt;
+	}
+
+	//”½“]
+	float reverse = (1.0f - t);
+
+	return (3 * reverse * reverse * t * pos1Y) +
+		(3 * reverse * t * t * pos2Y) +
+		(t * t * t);
+}
