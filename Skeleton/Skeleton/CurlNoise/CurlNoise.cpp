@@ -185,6 +185,8 @@ void CurlNoise::Init(const std::vector<DirectX::XMFLOAT3>& pos)
 // ŽÀs
 void CurlNoise::Execution(void)
 {
+	memcpy(info["u0"].data, &pos[0], sizeof(DirectX::XMFLOAT3) * pos.size());
+
 	list->Reset();
 
 	list->GetList()->SetComputeRootSignature(root);
@@ -209,4 +211,6 @@ void CurlNoise::Execution(void)
 	queue->Get()->ExecuteCommandLists(1, com);
 
 	fence->Wait();
+
+	pos.assign(info["u0"].data, info["u0"].data + pos.size());
 }

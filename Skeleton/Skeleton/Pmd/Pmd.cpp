@@ -8,6 +8,7 @@
 #include "../Camera/Camera.h"
 #include "../Root/Root.h"
 #include "../Pipe/Pipe.h"
+#include "../CurlNoise/CurlNoise.h"
 #include "../etc/Release.h"
 #include "../etc/Func.h"
 #include <algorithm>
@@ -22,6 +23,8 @@ Pmd::Pmd(std::weak_ptr<Device>dev, std::weak_ptr<Camera>cam, std::weak_ptr<Root>
 	dev(dev), cam(cam), root(root), pipe(pipe), sRoot(sRoot), sPipe(sPipe), index(0)
 {
 	data.clear();
+
+	curl = std::make_unique<CurlNoise>(dev, L"Shader/CurlNoise.hlsl");
 }
 
 // デストラクタ
@@ -376,6 +379,14 @@ void Pmd::Load(const std::string & fileName, int & i)
 		loader.GetTexture(fileName).size() + loader.GetSpa(fileName).size() + loader.GetSph(fileName).size() + 
 		loader.GetToon(fileName).size() + 1 + loader.GetMaterial(fileName).size() + 1);
 
+	std::vector<DirectX::XMFLOAT3>pos;
+	for (auto& n : loader.GetVertex(fileName))
+	{
+		pos.push_back(n.pos);
+	}
+	curl->Init(pos);
+	curl->UAV("u0", sizeof(DirectX::XMFLOAT3), pos.size());
+
 	//テクスチャ
 	for (auto& n : loader.GetTexture(fileName))
 	{
@@ -458,6 +469,8 @@ void Pmd::Rotate(int & i, const float & angle)
 // 描画
 void Pmd::Draw(std::weak_ptr<List>list, int & i)
 {
+	curl->Execution();
+
 	data[&i].wvp->view      = cam.lock()->GetView();
 	data[&i].wvp->lightView = cam.lock()->GetLightView();
 	data[&i].wvp->eyePos    = cam.lock()->GetEye();

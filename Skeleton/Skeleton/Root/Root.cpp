@@ -24,20 +24,20 @@ Root::~Root()
 // シェーダ読み込み
 long Root::ShaderCompile(const std::tstring & fileName)
 {
-	auto hr = D3DCompileFromFile(fileName.c_str(), nullptr, nullptr, "VS", "vs_5_1", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &vertex, &error);
+	auto hr = D3DCompileFromFile(fileName.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "VS", "vs_5_1", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &vertex, &error);
 	if (FAILED(hr))
 	{
 		OutputDebugString(_T("\n頂点シェーダの読み込み：失敗\n"));
 		return hr;
 	}
 
-	hr = D3DCompileFromFile(fileName.c_str(), nullptr, nullptr, "GS", "gs_5_1", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &geometry, &error);
+	hr = D3DCompileFromFile(fileName.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "GS", "gs_5_1", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &geometry, &error);
 	if(FAILED(hr))
 	{
 		OutputDebugString(_T("\nジオメトリシェーダの読み込み：失敗\n"));
 	}
 
-	hr = D3DCompileFromFile(fileName.c_str(), nullptr, nullptr, "PS", "ps_5_1", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &pixel, &error);
+	hr = D3DCompileFromFile(fileName.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PS", "ps_5_1", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &pixel, &error);
 	if (FAILED(hr))
 	{
 		OutputDebugString(_T("\nピクセルシェーダの読み込み：失敗\n"));

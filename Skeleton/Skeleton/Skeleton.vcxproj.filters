@@ -67,12 +67,6 @@
     <Filter Include="Input">
       <UniqueIdentifier>{db2bae09-4b9b-41c0-9a0d-d4c5fc0fbe6c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="etc">
-      <UniqueIdentifier>{aab56360-2d3a-4355-8ca4-2039ea0065d0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="etc\Func">
-      <UniqueIdentifier>{9f0d014a-627a-4a6e-bded-339e3189497f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Window\Icon">
       <UniqueIdentifier>{824e9ca4-5b4a-4698-86a2-9c1f0d03ef9b}</UniqueIdentifier>
     </Filter>
@@ -132,6 +126,12 @@
     </Filter>
     <Filter Include="CurlNoise">
       <UniqueIdentifier>{343417ac-c7c4-4f49-8f16-4506a3709742}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="etc">
+      <UniqueIdentifier>{aab56360-2d3a-4355-8ca4-2039ea0065d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="etc\Func">
+      <UniqueIdentifier>{9f0d014a-627a-4a6e-bded-339e3189497f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

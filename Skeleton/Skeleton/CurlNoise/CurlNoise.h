@@ -22,7 +22,7 @@ class CurlNoise
 		//リソース
 		ID3D12Resource* rsc;
 		//送信データ
-		float* data;
+		DirectX::XMFLOAT3* data;
 		//番号
 		int index;
 	};

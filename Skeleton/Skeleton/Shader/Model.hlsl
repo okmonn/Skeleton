@@ -1,3 +1,5 @@
+#include "CurlNoise.hlsl"
+
 // ルートシグネチャの定義
 #define RS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
                     "DescriptorTable(SRV(t0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
@@ -27,8 +29,6 @@
                                   "maxLOD         = 3.402823466e+38f, "\
                                   "space          = 0, "\
                                   "visibility     = SHADER_VISIBILITY_ALL)"
-
-#include "CurlNoise.hlsl"
 
 Texture2D<float4> tex : register(t0);
 Texture2D<float4> spa : register(t1);
