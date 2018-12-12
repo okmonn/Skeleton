@@ -1,4 +1,4 @@
-#include "CurlNoise.hlsl"
+//#include "CurlNoise.hlsl"
 
 // ルートシグネチャの定義
 #define RS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\

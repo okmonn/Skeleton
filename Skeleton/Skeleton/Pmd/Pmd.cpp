@@ -384,8 +384,8 @@ void Pmd::Load(const std::string & fileName, int & i)
 	{
 		pos.push_back(n.pos);
 	}
-	curl->Init(pos);
 	curl->UAV("u0", sizeof(DirectX::XMFLOAT3), pos.size());
+	curl->Init(pos);
 
 	//テクスチャ
 	for (auto& n : loader.GetTexture(fileName))

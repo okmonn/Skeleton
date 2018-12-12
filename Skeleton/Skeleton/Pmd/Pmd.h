@@ -159,4 +159,6 @@ private:
 
 	// Pmdƒf[ƒ^
 	std::unordered_map<int*, Data>data;
+
+	int test;
 };

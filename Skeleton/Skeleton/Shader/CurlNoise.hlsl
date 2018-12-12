@@ -17,7 +17,7 @@
                                   "visibility = SHADER_VISIBILITY_ALL)"
 
 // 適応データ
-RWByteAddressBuffer real : register(u0);
+RWStructuredBuffer<float3> real : register(u0);
 
 // ランダム
 float Rand(float3 co)
@@ -57,9 +57,7 @@ float Perlin(float3 pos)
 [numthreads(1, 1, 1)]
 void CS(uint3 gID : SV_GroupID, uint3 gtID : SV_GroupThreadID, uint3 disID : SV_DispatchThreadID)
 {
-    float3 pos = asfloat(real.Load3(gID.x * 4));
-
-    //real.Store3()
+    real[gID.x].x = Perlin(real[gID.x]);
 
     AllMemoryBarrierWithGroupSync();
 }
