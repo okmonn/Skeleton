@@ -164,7 +164,7 @@ void Pmd::Bundle(const std::string & fileName, int * i)
 	iView.SizeInBytes    = sizeof(unsigned short) * loader.GetIndex(fileName).size();
 	data[i].list->GetList()->IASetIndexBuffer(&iView);
 
-	data[i].list->GetList()->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+	data[i].list->GetList()->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	//送信データ
 	unsigned __int8* d = data[i].materialData;
@@ -233,7 +233,7 @@ void Pmd::Bundle(const std::string & fileName, int * i)
 
 		data[i].list->GetList()->SetGraphicsRootDescriptorTable(5, handle);
 
-		//data[i].list->GetList()->DrawIndexedInstanced(loader.GetMaterial(fileName)[n].indexNum, 1, offset, 0, 0);
+		data[i].list->GetList()->DrawIndexedInstanced(loader.GetMaterial(fileName)[n].indexNum, 1, offset, 0, 0);
 
 		handle.ptr += size;
 
@@ -241,8 +241,6 @@ void Pmd::Bundle(const std::string & fileName, int * i)
 
 		offset += loader.GetMaterial(fileName)[n].indexNum;
 	}
-
-	data[i].list->GetList()->DrawInstanced(loader.GetVertex(fileName).size(), 1, 0, 0);
 
 	data[i].list->GetList()->Close();
 }

@@ -134,7 +134,7 @@ long Effector::CreatePipe(void)
 	auto hr = dev.lock()->Get()->CreateComputePipelineState(&desc, IID_PPV_ARGS(&pipe));
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nパイプラインの生成：失敗\n"));
+		OutputDebugString(_T("\nコンピュートパイプラインの生成：失敗\n"));
 	}
 
 	return hr;

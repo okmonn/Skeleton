@@ -130,6 +130,9 @@
     <Filter Include="VMD">
       <UniqueIdentifier>{d5ef66b0-c6f5-41d1-b348-a395510e5df6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CurlNoise">
+      <UniqueIdentifier>{343417ac-c7c4-4f49-8f16-4506a3709742}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -245,6 +248,9 @@
     </ClCompile>
     <ClCompile Include="Vmd\Vmd.cpp">
       <Filter>VMD</Filter>
+    </ClCompile>
+    <ClCompile Include="CurlNoise\CurlNoise.cpp">
+      <Filter>CurlNoise</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -383,6 +389,9 @@
     <ClInclude Include="Vmd\VmdData.h">
       <Filter>VMD</Filter>
     </ClInclude>
+    <ClInclude Include="CurlNoise\CurlNoise.h">
+      <Filter>CurlNoise</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Window\Icon.rc">
@@ -409,6 +418,9 @@
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="Shader\Primitive3D.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\CurlNoise.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>

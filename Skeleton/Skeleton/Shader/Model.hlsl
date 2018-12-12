@@ -28,6 +28,8 @@
                                   "space          = 0, "\
                                   "visibility     = SHADER_VISIBILITY_ALL)"
 
+#include "CurlNoise.hlsl"
+
 Texture2D<float4> tex : register(t0);
 Texture2D<float4> spa : register(t1);
 Texture2D<float4> sph : register(t2);
@@ -85,7 +87,7 @@ struct Out
 
 // 頂点シェーダ
 [RootSignature(RS)]
-Out VS(Input input)
+Out VS(Input input, uint id : SV_VertexID)
 {
     Out o;
     o.svpos  = input.pos;
@@ -98,52 +100,19 @@ Out VS(Input input)
     return o;
 }
 
-float Rand(float3 co)
-{
-    return frac(sin(dot(co.xyz, float3(12.9898, 78.233, 56.787))) * 43758.5453);
-}
-
-float Noise(float3 pos)
-{
-    float3 ip = floor(pos);
-    float3 fp = smoothstep(0, 1, frac(pos));
-    float4 a = float4(
-		Rand(ip + float3(0, 0, 0)),
-		Rand(ip + float3(1, 0, 0)),
-		Rand(ip + float3(0, 1, 0)),
-		Rand(ip + float3(1, 1, 0)));
-    float4 b = float4(
-		Rand(ip + float3(0, 0, 1)),
-		Rand(ip + float3(1, 0, 1)),
-		Rand(ip + float3(0, 1, 1)),
-		Rand(ip + float3(1, 1, 1)));
- 
-    a = lerp(a, b, fp.z);
-    a.xy = lerp(a.xy, a.zw, fp.y);
-    return lerp(a.x, a.y, fp.x);
-}
-
-float Perlin(float3 pos)
-{
-    return (Noise(pos) * 32 + Noise(pos * 2) * 16 + Noise(pos * 4) * 8 +
-		Noise(pos * 8) * 4 + Noise(pos * 16) * 2 + Noise(pos * 32)) / 63;
-}
-
-#define VERTEX_MAX 1
+#define VERTEX_MAX 9
 
 // ジオメトリーシェーダー
 [maxvertexcount(VERTEX_MAX)]
-void GS(point Out vertex[1], inout PointStream<Out> stream)
+void GS(triangle Out vertex[3], inout TriangleStream<Out> stream)
 {
-    for (int i = 0; i < VERTEX_MAX; ++i)
+    for (int i = -1; i <= VERTEX_MAX / 3 / 2; ++i)
     {
         stream.RestartStrip();
-        for (int n = 0; n < 1; ++n)
+        for (int n = 0; n < 3; ++n)
         {
             float4 pos = vertex[n].pos;
-            pos.x += Perlin(pos.xyz);
-            pos.y += Perlin(pos.xyz);
-            pos.z += Perlin(pos.xyz);
+            pos.x += 10.0f * i;
 
             Out o;
             o.pos    = pos;
@@ -152,7 +121,7 @@ void GS(point Out vertex[1], inout PointStream<Out> stream)
             o.born   = vertex[n].born;
             o.weight = vertex[n].weight;
 
-            float w  = o.weight / 100.0f;
+            float w = o.weight / 100.0f;
             matrix m = mtx[o.born.x] * w + mtx[o.born.y] * (1.0f - w);
             //原点に平行移動
             matrix vec1 = float4x4(1.0f, 0.0f, 0.0f, vertex[n].pos.x - pos.x,
@@ -165,17 +134,18 @@ void GS(point Out vertex[1], inout PointStream<Out> stream)
                                    0.0f, 0.0f, 1.0f, pos.z - vertex[n].pos.z,
                                    0.0f, 0.0f, 0.0f, 1.0f);
 
-            pos = mul(vec1, pos);
-            pos = mul(m, pos);
-            pos = mul(vec2, pos);
-            pos = mul(world, pos);
-            pos = mul(view, pos);
+            pos = mul(vec1,       pos);
+            pos = mul(m,          pos);
+            pos = mul(vec2,       pos);
+            pos = mul(world,      pos);
+            pos = mul(view,       pos);
             pos = mul(projection, pos);
             o.svpos = pos;
 
             stream.Append(o);
         }
     }
+    
     stream.RestartStrip();
 }
 
@@ -201,9 +171,15 @@ float4 PS(Out o) : SV_TARGET
     bright = saturate(acos(bright) / PI);
     float3 toonColor = toon.Sample(smp, float2(0.0f, 1.0f - bright)).rgb;
 
-    float3 color = (texFlag == false) ? saturate((toonColor * diffuse) * bright + specula * spec + mirror * lightColor) : tex.Sample(smp, o.uv).rgb;
-    color *= (sphFlag == false) ? 1.0f : sph.Sample(smp, eyeVec.xy / 2.0f * float2(1.0f, -1.0f) + float2(0.5f, 0.5f)).rgb;
-    color += (spaFlag == false) ? 0.0f : spa.Sample(smp, eyeVec.xy / 2.0f * float2(1.0f, -1.0f) + float2(0.5f, 0.5f)).rgb;
+    float3 color = lerp(saturate((toonColor * diffuse) * bright + specula * spec + mirror * lightColor),
+                 tex.Sample(smp, o.uv).rgb,
+                 step(true, texFlag));
+    color *= lerp(1.0f,
+                  sph.Sample(smp, eyeVec.xy / 2.0f * float2(1.0f, -1.0f) + float2(0.5f, 0.5f)).rgb,
+                  step(true, sphFlag));
+    color += lerp(0.0f,
+                  spa.Sample(smp, eyeVec.xy / 2.0f * float2(1.0f, -1.0f) + float2(0.5f, 0.5f)).rgb,
+                  step(true, spaFlag));
     
     return float4(color, alpha);
 }

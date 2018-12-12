@@ -28,11 +28,11 @@
                                   "space          = 0, "\
                                   "visibility     = SHADER_VISIBILITY_ALL)"
 
-Texture2D<float4> tex : register(t0);
-Texture2D<float4> spa : register(t1);
-Texture2D<float4> sph : register(t2);
+Texture2D<float4> tex  : register(t0);
+Texture2D<float4> spa  : register(t1);
+Texture2D<float4> sph  : register(t2);
 Texture2D<float4> toon : register(t3);
-SamplerState smp : register(s0);
+SamplerState smp       : register(s0);
 
 cbuffer WVP : register(b0)
 {
@@ -98,13 +98,13 @@ Out VS(Input input)
     return o;
 }
 
-#define MAX_VERTEX_COUNT 9
+#define VERTEX_MAX 9
 
 // ジオメトリーシェーダー
-[maxvertexcount(MAX_VERTEX_COUNT)]
+[maxvertexcount(VERTEX_MAX)]
 void GS(triangle Out vertex[3], inout TriangleStream<Out> stream)
 {
-    for (int i = -1; i <= MAX_VERTEX_COUNT / 3 / 2; ++i)
+    for (int i = -1; i <= VERTEX_MAX / 3 / 2; ++i)
     {
         stream.RestartStrip();
         for (int n = 0; n < 3; ++n)
@@ -169,9 +169,15 @@ float4 PS(Out o) : SV_TARGET
     bright = saturate(acos(bright) / PI);
     float3 toonColor = toon.Sample(smp, float2(0.0f, 1.0f - bright)).rgb;
 
-    float3 color = (texFlag == false) ? saturate((toonColor * diffuse) * bright + specula * spec + mirror * lightColor) : tex.Sample(smp, o.uv).rgb;
-    color *= (sphFlag == false) ? 1.0f : sph.Sample(smp, eyeVec.xy / 2.0f * float2(1.0f, -1.0f) + float2(0.5f, 0.5f)).rgb;
-    color += (spaFlag == false) ? 0.0f : spa.Sample(smp, eyeVec.xy / 2.0f * float2(1.0f, -1.0f) + float2(0.5f, 0.5f)).rgb;
+    float3 color = lerp(saturate((toonColor * diffuse) * bright + specula * spec + mirror * lightColor),
+                 tex.Sample(smp, o.uv).rgb,
+                 step(true, texFlag));
+    color *= lerp(1.0f,
+                  sph.Sample(smp, eyeVec.xy / 2.0f * float2(1.0f, -1.0f) + float2(0.5f, 0.5f)).rgb,
+                  step(true, sphFlag));
+    color += lerp(0.0f,
+                  spa.Sample(smp, eyeVec.xy / 2.0f * float2(1.0f, -1.0f) + float2(0.5f, 0.5f)).rgb,
+                  step(true, spaFlag));
     
 
     return float4(color, alpha);
