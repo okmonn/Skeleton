@@ -15,7 +15,6 @@ class List;
 class Camera;
 class Root;
 class Pipe;
-class CurlNoise;
 
 class Pmd
 {
@@ -145,9 +144,6 @@ private:
 	// パイプ
 	std::weak_ptr<Pipe>pipe;
 
-	// カールノイズ
-	std::unique_ptr<CurlNoise>curl;
-
 	// 影用ルート
 	std::weak_ptr<Root>sRoot;
 
@@ -159,6 +155,4 @@ private:
 
 	// Pmdデータ
 	std::unordered_map<int*, Data>data;
-
-	int test;
 };

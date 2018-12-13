@@ -2,8 +2,6 @@
 #include "../etc/tString.h"
 #include <map>
 #include <memory>
-#include <vector>
-#include <DirectXMath.h>
 
 struct ID3D10Blob;
 typedef ID3D10Blob ID3DBlob;
@@ -11,46 +9,35 @@ struct ID3D12RootSignature;
 struct ID3D12PipelineState;
 struct ID3D12DescriptorHeap;
 struct ID3D12Resource;
+class DescriptorMane;
 class Device;
 class Queue;
 class List;
 class Fence;
 
-class CurlNoise
+class Compute
 {
 	struct Info {
-		//リソース
-		ID3D12Resource* rsc;
-		//送信データ
-		DirectX::XMFLOAT3* data;
-		//番号
-		int index;
+		//リソースID
+		int rsc;
+		//送受信データ
+		void* data;
 	};
 
-public:
 	// コンストラクタ
-	CurlNoise(std::weak_ptr<Device>dev, const std::tstring& fileName);
+	Compute();
 	// デストラクタ
-	~CurlNoise();
+	virtual ~Compute();
 
-	// UAVの生成
-	void UAV(const std::string& name, const unsigned int& stride, const unsigned int& num);
+protected:
+	// クラスのインスタンス
+	void Create(void);
 
-	// データの初期化
-	void Init(const std::vector<DirectX::XMFLOAT3>& pos);
-
-	// 実行
-	void Execution(void);
-
-private:
 	// ルートシグネチャの生成
 	long CreateRoot(const std::tstring& fileName);
 
 	// パイプラインの生成
 	long CreatePipe(void);
-
-	// ヒープの生成
-	long CreateHeap(void);
 
 	// UAVリソースの生成
 	long CreateUavRsc(const std::string& name, const unsigned int& size);
@@ -61,6 +48,15 @@ private:
 	// マップ
 	long Map(const std::string& name);
 
+	// アンマップ
+	void UnMap(const std::string& name);
+
+	// UAVの生成
+	void UAV(const std::string& name, const unsigned int& stride, const unsigned int& num);
+
+
+	// ディスクリプタマネージャー
+	DescriptorMane& descMane;
 
 	// デバイス
 	std::weak_ptr<Device>dev;
@@ -70,28 +66,22 @@ private:
 
 	// リスト
 	std::unique_ptr<List>list;
-	
+
 	// フェンス
 	std::unique_ptr<Fence>fence;
 
 	// コンピュートシェーダー情報
 	ID3DBlob* shader;
 
-	// コンピュートルートシグネチャ
+	// コンピュート用ルートシグネチャ
 	ID3D12RootSignature* root;
 
-	// コンピュートパイプライン
+	// コンピュート用パイプライン
 	ID3D12PipelineState* pipe;
 
-	// ヒープ
-	ID3D12DescriptorHeap* heap;
+	// ヒープID
+	int heap;
 
-	// リソース番号
-	int index;
-
-	// バッファ
+	// リソース情報
 	std::map<std::string, Info>info;
-
-	// データ
-	std::vector<DirectX::XMFLOAT3>pos;
 };

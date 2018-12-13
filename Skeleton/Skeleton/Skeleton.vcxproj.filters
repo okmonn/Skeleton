@@ -124,14 +124,14 @@
     <Filter Include="VMD">
       <UniqueIdentifier>{d5ef66b0-c6f5-41d1-b348-a395510e5df6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CurlNoise">
-      <UniqueIdentifier>{343417ac-c7c4-4f49-8f16-4506a3709742}</UniqueIdentifier>
-    </Filter>
     <Filter Include="etc">
       <UniqueIdentifier>{aab56360-2d3a-4355-8ca4-2039ea0065d0}</UniqueIdentifier>
     </Filter>
     <Filter Include="etc\Func">
       <UniqueIdentifier>{9f0d014a-627a-4a6e-bded-339e3189497f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compute">
+      <UniqueIdentifier>{676b13d6-13a6-4b17-bc6f-8eeaf1e2004f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -249,8 +249,8 @@
     <ClCompile Include="Vmd\Vmd.cpp">
       <Filter>VMD</Filter>
     </ClCompile>
-    <ClCompile Include="CurlNoise\CurlNoise.cpp">
-      <Filter>CurlNoise</Filter>
+    <ClCompile Include="Compute\Compute.cpp">
+      <Filter>Compute</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -389,8 +389,8 @@
     <ClInclude Include="Vmd\VmdData.h">
       <Filter>VMD</Filter>
     </ClInclude>
-    <ClInclude Include="CurlNoise\CurlNoise.h">
-      <Filter>CurlNoise</Filter>
+    <ClInclude Include="Compute\Compute.h">
+      <Filter>Compute</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

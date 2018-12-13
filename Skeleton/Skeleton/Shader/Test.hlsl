@@ -1,1 +1,1 @@
-static float w = 1.0f;
+float w = 1.0f;
