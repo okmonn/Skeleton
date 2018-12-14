@@ -2,18 +2,16 @@
 #include "../SoundFunc/SoundFunc.h"
 #include <mutex>
 
-// スレッド最大数
+// 読み込みスレッド最大数
 #define THREAD_MAX 5
 
 // コンストラクタ
 SoundLoader::SoundLoader() : 
 	threadFlag(true)
 {
-	wave.clear();
-	flag.clear();
 	th.resize(THREAD_MAX);
 
-	InitTbl();
+	InitLoadTbl();
 }
 
 // デストラクタ
@@ -30,7 +28,7 @@ SoundLoader::~SoundLoader()
 }
 
 // 読み込みテーブルの生成
-void SoundLoader::InitTbl(void)
+void SoundLoader::InitLoadTbl(void)
 {
 	load[1][8] = [&](std::vector<float>& tmp, FILE* file)->void {
 		sound::LoadMono8(tmp, file);
@@ -82,7 +80,7 @@ int SoundLoader::Load(const std::string & fileName)
 		{
 			if (itr->joinable() == false)
 			{
-				wave[fileName].data = std::make_shared<std::unordered_map<int, std::vector<float>>>();
+				wave[fileName].data.resize((size_t)std::ceilf((float)data.size / (float)(fmt.sample / 10) / (float)fmt.channel));
 				*itr = std::thread(&SoundLoader::Stream, this, fileName);
 				flag = false;
 				break;
@@ -99,25 +97,14 @@ void SoundLoader::Stream(const std::string & fileName)
 	std::mutex m;
 	std::lock_guard<std::mutex>lock(m);
 
-	flag[fileName] = false;
-
 	int read = 0;
-
-	//std::vector<float>tmp((wave[fileName].sample * ((wave[fileName].bit / 8) * wave[fileName].channel)) / 100);
-	std::vector<float>tmp(wave[fileName].sample / 10);
-	if (tmp.size() % 2 != 0)
-	{
-		tmp.resize(tmp.size() + 1);
-	}
 
 	while (std::feof(wave[fileName].file) == 0 && threadFlag == true)
 	{
-		load[wave[fileName].channel][wave[fileName].bit](tmp, wave[fileName].file);
-
-		wave[fileName].data->insert(std::make_pair(read++, tmp));
+		wave[fileName].data[read].resize(wave[fileName].sample * 60);
+		load[wave[fileName].channel][wave[fileName].bit](wave[fileName].data[read], wave[fileName].file);
+		++read;
 	}
 
 	fclose(wave[fileName].file);
-
-	flag[fileName] = true;
 }

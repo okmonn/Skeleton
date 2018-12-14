@@ -91,9 +91,6 @@
     <Filter Include="Union">
       <UniqueIdentifier>{cf83fe37-b718-4621-a618-94f3bab8a450}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Effector">
-      <UniqueIdentifier>{b31f9d28-2a04-4c89-8da2-2448cf7c23a7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="PMD">
       <UniqueIdentifier>{8e8d2549-f67b-459d-9176-b6bd6ab531d5}</UniqueIdentifier>
     </Filter>
@@ -132,6 +129,9 @@
     </Filter>
     <Filter Include="Compute">
       <UniqueIdentifier>{676b13d6-13a6-4b17-bc6f-8eeaf1e2004f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compute\Effector">
+      <UniqueIdentifier>{86997bc8-3b24-4b9b-b8a5-ef2e3affb1f1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -173,9 +173,6 @@
     </ClCompile>
     <ClCompile Include="Sound\SoundFunc\SoundFunc.cpp">
       <Filter>Sound\SoundFunc</Filter>
-    </ClCompile>
-    <ClCompile Include="Sound\SoundLoader\SoundLoader.cpp">
-      <Filter>Sound\SoundLoader</Filter>
     </ClCompile>
     <ClCompile Include="Sound\XAudio2\XAudio2.cpp">
       <Filter>Sound\XAudio2</Filter>
@@ -222,9 +219,6 @@
     <ClCompile Include="Union\Union.cpp">
       <Filter>Union</Filter>
     </ClCompile>
-    <ClCompile Include="Effector\Effector.cpp">
-      <Filter>Effector</Filter>
-    </ClCompile>
     <ClCompile Include="Pmd\Pmd.cpp">
       <Filter>PMD</Filter>
     </ClCompile>
@@ -251,6 +245,12 @@
     </ClCompile>
     <ClCompile Include="Compute\Compute.cpp">
       <Filter>Compute</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\SoundLoader\SoundLoader.cpp">
+      <Filter>Sound\SoundLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Compute\Effector.cpp">
+      <Filter>Compute\Effector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -289,9 +289,6 @@
     </ClInclude>
     <ClInclude Include="Sound\SoundFunc\SoundFunc.h">
       <Filter>Sound\SoundFunc</Filter>
-    </ClInclude>
-    <ClInclude Include="Sound\SoundLoader\SoundLoader.h">
-      <Filter>Sound\SoundLoader</Filter>
     </ClInclude>
     <ClInclude Include="Sound\XAudio2\XAudio2.h">
       <Filter>Sound\XAudio2</Filter>
@@ -356,9 +353,6 @@
     <ClInclude Include="Union\Union.h">
       <Filter>Union</Filter>
     </ClInclude>
-    <ClInclude Include="Effector\Effector.h">
-      <Filter>Effector</Filter>
-    </ClInclude>
     <ClInclude Include="Pmd\Pmd.h">
       <Filter>PMD</Filter>
     </ClInclude>
@@ -392,6 +386,12 @@
     <ClInclude Include="Compute\Compute.h">
       <Filter>Compute</Filter>
     </ClInclude>
+    <ClInclude Include="Sound\SoundLoader\SoundLoader.h">
+      <Filter>Sound\SoundLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Compute\Effector.h">
+      <Filter>Compute\Effector</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Window\Icon.rc">
@@ -424,6 +424,9 @@
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="Shader\Test.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\SoundEffect.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>

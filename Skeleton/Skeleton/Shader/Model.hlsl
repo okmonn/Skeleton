@@ -1,5 +1,3 @@
-#include "CurlNoise.hlsl"
-
 // ルートシグネチャの定義
 #define RS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
                     "DescriptorTable(SRV(t0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
@@ -89,8 +87,6 @@ struct Out
 [RootSignature(RS)]
 Out VS(Input input, uint id : SV_VertexID)
 {
-    float3 y = asfloat(test.Load3(id * 4));
-
     Out o;
     o.svpos  = input.pos;
     o.pos    = input.pos;

@@ -2,11 +2,9 @@
 #include "../Window/Window.h"
 #include "../Input/Input.h"
 #include "../Union/Union.h"
-#include "../Effector/Effector.h"
+#include "../Compute/Effector.h"
 #include "../Sound/Sound.h"
 #include <Windows.h>
-
-bool flag = true;
 
 int n = 0;
 
@@ -19,8 +17,7 @@ Application::Application()
 // デストラクタ
 Application::~Application()
 {
-	flag = false;
-	th.join();
+	int n = 0;
 }
 
 // クラスの生成
@@ -29,49 +26,14 @@ void Application::Create(void)
 	win      = std::make_shared<Window>();
 	input    = std::make_shared<Input>(win);
 	un       = std::make_shared<Union>(win);
-	effector = std::make_shared<Effector>(un->GetDev(), L"Shader/Effect.hlsl");
-	th = std::thread(&Application::Test, this);
+	effe     = std::make_shared<Effector>(un->GetDev(), L"Shader/SoundEffect.hlsl");
 
-	sound = std::make_shared<Sound>(effector);
+	sound = std::make_shared<Sound>(effe);
 	sound->Load("mtgx.wav");
 	sound->Play(true);
 
 	un->LoadPmd("model/巡音ルカ.pmd", n);
 	un->Attach("ヤゴコロダンス.vmd", n);
-}
-
-// テスト
-void Application::Test(void)
-{
-	static float freq = 0.0f;
-	bool low = false;
-	while (flag)
-	{
-		if (input->Triger(INPUT_SPACE))
-		{
-			low = (low == true) ? false : true;
-			effector->LowPassFilter(low);
-		}
-
-		if (input->CheckKey(INPUT_UP))
-		{
-			freq += 10.0f;
-			if (freq > 44100.0f / 2.0f)
-			{
-				freq = 44100.0f / 2.0f;
-			}
-			effector->SetFilterParam(freq);
-		}
-		else if (input->CheckKey(INPUT_DOWN))
-		{
-			freq -= 10.0f;
-			if (freq < 0.0f)
-			{
-				freq = 0.0f;
-			}
-			effector->SetFilterParam(freq);
-		}
-	}
 }
 
 // メッセージの確認

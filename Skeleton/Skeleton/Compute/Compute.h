@@ -24,10 +24,24 @@ class Compute
 		void* data;
 	};
 
+public:
 	// コンストラクタ
 	Compute();
 	// デストラクタ
 	virtual ~Compute();
+
+private:
+	// UAVリソースの生成
+	long CreateUavRsc(const std::string& name, const unsigned int& size);
+
+	// UAVの生成
+	void CreateUnorderView(const std::string& name, const unsigned int& stride, const unsigned int& num);
+
+	// CBVリソースの生成
+	long CreateCbvRsc(const std::string& name, const unsigned int& size);
+
+	// CBVの生成
+	void CreateConstantView(const std::string& name, const unsigned int& size);
 
 protected:
 	// クラスのインスタンス
@@ -39,12 +53,6 @@ protected:
 	// パイプラインの生成
 	long CreatePipe(void);
 
-	// UAVリソースの生成
-	long CreateUavRsc(const std::string& name, const unsigned int& size);
-
-	// UAVの生成
-	void CreateUnorderView(const std::string& name, const unsigned int& stride, const unsigned int& num);
-
 	// マップ
 	long Map(const std::string& name);
 
@@ -53,6 +61,12 @@ protected:
 
 	// UAVの生成
 	void UAV(const std::string& name, const unsigned int& stride, const unsigned int& num);
+
+	// CBVの生成
+	void CBV(const std::string& name, const unsigned int& size);
+
+	// 終了
+	void End(void);
 
 
 	// ディスクリプタマネージャー

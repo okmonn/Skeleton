@@ -1,7 +1,6 @@
 #pragma once
 #include "../etc/KeyData.h"
 #include <memory>
-#include <thread>
 
 class Window;
 class Input;
@@ -54,12 +53,9 @@ private:
 	// ユニオン
 	std::shared_ptr<Union>un;
 
-	// エフェクター
-	std::shared_ptr<Effector>effector;
+	// サウンドエフェクター
+	std::shared_ptr<Effector>effe;
 
 	// サウンド
 	std::shared_ptr<Sound>sound;
-
-	// スレッド
-	std::thread th;
 };

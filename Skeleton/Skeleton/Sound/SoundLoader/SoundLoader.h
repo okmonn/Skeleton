@@ -1,13 +1,13 @@
 #pragma once
-#include <unordered_map>
 #include <string>
 #include <vector>
-#include <memory>
 #include <thread>
 #include <functional>
+#include <unordered_map>
 
 class SoundLoader
 {
+	//サウンド情報
 	struct Wave {
 		//ファイルハンドル
 		FILE* file;
@@ -18,7 +18,7 @@ class SoundLoader
 		//量子化ビット数
 		int bit;
 		//波形情報
-		std::shared_ptr<std::unordered_map<int, std::vector<float>>>data;
+		std::vector<std::vector<float>>data;
 	};
 
 public:
@@ -46,25 +46,19 @@ public:
 	int GetBit(const std::string& fileName) {
 		return wave[fileName].bit;
 	}
-	// 波形データの取得
-	std::shared_ptr<std::unordered_map<int, std::vector<float>>> GetWave(const std::string& fileName) {
+	// 波形情報の取得
+	std::vector<std::vector<float>>& GetWave(const std::string& fileName) {
 		return wave[fileName].data;
-	}
-	// 読み込み完了フラグの取得
-	bool GetFlag(const std::string& fileName) {
-		return flag[fileName];
 	}
 
 private:
 	// コンストラクタ
 	SoundLoader();
-	SoundLoader(const SoundLoader&) {
-	}
-	void operator=(const SoundLoader&) {
-	}
+	SoundLoader(const SoundLoader&) = delete;
+	void operator=(const SoundLoader&) = delete;
 
 	// 読み込みテーブルの生成
-	void InitTbl(void);
+	void InitLoadTbl(void);
 
 	// 非同期読み込み
 	void Stream(const std::string& fileName);
@@ -73,14 +67,11 @@ private:
 	// スレッド終了フラグ
 	bool threadFlag;
 
-	// 波形情報
-	std::unordered_map<std::string, Wave>wave;
-
-	// 波形読み込み完了フラグ
-	std::unordered_map<std::string, bool>flag;
-
-	// 読み込みスレッド
+	// スレッド
 	std::vector<std::thread>th;
+
+	// サウンド情報
+	std::unordered_map<std::string, Wave>wave;
 
 	// 読み込みテーブル
 	std::unordered_map<int, std::unordered_map<int, std::function<void(std::vector<float>& tmp, FILE* file)>>>load;
