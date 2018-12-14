@@ -101,7 +101,7 @@ void SoundLoader::Stream(const std::string & fileName)
 
 	while (std::feof(wave[fileName].file) == 0 && threadFlag == true)
 	{
-		wave[fileName].data[read].resize(wave[fileName].sample * 60);
+		wave[fileName].data[read].resize(wave[fileName].sample / 10);
 		load[wave[fileName].channel][wave[fileName].bit](wave[fileName].data[read], wave[fileName].file);
 		++read;
 	}
