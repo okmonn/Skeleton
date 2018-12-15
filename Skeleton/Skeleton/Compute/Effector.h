@@ -9,7 +9,9 @@ class Effector :
 	// パラメータ
 	struct Param {
 		//サンプリング周波数
-		int sample;
+		float sample;
+		//遅延器の数
+		float delayDevNum;
 	};
 
 public:
@@ -21,8 +23,25 @@ public:
 	// 初期化
 	void Init(const unsigned int& num);
 
+	// ローパスフィルタ
+	void LowPass(const float& cutoff);
+
+	// パラメータのセット
+	void SetParam(void);
+
 	// 実行
 	void Execution(const std::vector<float>& input, std::vector<float>& out);
 
 private:
+	// ハニング窓関数
+	float Haninng(const int& i, const int& size);
+	// シンク関数
+	float Sinc(const float& i);
+
+
+	// パラメータ
+	Param param;
+
+	// デジタルフィルタの係数
+	std::vector<float>coe;
 };

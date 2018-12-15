@@ -1,5 +1,7 @@
 // ルートシグネチャの宣言
 #define RS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
+                    "DescriptorTable(CBV(b0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
+                                    "visibility = SHADER_VISIBILITY_ALL),"\
                     "DescriptorTable(UAV(u0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
                                     "visibility = SHADER_VISIBILITY_ALL),"\
                     "DescriptorTable(UAV(u1, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
@@ -17,6 +19,12 @@
                                   "maxLOD         = 3.402823466e+38f,"\
                                   "space          = 0,"\
                                   "visibility     = SHADER_VISIBILITY_ALL)"
+
+// フィルタ係数
+cbuffer Filter : register(b0)
+{
+    float coe[256];
+}
 
 // 適応前データ
 RWStructuredBuffer<float> origin : register(u0);
@@ -87,9 +95,9 @@ float Hanning(int index, uint size)
 
     tmp = (size % 2 == 0) ?
 				//偶数
-				0.5f - 0.5f * cos(2.0f * 3.14159265f * (float) index / (float) size) :
+				0.5f - 0.5f * cos(2.0f * 3.14159265f * index / size) :
 				//奇数
-				0.5f - 0.5f * cos(2.0f * 3.14159265f * ((float) index + 0.5f) / (float) size);
+				0.5f - 0.5f * cos(2.0f * 3.14159265f * (index + 0.5f) / size);
 
     if (tmp == 0.0f)
     {
@@ -106,38 +114,51 @@ float Sinc(float x)
 
 void LowPass2(uint index)
 {
-    real[index] = 0.0f;
+    //float fe = 1000.0f / 44100.0f; /* エッジ周波数 */
+    //float delta = 1000.0f / 44100.0f; /* 遷移帯域幅 */
+    //int J = (int) (3.1f / delta + 0.5f) - 1; /* 遅延器の数 */
+    //if (J % 2 == 1)
+    //{
+    //    J++; /* J+1が奇数になるように調整する */
+    //}
+    //int m = 0;
+    //float b[137];
+    //int offset = J / 2;
+    //for (m = -J / 2; m <= J / 2; m++)
+    //{
+    //    b[offset + m] = 2.0f * fe * Sinc(2.0f * 3.14159265f * fe * m);
+    //}
+    //for (m = 0; m <= J; m++)
+    //{
+    //    float q = b[m] * Hanning(m, J + 1);
+    //    if (index - m >= 0)
+    //    {
+    //        real[index] += q * origin[index - m];
+    //    }
+    //}
 
-    float fe = 10000.0f / 44100.0f; /* エッジ周波数 */
-    float delta = 1000.0f / 44100.0f; /* 遷移帯域幅 */
-    int J = (int) (3.1f / delta + 0.5f) - 1; /* 遅延器の数 */
-    if (J % 2 == 1)
+    float delta = 1000.0f / 44100.0f;
+    int num = (int) (3.1f / delta + 0.5f) - 1;
+    if(num % 2 != 0)
     {
-        J++; /* J+1が奇数になるように調整する */
+        ++num;
     }
-    int m = 0;
-    float b[137];
-    int offset = J / 2;
-    for (m = -J / 2; m <= J / 2; m++)
+    for (int m = 0; m <= num; ++m)
     {
-        b[offset + m] = 2.0 * fe * Sinc(2.0 * 3.14159265f * fe * m);
-    }
-    for (m = 0; m <= J; m++)
-    {
-        b[m] *= Hanning(m, J + 1);
-        if (index - m >= 0)
+        if(index - m >= 0)
         {
-            real[index] += b[m] * origin[index - m];
+            real[index] += coe[m] * origin[index - m];
         }
     }
+
 }
 
 [RootSignature(RS)]
 [numthreads(1, 1, 1)]
 void CS(uint3 gID : SV_GroupID, uint3 gtID : SV_GroupThreadID, uint3 disID : SV_DispatchThreadID)
 {
-    //LowPass(gID.x);
-    real[gID.x] = origin[gID.x];
+    LowPass2(gID.x);
+    //real[gID.x] = origin[gID.x];
 
-    //AllMemoryBarrierWithGroupSync();
+    AllMemoryBarrierWithGroupSync();
 }
