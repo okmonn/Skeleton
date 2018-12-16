@@ -423,9 +423,6 @@
     <FxCompile Include="Shader\CurlNoise.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
-    <FxCompile Include="Shader\Test.hlsl">
-      <Filter>リソース ファイル</Filter>
-    </FxCompile>
     <FxCompile Include="Shader\SoundEffect.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
