@@ -72,7 +72,7 @@ void Effector::LowPass(const float & cutoff, const float& delta)
 void Effector::HightPass(const float & cutoff, const float & delta)
 {
 	//エッジ周波数
-	float fe = cutoff / param.sample;
+	float fe = fmod(cutoff , (param.sample / 2.0f)) / param.sample;
 	//遷移帯域幅
 	float d  = delta / param.sample;
 
@@ -92,6 +92,21 @@ void Effector::HightPass(const float & cutoff, const float & delta)
 // 実行
 void Effector::Execution(const std::vector<float>& input, std::vector<float>& out)
 {
+	/*{
+		out.resize(input.size());
+		for (int i = 0; i < input.size(); ++i)
+		{
+			for (int n = 0; n <= param.delayDevNum; ++n)
+			{
+				if (i - n >= 0)
+				{
+					out[i] += coe[n] * input[i - n];
+				}
+			}
+		}
+		return;
+	}*/
+
 	memcpy(info["b0"].data, &param, sizeof(Param));
 	memcpy(info["b1"].data, coe.data(), sizeof(float) * coe.size());
 

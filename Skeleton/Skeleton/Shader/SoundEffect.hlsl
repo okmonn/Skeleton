@@ -90,6 +90,25 @@ void Filter(uint index)
     }
 }
 
+// コンプレッサ
+void Compressor(uint index)
+{
+    //しきい値
+    float threshold = 0.2f;
+    ///レシオ
+    float ratio = 1.0f / 10.0f;
+
+    if(real[index] > threshold)
+    {
+        real[index] = threshold + (real[index] - threshold) * ratio;
+
+    }
+    else if(real[index] < -threshold)
+    {
+        real[index] = -threshold + (real[index] + threshold) * ratio;
+    }
+}
+
 [RootSignature(RS)]
 [numthreads(1, 1, 1)]
 void CS(uint3 gID : SV_GroupID, uint3 gtID : SV_GroupThreadID, uint3 disID : SV_DispatchThreadID)
@@ -97,13 +116,15 @@ void CS(uint3 gID : SV_GroupID, uint3 gtID : SV_GroupThreadID, uint3 disID : SV_
     if(filter == false)
     {
         Filter(gID.x);
+        Compressor(gID.x);
+
     }
     else
     {
         real[gID.x] = origin[gID.x];
         Tremolo(gID.x);
-        //Distortion(gID.x);
-        //Volume(gID.x);
+        Distortion(gID.x);
+        Volume(gID.x);
     }
 
     AllMemoryBarrierWithGroupSync();
