@@ -29,11 +29,40 @@ void Application::Create(void)
 	effe     = std::make_shared<Effector>(un->GetDev(), L"Shader/SoundEffect.hlsl");
 
 	sound = std::make_shared<Sound>(effe);
-	sound->Load("mtgx.wav");
+	sound->Load("えれくとりっくえんじぇう.wav");
 	sound->Play(true);
 
 	un->LoadPmd("model/巡音ルカ.pmd", n);
 	un->Attach("ヤゴコロダンス.vmd", n);
+}
+
+// テスト
+void Application::Test(void)
+{
+	static float cut = 44100.0f / 2.0f - 100.0f;
+	static float gain = 1.0f;
+	if (input->CheckKey(INPUT_UP))
+	{
+		cut += 100.0f;
+		sound->LowPass(cut);
+		printf("%f\n", cut);
+	}
+	else if (input->CheckKey(INPUT_DOWN))
+	{
+		cut -= 100.0f;
+		sound->LowPass(cut);
+		printf("%f\n", cut);
+	}
+	else if (input->CheckKey(INPUT_RIGHT))
+	{
+		gain += 0.5f;
+		effe->SetGain(gain);
+	}
+	else if (input->CheckKey(INPUT_LEFT))
+	{
+		gain -= 0.5f;
+		effe->SetGain(gain);
+	}
 }
 
 // メッセージの確認
@@ -67,6 +96,8 @@ bool Application::InputKey(const int & i)
 // 描画
 void Application::Draw(void)
 {
+	Test();
+
 	un->Animation(n, true, 0.5f);
 
 	un->ClearShadow();

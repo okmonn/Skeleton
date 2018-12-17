@@ -139,7 +139,7 @@ void Filter::Execution(std::vector<float>& data)
 	{
 		tmp = data[i];
 
-		data[i] = b[0] / a[0] * input[i] + b[1] / a[0] * input[0] + b[2] / a[0] * input[1]
+		data[i] = b[0] / a[0] * tmp + b[1] / a[0] * input[0] + b[2] / a[0] * input[1]
 			- a[1] / a[0] * out[0] - a[2] / a[0] * out[1];
 
 		input[1] = input[0];

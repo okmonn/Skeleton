@@ -195,3 +195,17 @@ void * Sound::GetHandle(void) const
 	return call->handle;
 }
 
+// ローパスフィルタ
+void Sound::LowPass(float & cutoff, const float & q, const float & sample)
+{
+	if (cutoff >= sample / 2.0f)
+	{
+		cutoff = sample / 2.0f - 1.0f;
+	}
+	else if (cutoff < 0.0f)
+	{
+		cutoff = 0.0f;
+	}
+	filter->LowPass(cutoff, q, sample);
+}
+

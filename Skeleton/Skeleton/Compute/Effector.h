@@ -29,17 +29,13 @@ public:
 	void Execution(const std::vector<float>& input, std::vector<float>& out);
 
 	// サンプリング周波数のセット
-	void SetSample(const float& sample) {
-		param.sample = sample;
-	}
+	void SetSample(const float& sample);
+
 	// 増幅率のセット
-	void SetGain(const float& gain) {
-		param.gain = gain;
-	}
+	void SetGain(const float& gain);
+
 	// ボリュームのセット
-	void SetVolume(const float& volume) {
-		param.volume = volume;
-	}
+	void SetVolume(const float& volume);
 
 private:
 	// パラメータ

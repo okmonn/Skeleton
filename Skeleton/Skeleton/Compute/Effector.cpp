@@ -82,3 +82,36 @@ void Effector::Execution(const std::vector<float>& input, std::vector<float>& ou
 
 	out.assign((float*)info["u1"].data, (float*)info["u1"].data + input.size());
 }
+
+// サンプリング周波数のセット
+void Effector::SetSample(const float & sample)
+{
+	if (sample < 0.0f)
+	{
+		return;
+	}
+
+	param.sample = sample;
+}
+
+// 増幅率のセット
+void Effector::SetGain(const float & gain)
+{
+	if (gain < 0.0f)
+	{
+		return;
+	}
+
+	param.gain = gain;
+}
+
+// ボリュームのセット
+void Effector::SetVolume(const float & volume)
+{
+	if (volume < 0.0f)
+	{
+		return;
+	}
+
+	param.volume = volume;
+}

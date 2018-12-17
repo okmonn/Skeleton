@@ -33,6 +33,9 @@ public:
 	// コールバックハンドルの取得
 	void* GetHandle(void) const;
 
+	// ローパスフィルタ
+	void LowPass(float& cutoff, const float& q = sqrtf(2.0f), const float& sample = 44100.0f);
+
 	// 再生終了フラグの取得
 	bool GetEnd(void) const {
 		return end;
