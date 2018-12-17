@@ -28,6 +28,8 @@ void Application::Create(void)
 	un       = std::make_shared<Union>(win);
 	effe     = std::make_shared<Effector>(un->GetDev(), L"Shader/SoundEffect.hlsl");
 
+	win->ChangeTitle(L"1601271_‰ª”É’j");
+
 	sound = std::make_shared<Sound>(effe);
 	sound->Load("‚¦‚ê‚­‚Æ‚è‚Á‚­‚¦‚ñ‚¶‚¥‚¤.wav");
 	sound->Play(true);
