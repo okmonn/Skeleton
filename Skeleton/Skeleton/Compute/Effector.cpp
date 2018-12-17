@@ -44,7 +44,7 @@ void Effector::Init(const unsigned int & num)
 	UAV("u0", sizeof(float), num);
 	UAV("u1", sizeof(float), num);
 
-	LowPass(100);
+	LowPass(1000);
 }
 
 // ローパスフィルタ
@@ -58,7 +58,7 @@ void Effector::LowPass(const float & cutoff, const float& delta)
 	param.delayDevNum = std::roundf(3.1f / d) - 1.0f;
 	if ((int)param.delayDevNum % 2 == 1)
 	{
-		++param.delayDevNum;
+		--param.delayDevNum;
 	}
 
 	int offset = (int)param.delayDevNum / 2;
@@ -92,21 +92,6 @@ void Effector::HightPass(const float & cutoff, const float & delta)
 // 実行
 void Effector::Execution(const std::vector<float>& input, std::vector<float>& out)
 {
-	/*{
-		out.resize(input.size());
-		for (int i = 0; i < input.size(); ++i)
-		{
-			for (int n = 0; n <= param.delayDevNum; ++n)
-			{
-				if (i - n >= 0)
-				{
-					out[i] += coe[n] * input[i - n];
-				}
-			}
-		}
-		return;
-	}*/
-
 	memcpy(info["b0"].data, &param, sizeof(Param));
 	memcpy(info["b1"].data, coe.data(), sizeof(float) * coe.size());
 

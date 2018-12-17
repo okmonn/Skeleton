@@ -147,6 +147,7 @@
     <ClCompile Include="Root\Root.cpp" />
     <ClCompile Include="Root\RootMane.cpp" />
     <ClCompile Include="ShadowMap\ShadowMap.cpp" />
+    <ClCompile Include="Sound\Filter\Filter.cpp" />
     <ClCompile Include="Sound\Sound.cpp" />
     <ClCompile Include="Sound\SoundFunc\SoundFunc.cpp" />
     <ClCompile Include="Sound\SoundLoader\SoundLoader.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="Root\RootMane.h" />
     <ClInclude Include="ShadowMap\ShadowMap.h" />
     <ClInclude Include="Sound\Destroy.h" />
+    <ClInclude Include="Sound\Filter\Filter.h" />
     <ClInclude Include="Sound\Sound.h" />
     <ClInclude Include="Sound\SoundFunc\SoundFunc.h" />
     <ClInclude Include="Sound\SoundLoader\SoundLoader.h" />

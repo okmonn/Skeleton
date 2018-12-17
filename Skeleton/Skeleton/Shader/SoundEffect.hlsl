@@ -79,11 +79,34 @@ void Volume(uint index)
     real[index] *= volume;
 }
 
+float Haninng(int i, int size)
+{
+    float tmp = 0.0f;
+
+    tmp = (size % 2 == 0) ?
+		//‹ô”
+		0.5f - 0.5f * cos(2.0f * PI * i / size) :
+		//Šï”
+		0.5f - 0.5f * cos(2.0f * PI * (i + 0.5f) / size);
+
+    if (tmp == 0.0f)
+    {
+        tmp = 1.0f;
+    }
+
+    return tmp;
+}
+
+float Sinc(float i)
+{
+    return (i == 0.0f) ? 1.0f : sin(i) / i;
+}
+
 // FIRƒtƒBƒ‹ƒ^
 void Filter(uint index)
 {
     int flag = 0;
-    for (uint m = 0; m <= (uint)delayDevNum; ++m)
+    for (int m = 0; m <= (int) delayDevNum; ++m)
     {
         flag = (index - m >= 0);
         real[index] += lerp(0.0f, coe[m] * origin[index - m], step(true, flag));
@@ -116,8 +139,7 @@ void CS(uint3 gID : SV_GroupID, uint3 gtID : SV_GroupThreadID, uint3 disID : SV_
     if(filter == false)
     {
         Filter(gID.x);
-        Compressor(gID.x);
-
+        //real[gID.x] = origin[gID.x];
     }
     else
     {

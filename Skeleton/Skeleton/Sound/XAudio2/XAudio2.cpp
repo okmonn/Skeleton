@@ -13,9 +13,9 @@ XAudio2::XAudio2() :
 // デストラクタ
 XAudio2::~XAudio2()
 {
+	audio->StopEngine();
 	Destroy(mastering);
 	Release(audio);
-
 	CoUninitialize();
 }
 
@@ -61,4 +61,6 @@ void XAudio2::Init(void)
 	InitCom();
 	CreateAudio();
 	CreateMastering();
+
+	audio->StartEngine();
 }

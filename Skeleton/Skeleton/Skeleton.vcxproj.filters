@@ -133,6 +133,9 @@
     <Filter Include="Compute\Effector">
       <UniqueIdentifier>{86997bc8-3b24-4b9b-b8a5-ef2e3affb1f1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sound\Filter">
+      <UniqueIdentifier>{35b0d88b-9ae0-4a58-8dae-b0c3ab5468b2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -251,6 +254,9 @@
     </ClCompile>
     <ClCompile Include="Compute\Effector.cpp">
       <Filter>Compute\Effector</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\Filter\Filter.cpp">
+      <Filter>Sound\Filter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -391,6 +397,9 @@
     </ClInclude>
     <ClInclude Include="Compute\Effector.h">
       <Filter>Compute\Effector</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\Filter\Filter.h">
+      <Filter>Sound\Filter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
