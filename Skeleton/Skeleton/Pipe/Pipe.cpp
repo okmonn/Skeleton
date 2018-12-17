@@ -18,7 +18,7 @@ Pipe::~Pipe()
 }
 
 // パイプラインの生成
-long Pipe::Create(const D3D12_INPUT_ELEMENT_DESC & input, const unsigned int & num, const D3D12_PRIMITIVE_TOPOLOGY_TYPE & type, const bool & depth)
+long Pipe::Create(const D3D12_INPUT_ELEMENT_DESC & input, const size_t & num, const D3D12_PRIMITIVE_TOPOLOGY_TYPE & type, const bool & depth)
 {
 	D3D12_RASTERIZER_DESC rasterizer{};
 	rasterizer.AntialiasedLineEnable = FALSE;
@@ -77,7 +77,7 @@ long Pipe::Create(const D3D12_INPUT_ELEMENT_DESC & input, const unsigned int & n
 		desc.GS.pShaderBytecode           = root.lock()->GetGeometry()->GetBufferPointer();
 		desc.GS.BytecodeLength            = root.lock()->GetGeometry()->GetBufferSize();
 	}
-	desc.InputLayout                      = { &input, num };
+	desc.InputLayout                      = { &input, static_cast<unsigned int>(num) };
 	desc.NumRenderTargets                 = 1;
 	desc.PrimitiveTopologyType            = type;
 	desc.pRootSignature                   = root.lock()->Get();

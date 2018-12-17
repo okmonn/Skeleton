@@ -67,7 +67,7 @@ long Pmd::WriteSub(const std::string & fileName)
 	box.right  = static_cast<UINT>(tex.GetRsc(fileName)->GetDesc().Width);
 	box.top    = 0;
 
-	auto hr = tex.GetRsc(fileName)->WriteToSubresource(0, &box, &tex.GetDecode(fileName)[0], tex.GetSub(fileName)->RowPitch, static_cast<UINT>(tex.GetSub(fileName)->SlicePitch));
+	auto hr = tex.GetRsc(fileName)->WriteToSubresource(0, &box, &tex.GetDecode(fileName)[0], static_cast<unsigned int>(tex.GetSub(fileName)->RowPitch), static_cast<unsigned int>(tex.GetSub(fileName)->SlicePitch));
 	if (FAILED(hr))
 	{
 		OutputDebugString(_T("\nサブリソースの更新：失敗"));
@@ -153,7 +153,7 @@ void Pmd::Bundle(const std::string & fileName, int * i)
 	//頂点のセット
 	D3D12_VERTEX_BUFFER_VIEW view{};
 	view.BufferLocation = descMane.GetRsc(loader.GetVertexRsc(fileName))->GetGPUVirtualAddress();
-	view.SizeInBytes    = sizeof(pmd::Vertex) * loader.GetVertex(fileName).size();
+	view.SizeInBytes    = static_cast<unsigned int>(sizeof(pmd::Vertex) * loader.GetVertex(fileName).size());
 	view.StrideInBytes  = sizeof(pmd::Vertex);
 	data[i].list->GetList()->IASetVertexBuffers(0, 1, &view);
 
@@ -161,7 +161,7 @@ void Pmd::Bundle(const std::string & fileName, int * i)
 	D3D12_INDEX_BUFFER_VIEW iView{};
 	iView.BufferLocation = descMane.GetRsc(loader.GetIndexRsc(fileName))->GetGPUVirtualAddress();
 	iView.Format         = DXGI_FORMAT::DXGI_FORMAT_R16_UINT;;
-	iView.SizeInBytes    = sizeof(unsigned short) * loader.GetIndex(fileName).size();
+	iView.SizeInBytes    = static_cast<unsigned int>(sizeof(unsigned short) * loader.GetIndex(fileName).size());
 	data[i].list->GetList()->IASetIndexBuffer(&iView);
 
 	data[i].list->GetList()->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -270,15 +270,15 @@ void Pmd::ShadowBundle(const std::string & fileName, int * i)
 	//頂点のセット
 	D3D12_VERTEX_BUFFER_VIEW view{};
 	view.BufferLocation = descMane.GetRsc(loader.GetVertexRsc(fileName))->GetGPUVirtualAddress();
-	view.SizeInBytes = sizeof(pmd::Vertex) * loader.GetVertex(fileName).size();
-	view.StrideInBytes = sizeof(pmd::Vertex);
+	view.SizeInBytes    = static_cast<unsigned int>(sizeof(pmd::Vertex) * loader.GetVertex(fileName).size());
+	view.StrideInBytes  = sizeof(pmd::Vertex);
 	data[i].sList->GetList()->IASetVertexBuffers(0, 1, &view);
 
 	//インデックスのセット
 	D3D12_INDEX_BUFFER_VIEW iView{};
 	iView.BufferLocation = descMane.GetRsc(loader.GetIndexRsc(fileName))->GetGPUVirtualAddress();
-	iView.Format = DXGI_FORMAT::DXGI_FORMAT_R16_UINT;;
-	iView.SizeInBytes = sizeof(unsigned short) * loader.GetIndex(fileName).size();
+	iView.Format         = DXGI_FORMAT::DXGI_FORMAT_R16_UINT;;
+	iView.SizeInBytes    = static_cast<unsigned int>(sizeof(unsigned short) * loader.GetIndex(fileName).size());
 	data[i].sList->GetList()->IASetIndexBuffer(&iView);
 
 	data[i].sList->GetList()->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

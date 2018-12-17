@@ -57,13 +57,13 @@ void Triangle::Bundle(void)
 
 	D3D12_VERTEX_BUFFER_VIEW view{};
 	view.BufferLocation = descMane.GetRsc(vRsc)->GetGPUVirtualAddress();
-	view.SizeInBytes    = sizeof(prm::Vertex) * vertex.size();
+	view.SizeInBytes    = static_cast<unsigned int>(sizeof(prm::Vertex) * vertex.size());
 	view.StrideInBytes  = sizeof(prm::Vertex);
 	list->GetList()->IASetVertexBuffers(0, 1, &view);
 
 	list->GetList()->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	list->GetList()->DrawInstanced(vertex.size(), 1, 0, 0);
+	list->GetList()->DrawInstanced(static_cast<unsigned int>(vertex.size()), 1, 0, 0);
 
 	list->GetList()->Close();
 }

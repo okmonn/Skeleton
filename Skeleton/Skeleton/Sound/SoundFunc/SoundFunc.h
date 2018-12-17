@@ -55,4 +55,16 @@ namespace sound
 
 	// ステレオ・16ビット
 	void LoadStereo16(std::vector<float>& data, FILE* file);
+
+	// ハニング窓関数
+	float Haninng(const unsigned int& i, const size_t& size);
+
+	// シンク関数
+	float Sinc(const float& i);
+
+	// 離散フーリエ変換
+	void DFT(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag);
+
+	// 逆離散フーリエ変換
+	void IDFT(const std::vector<float>& real, const std::vector<float>& imag, std::vector<float>& out);
 };

@@ -17,7 +17,7 @@ public:
 	~Pipe();
 
 	// パイプラインの生成
-	long Create(const D3D12_INPUT_ELEMENT_DESC& input, const unsigned int& num, const D3D12_PRIMITIVE_TOPOLOGY_TYPE& type, const bool& depth);
+	long Create(const D3D12_INPUT_ELEMENT_DESC& input, const size_t& num, const D3D12_PRIMITIVE_TOPOLOGY_TYPE& type, const bool& depth);
 
 	// パイプラインの取得
 	ID3D12PipelineState* Get(void) const {

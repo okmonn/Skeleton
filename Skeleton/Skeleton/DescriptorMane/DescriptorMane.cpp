@@ -24,12 +24,12 @@ DescriptorMane::~DescriptorMane()
 }
 
 // ÉqÅ[ÉvÇÃê∂ê¨
-long DescriptorMane::CreateHeap(std::weak_ptr<Device>dev, int & i, const D3D12_DESCRIPTOR_HEAP_FLAGS & flag, const unsigned int & num, const D3D12_DESCRIPTOR_HEAP_TYPE & type)
+long DescriptorMane::CreateHeap(std::weak_ptr<Device>dev, int & i, const D3D12_DESCRIPTOR_HEAP_FLAGS & flag, const size_t & num, const D3D12_DESCRIPTOR_HEAP_TYPE & type)
 {
 	D3D12_DESCRIPTOR_HEAP_DESC desc{};
 	desc.Flags          = flag;
 	desc.NodeMask       = 0;
-	desc.NumDescriptors = num;
+	desc.NumDescriptors = static_cast<unsigned int>(num);
 	desc.Type           = type;
 
 	auto hr = dev.lock()->Get()->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&heap[&i]));

@@ -14,10 +14,6 @@ class Effector :
 		float gain;
 		//音量レベル
 		float volume;
-		//遅延器の数
-		float delayDevNum;
-		//フィルタ適応フラグ
-		int filter;
 	};
 
 public:
@@ -28,12 +24,6 @@ public:
 
 	// 初期化
 	void Init(const unsigned int& num);
-
-	// ローパスフィルタ
-	void LowPass(const float& cutoff, const float& delta = 1000.0f);
-
-	// ハイパスフィルタ
-	void HightPass(const float& cutoff, const float& delta = 1000.0f);
 
 	// 実行
 	void Execution(const std::vector<float>& input, std::vector<float>& out);
@@ -50,22 +40,8 @@ public:
 	void SetVolume(const float& volume) {
 		param.volume = volume;
 	}
-	// フィルタ適応フラグのセット
-	void SetFilter(const bool& flag) {
-		param.filter = flag;
-	}
 
 private:
-	// ハニング窓関数
-	float Haninng(const int& i, const int& size);
-
-	// シンク関数
-	float Sinc(const float& i);
-
-
 	// パラメータ
 	Param param;
-
-	// デジタルフィルタの係数
-	std::vector<float>coe;
 };

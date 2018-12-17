@@ -81,11 +81,11 @@ void Plane::Draw(std::weak_ptr<List> list, std::weak_ptr<ShadowMap>shadow)
 
 	D3D12_VERTEX_BUFFER_VIEW view{};
 	view.BufferLocation = descMane.GetRsc(vRsc)->GetGPUVirtualAddress();
-	view.SizeInBytes    = sizeof(prm3d::Vertex) * vertex.size();
+	view.SizeInBytes    = static_cast<unsigned int>(sizeof(prm3d::Vertex) * vertex.size());
 	view.StrideInBytes  = sizeof(prm3d::Vertex);
 	list.lock()->GetList()->IASetVertexBuffers(0, 1, &view);
 
 	list.lock()->GetList()->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	list.lock()->GetList()->DrawInstanced(vertex.size(), 1, 0, 0);
+	list.lock()->GetList()->DrawInstanced(static_cast<unsigned int>(vertex.size()), 1, 0, 0);
 }

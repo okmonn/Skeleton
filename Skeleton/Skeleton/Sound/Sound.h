@@ -10,6 +10,7 @@ class XAudio2;
 class VoiceCallback;
 class SoundLoader;
 class Effector;
+class Filter;
 
 class Sound
 {
@@ -67,6 +68,9 @@ private:
 	
 	// コールバック
 	std::unique_ptr<VoiceCallback>call;
+
+	// フィルター
+	std::unique_ptr<Filter>filter;
 
 	// ソースボイス
 	IXAudio2SourceVoice* voice;

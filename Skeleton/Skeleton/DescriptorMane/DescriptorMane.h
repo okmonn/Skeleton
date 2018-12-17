@@ -26,7 +26,7 @@ public:
 
 	// ヒープの生成
 	long CreateHeap(std::weak_ptr<Device>dev, int& i, const D3D12_DESCRIPTOR_HEAP_FLAGS& flag = static_cast<D3D12_DESCRIPTOR_HEAP_FLAGS>(0),
-		const unsigned int& num = 1, const D3D12_DESCRIPTOR_HEAP_TYPE& type = static_cast<D3D12_DESCRIPTOR_HEAP_TYPE>(0));
+		const size_t& num = 1, const D3D12_DESCRIPTOR_HEAP_TYPE& type = static_cast<D3D12_DESCRIPTOR_HEAP_TYPE>(0));
 
 	// リソースの生成
 	long CreateRsc(std::weak_ptr<Device>dev, int& i, const D3D12_HEAP_PROPERTIES& prop, const D3D12_RESOURCE_DESC& desc, D3D12_CLEAR_VALUE* clear = nullptr,

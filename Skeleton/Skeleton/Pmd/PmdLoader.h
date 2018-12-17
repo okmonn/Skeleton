@@ -125,7 +125,7 @@ private:
 
 	// マップ
 	template<typename T>
-	long Map(int* i, T* data, const unsigned int& size, void** rscData);
+	long Map(int* i, T* data, const size_t& size, void** rscData);
 
 	// ボーンノードのセット
 	void SetBornNode(const std::string& fileName);

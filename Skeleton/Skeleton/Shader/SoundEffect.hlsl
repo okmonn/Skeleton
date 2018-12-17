@@ -2,8 +2,6 @@
 #define RS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
                     "DescriptorTable(CBV(b0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
                                     "visibility = SHADER_VISIBILITY_ALL),"\
-                    "DescriptorTable(CBV(b1, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
-                                    "visibility = SHADER_VISIBILITY_ALL),"\
                     "DescriptorTable(UAV(u0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
                                     "visibility = SHADER_VISIBILITY_ALL),"\
                     "DescriptorTable(UAV(u1, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
@@ -28,14 +26,6 @@ cbuffer Param : register(b0)
     float sample;
     float gain;
     float volume;
-    float delayDevNum;
-    int filter;
-}
-
-// フィルタ係数
-cbuffer Filter : register(b1)
-{
-    float coe[256];
 }
 
 // 適応前データ
@@ -79,40 +69,6 @@ void Volume(uint index)
     real[index] *= volume;
 }
 
-float Haninng(int i, int size)
-{
-    float tmp = 0.0f;
-
-    tmp = (size % 2 == 0) ?
-		//偶数
-		0.5f - 0.5f * cos(2.0f * PI * i / size) :
-		//奇数
-		0.5f - 0.5f * cos(2.0f * PI * (i + 0.5f) / size);
-
-    if (tmp == 0.0f)
-    {
-        tmp = 1.0f;
-    }
-
-    return tmp;
-}
-
-float Sinc(float i)
-{
-    return (i == 0.0f) ? 1.0f : sin(i) / i;
-}
-
-// FIRフィルタ
-void Filter(uint index)
-{
-    int flag = 0;
-    for (int m = 0; m <= (int) delayDevNum; ++m)
-    {
-        flag = (index - m >= 0);
-        real[index] += lerp(0.0f, coe[m] * origin[index - m], step(true, flag));
-    }
-}
-
 // コンプレッサ
 void Compressor(uint index)
 {
@@ -136,18 +92,10 @@ void Compressor(uint index)
 [numthreads(1, 1, 1)]
 void CS(uint3 gID : SV_GroupID, uint3 gtID : SV_GroupThreadID, uint3 disID : SV_DispatchThreadID)
 {
-    if(filter == false)
-    {
-        Filter(gID.x);
-        //real[gID.x] = origin[gID.x];
-    }
-    else
-    {
-        real[gID.x] = origin[gID.x];
-        Tremolo(gID.x);
-        Distortion(gID.x);
-        Volume(gID.x);
-    }
+    real[gID.x] = origin[gID.x];
+    Tremolo(gID.x);
+    Distortion(gID.x);
+    Volume(gID.x);
 
     AllMemoryBarrierWithGroupSync();
 }

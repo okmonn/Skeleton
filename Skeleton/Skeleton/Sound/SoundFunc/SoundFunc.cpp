@@ -6,6 +6,9 @@
 // char型のオーバーフローの防止
 #define OVERFLLOW_CHAR 127.0f
 
+// 円周率
+#define PI 3.14159265f
+
 // ステレオ8ビット
 struct Stereo8 {
 	unsigned char left;
@@ -194,5 +197,75 @@ void sound::LoadStereo16(std::vector<float>& data, FILE * file)
 		//float値に変換
 		data[i] = static_cast<float>(tmp.left) / OVERFLLOW_SHORT;
 		data[i + 1] = static_cast<float>(tmp.right) / OVERFLLOW_SHORT;
+	}
+}
+
+// ハニング窓関数
+float sound::Haninng(const unsigned int & i, const size_t & size)
+{
+	float tmp = 0.0f;
+
+	tmp = (size % 2 == 0) ?
+		//偶数
+		0.5f - 0.5f * cosf(2.0f * PI * i / size) :
+		//奇数
+		0.5f - 0.5f * cosf(2.0f * PI * (i + 0.5f) / size);
+
+	if (tmp == 0.0f)
+	{
+		tmp = 1.0f;
+	}
+
+	return tmp;
+}
+
+// シンク関数
+float sound::Sinc(const float & i)
+{
+	return (i == 0.0f) ? 1.0f : sinf(i) / i;
+}
+
+// 離散フーリエ変換
+void sound::DFT(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag)
+{
+	real = input;
+	imag.assign(input.size(), 0.0f);
+
+	float tmpR = 0.0f;
+	float tmpI = 0.0f;
+	for (unsigned int i = 0; i < input.size(); ++i)
+	{
+		for (unsigned int n = 0; n < input.size(); ++n)
+		{
+			tmpR =  cosf(2.0f * PI * i * n / input.size());
+			tmpI = -sinf(2.0f * PI * i * n / input.size());
+
+			real[i] += tmpR * (input[n] * Haninng(n, input.size())) - tmpI * 0.0f;
+			imag[i] += tmpR * 0.0f                                  + tmpI * (input[n] * Haninng(n, input.size()));
+		}
+	}
+}
+
+// 逆離散フーリエ変換
+void sound::IDFT(const std::vector<float>& real, const std::vector<float>& imag, std::vector<float>& out)
+{
+	out.assign(real.size(), 0.0f);
+
+	float tmpR = 0.0f;
+	float tmpI = 0.0f;
+	for (unsigned int i = 0; i < real.size(); ++i)
+	{
+		float tmp = 0.0f;
+		for (unsigned int n = 0; n < real.size(); ++i)
+		{
+			tmpR = cosf(2.0f * PI * i * n / real.size());
+			tmpI = sinf(2.0f * PI * i * n / real.size());
+
+			out[i] += (tmpR * real[n] - tmpI * imag[n]) / real.size();
+			tmp    += (tmpR * imag[n] + tmpI * real[n]) / real.size();
+		}
+
+		out[i] /= Haninng(i, real.size());
+		tmp    /= Haninng(i, real.size());
 	}
 }

@@ -119,7 +119,7 @@ long PmdLoader::CreateRsc(std::weak_ptr<Device>dev, int * i, const unsigned long
 
 // ƒ}ƒbƒv
 template<typename T>
-long PmdLoader::Map(int * i, T * data, const unsigned int & size, void ** rscData)
+long PmdLoader::Map(int * i, T * data, const size_t & size, void ** rscData)
 {
 	auto hr = descMane.GetRsc(*i)->Map(0, nullptr, rscData);
 	if (FAILED(hr))

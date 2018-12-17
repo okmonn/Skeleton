@@ -203,7 +203,7 @@ long Texture::WriteSub(int * i)
 	box.right  = static_cast<UINT>(tex[i].rsc->GetDesc().Width);
 	box.top    = 0;
 
-	auto hr = tex[i].rsc->WriteToSubresource(0, &box, &tex[i].decode[0], tex[i].sub.lock()->RowPitch, static_cast<UINT>(tex[i].sub.lock()->SlicePitch));
+	auto hr = tex[i].rsc->WriteToSubresource(0, &box, &tex[i].decode[0], static_cast<unsigned int>(tex[i].sub.lock()->RowPitch), static_cast<unsigned int>(tex[i].sub.lock()->SlicePitch));
 	if (FAILED(hr))
 	{
 		OutputDebugString(_T("\nサブリソースの更新：失敗"));
@@ -249,14 +249,14 @@ void Texture::SetBundle(int * i)
 
 	D3D12_VERTEX_BUFFER_VIEW view{};
 	view.BufferLocation = descMane.GetRsc(vRsc)->GetGPUVirtualAddress();
-	view.SizeInBytes = sizeof(tex::Vertex) * vertex.size();
-	view.StrideInBytes = sizeof(tex::Vertex);
+	view.SizeInBytes    = static_cast<unsigned int>(sizeof(tex::Vertex) * vertex.size());
+	view.StrideInBytes  = sizeof(tex::Vertex);
 	tex[i].list->GetList()->IASetVertexBuffers(0, 1, &view);
 
 	tex[i].list->GetList()->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	tex[i].list->GetList()->SetGraphicsRootDescriptorTable(1, handle);
-	tex[i].list->GetList()->DrawInstanced(vertex.size(), 1, 0, 0);
+	tex[i].list->GetList()->DrawInstanced(static_cast<unsigned int>(vertex.size()), 1, 0, 0);
 
 	tex[i].list->GetList()->Close();
 }

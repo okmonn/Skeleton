@@ -3,6 +3,7 @@
 #include "XAudio2/VoiceCallback.h"
 #include "SoundLoader/SoundLoader.h"
 #include "../Compute/Effector.h"
+#include "Filter/Filter.h"
 #include "Destroy.h"
 #include <ks.h>
 #include <ksmedia.h>
@@ -32,7 +33,8 @@ Sound::Sound() :
 {
 	wave.resize(BUF_MAX);
 
-	call = std::make_unique<VoiceCallback>();
+	call   = std::make_unique<VoiceCallback>();
+	filter = std::make_unique<Filter>();
 }
 
 // コンストラクタ
@@ -42,7 +44,8 @@ Sound::Sound(std::weak_ptr<Effector> effe) :
 {
 	wave.resize(BUF_MAX);
 
-	call = std::make_unique<VoiceCallback>();
+	call   = std::make_unique<VoiceCallback>();
+	filter = std::make_unique<Filter>();
 }
 
 // デストラクタ
@@ -126,6 +129,8 @@ void Sound::Stream(void)
 		{
 			effe.lock()->Execution(loader.GetWave(name)[read], wave[index]);
 		}
+
+		filter->Execution(wave[index]);
 
 		XAUDIO2_BUFFER buf{};
 		buf.AudioBytes = sizeof(float) * static_cast<unsigned int>(wave[index].size());
