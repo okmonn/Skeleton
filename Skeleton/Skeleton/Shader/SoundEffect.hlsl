@@ -63,6 +63,17 @@ void Distortion(uint index)
     }
 }
 
+// パンニング
+void Pann(uint index)
+{
+    int flag = index % 2 == 0;
+    real[index] = lerp(origin[index - 1] + origin[index], origin[index] + origin[index + 1], step(true, flag));
+    if(real[index] > 1.0f)
+    {
+        real[index] = 1.0f;
+    }
+}
+
 // ボリューム
 void Volume(uint index)
 {
@@ -93,9 +104,10 @@ void Compressor(uint index)
 void CS(uint3 gID : SV_GroupID, uint3 gtID : SV_GroupThreadID, uint3 disID : SV_DispatchThreadID)
 {
     real[gID.x] = origin[gID.x];
-    Tremolo(gID.x);
-    Distortion(gID.x);
-    Volume(gID.x);
+    Pann(gID.x);
+    //Tremolo(gID.x);
+    //Distortion(gID.x);
+    //Volume(gID.x);
 
     AllMemoryBarrierWithGroupSync();
 }
