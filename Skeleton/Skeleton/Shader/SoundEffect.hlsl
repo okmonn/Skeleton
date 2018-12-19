@@ -104,10 +104,10 @@ void Compressor(uint index)
 void CS(uint3 gID : SV_GroupID, uint3 gtID : SV_GroupThreadID, uint3 disID : SV_DispatchThreadID)
 {
     real[gID.x] = origin[gID.x];
-    Pann(gID.x);
-    //Tremolo(gID.x);
-    //Distortion(gID.x);
-    //Volume(gID.x);
+    //Pann(gID.x);
+    Tremolo(gID.x);
+    Distortion(gID.x);
+    Volume(gID.x);
 
     AllMemoryBarrierWithGroupSync();
 }
