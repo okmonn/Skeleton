@@ -28,10 +28,8 @@ void Application::Create(void)
 	un       = std::make_shared<Union>(win);
 	effe     = std::make_shared<Effector>(un->GetDev(), L"Shader/SoundEffect.hlsl");
 
-	win->ChangeTitle(L"1601271_‰ª”É’j");
-
 	sound = std::make_shared<Sound>(effe);
-	sound->Load("‚¦‚ê‚­‚Æ‚è‚Á‚­‚¦‚ñ‚¶‚¥‚¤.wav");
+	sound->Load("mtgx.wav");
 	sound->Play(true);
 
 	un->LoadPmd("model/„‰¹ƒ‹ƒJ.pmd", n);
@@ -43,27 +41,32 @@ void Application::Test(void)
 {
 	static float cut = 44100.0f / 2.0f - 100.0f;
 	static float gain = 1.0f;
+	static float d = 1.0f;
 	if (input->CheckKey(INPUT_UP))
 	{
-		cut += 100.0f;
+		/*cut += 100.0f;
 		sound->LowPass(cut);
-		printf("%f\n", cut);
+		printf("%f\n", cut);*/
+		d += 0.1f;
+		effe->SetDepth(d);
 	}
 	else if (input->CheckKey(INPUT_DOWN))
 	{
-		cut -= 100.0f;
+		/*cut -= 100.0f;
 		sound->LowPass(cut);
-		printf("%f\n", cut);
+		printf("%f\n", cut);*/
+		d -= 0.1f;
+		effe->SetDepth(d);
 	}
 	else if (input->CheckKey(INPUT_RIGHT))
 	{
 		gain += 0.5f;
-		effe->SetGain(gain);
+		effe->SetRate(gain);
 	}
 	else if (input->CheckKey(INPUT_LEFT))
 	{
 		gain -= 0.5f;
-		effe->SetGain(gain);
+		effe->SetRate(gain);
 	}
 }
 

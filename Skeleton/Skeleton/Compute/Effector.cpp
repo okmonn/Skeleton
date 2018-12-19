@@ -14,7 +14,7 @@ Effector::Effector(std::weak_ptr<Device>dev, const std::tstring& fileName)
 {
 	this->dev = dev;
 
-	param = { 44100.0f, 1.0f, 1.0f };
+	param = { 44100.0f, 1.0f, 1.0f, 1.0f, 0.0f };
 	
 	Create();
 	CreateRoot(fileName);
@@ -114,4 +114,16 @@ void Effector::SetVolume(const float & volume)
 	}
 
 	param.volume = volume;
+}
+
+// 変調深度のセット
+void Effector::SetDepth(const float & depth)
+{
+	param.depth = depth;
+}
+
+// 変調周波数のセット
+void Effector::SetRate(const float & rate)
+{
+	param.rate = rate;
 }

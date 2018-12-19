@@ -14,6 +14,10 @@ class Effector :
 		float gain;
 		//音量レベル
 		float volume;
+		//変調深度
+		float depth;
+		//変調周波数
+		float rate;
 	};
 
 public:
@@ -36,6 +40,12 @@ public:
 
 	// ボリュームのセット
 	void SetVolume(const float& volume);
+
+	// 変調深度のセット
+	void SetDepth(const float& depth);
+
+	// 変調周波数のセット
+	void SetRate(const float& rate);
 
 private:
 	// パラメータ

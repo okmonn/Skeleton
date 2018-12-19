@@ -26,6 +26,8 @@ cbuffer Param : register(b0)
     float sample;
     float gain;
     float volume;
+    float depth;
+    float rate;
 }
 
 // 適応前データ
@@ -38,11 +40,6 @@ RWStructuredBuffer<float> real   : register(u1);
 // トレモロ
 void Tremolo(uint index)
 {
-    //変調深度
-    float depth = 0.5f;
-    //変調周波数
-    float rate = 5.0f;
-
     //変調信号
     float signal = 1.0f + depth * sin((2.0f * PI * rate * index) / sample);
 
