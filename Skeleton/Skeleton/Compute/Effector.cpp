@@ -14,7 +14,7 @@ Effector::Effector(std::weak_ptr<Device>dev, const std::tstring& fileName)
 {
 	this->dev = dev;
 
-	param = { 44100.0f, 1.0f, 1.0f, 1.0f, 0.0f };
+	param = { 44100.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f };
 	
 	Create();
 	CreateRoot(fileName);
@@ -126,4 +126,11 @@ void Effector::SetDepth(const float & depth)
 void Effector::SetRate(const float & rate)
 {
 	param.rate = rate;
+}
+
+// パンニング比率のセット
+void Effector::SetPan(const float & left, const float & right)
+{
+	param.left = left;
+	param.right = right;
 }

@@ -18,6 +18,10 @@ class Effector :
 		float depth;
 		//変調周波数
 		float rate;
+		//パンニング
+		float left;
+		//パンイング
+		float right;
 	};
 
 public:
@@ -46,6 +50,9 @@ public:
 
 	// 変調周波数のセット
 	void SetRate(const float& rate);
+
+	// パンニング比率のセット
+	void SetPan(const float& left, const float& right);
 
 private:
 	// パラメータ

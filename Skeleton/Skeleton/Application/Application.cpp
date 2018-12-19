@@ -39,34 +39,24 @@ void Application::Create(void)
 // ƒeƒXƒg
 void Application::Test(void)
 {
-	static float cut = 44100.0f / 2.0f - 100.0f;
-	static float gain = 1.0f;
-	static float d = 1.0f;
+	float pan = 0.0f;
 	if (input->CheckKey(INPUT_UP))
 	{
-		/*cut += 100.0f;
-		sound->LowPass(cut);
-		printf("%f\n", cut);*/
-		d += 0.1f;
-		effe->SetDepth(d);
+		
 	}
 	else if (input->CheckKey(INPUT_DOWN))
 	{
-		/*cut -= 100.0f;
-		sound->LowPass(cut);
-		printf("%f\n", cut);*/
-		d -= 0.1f;
-		effe->SetDepth(d);
+		
 	}
 	else if (input->CheckKey(INPUT_RIGHT))
 	{
-		gain += 0.5f;
-		effe->SetRate(gain);
+		++pan;
+		effe->SetPan(1.0f + pan, 1.0f - pan);
 	}
 	else if (input->CheckKey(INPUT_LEFT))
 	{
-		gain -= 0.5f;
-		effe->SetRate(gain);
+		--pan;
+		effe->SetPan(1.0f + pan, 1.0f - pan);
 	}
 }
 
