@@ -100,9 +100,9 @@ void CS(uint3 gID : SV_GroupID, uint3 gtID : SV_GroupThreadID, uint3 disID : SV_
 {
     real[gID.x] = origin[gID.x];
     Pann(gID.x);
-    //Tremolo(gID.x);
-    //Distortion(gID.x);
-    //Volume(gID.x);
+    Tremolo(gID.x);
+    Distortion(gID.x);
+    Volume(gID.x);
 
     AllMemoryBarrierWithGroupSync();
 }
