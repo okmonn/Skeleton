@@ -1,5 +1,6 @@
 #include "SoundLoader.h"
 #include "../SoundFunc/SoundFunc.h"
+#include "../Mp3/Mp3.h"
 #include <mutex>
 
 // “Ç‚İ‚İƒXƒŒƒbƒhÅ‘å”
@@ -54,6 +55,8 @@ int SoundLoader::Load(const std::string & fileName)
 	{
 		return 0;
 	}
+
+	mp3::Load(fileName);
 
 	if (fopen_s(&wave[fileName].file, fileName.c_str(), "rb") != 0)
 	{

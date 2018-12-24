@@ -29,7 +29,7 @@ void Application::Create(void)
 	effe     = std::make_shared<Effector>(un->GetDev(), L"Shader/SoundEffect.hlsl");
 
 	sound = std::make_shared<Sound>(effe);
-	sound->Load("mtgx.wav");
+	sound->Load("瞬間センチメンタル.mp3");
 	sound->Play(true);
 
 	un->LoadPmd("model/巡音ルカ.pmd", n);

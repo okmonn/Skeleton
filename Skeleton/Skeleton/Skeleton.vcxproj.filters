@@ -136,6 +136,9 @@
     <Filter Include="Sound\Filter">
       <UniqueIdentifier>{35b0d88b-9ae0-4a58-8dae-b0c3ab5468b2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sound\MP3">
+      <UniqueIdentifier>{7abb2971-145d-4718-b7b8-1b75a54158af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -257,6 +260,9 @@
     </ClCompile>
     <ClCompile Include="Sound\Filter\Filter.cpp">
       <Filter>Sound\Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\Mp3\Mp3.cpp">
+      <Filter>Sound\MP3</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -400,6 +406,9 @@
     </ClInclude>
     <ClInclude Include="Sound\Filter\Filter.h">
       <Filter>Sound\Filter</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\Mp3\Mp3.h">
+      <Filter>Sound\MP3</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
