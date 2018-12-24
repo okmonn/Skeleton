@@ -4,6 +4,7 @@
 
 namespace mp3 
 {
+#pragma pack(1)
 	// ID3v2ヘッダー
 	struct ID3v2Header {
 		//識別子
@@ -15,6 +16,7 @@ namespace mp3
 		//サイズ
 		long size;
 	};
+#pragma pack()
 	// ID3v2フレーム
 	struct ID3v2Fream {
 		//フレームID
@@ -28,7 +30,7 @@ namespace mp3
 	};
 	
 	// ヘッダーの読み込み
-	void LoadHeader(ID3v2Header& header, FILE* file);
+	long LoadHeader(ID3v2Header& header, FILE* file);
 
 	// フレームの読み込み
 	void LoadFream(std::vector<ID3v2Fream>& freams, FILE* file);

@@ -1,7 +1,7 @@
 #include "Mp3.h"
 
 // ヘッダーの読み込み
-void mp3::LoadHeader(ID3v2Header & header, FILE * file)
+long mp3::LoadHeader(ID3v2Header & header, FILE * file)
 {
 	fread(&header.id[0], sizeof(header.id), 1, file);
 	for (size_t i = 1; i <= sizeof(header.ver); ++i)
@@ -9,24 +9,30 @@ void mp3::LoadHeader(ID3v2Header & header, FILE * file)
 		char tmp = 0;
 		fread(&tmp, sizeof(char), 1, file);
 		header.ver |= tmp;
-		header.ver = header.ver << 8 * (sizeof(header.ver) - i);
+		header.ver = header.ver << 8 * (1 - (i / sizeof(header.ver)));
 	}
 	fread(&header.flag, sizeof(header.flag), 1, file);
+
+	long size = 0;
 	for (size_t i = 1; i <= sizeof(header.size); ++i)
 	{
 		char tmp = 0;
 		fread(&tmp, sizeof(char), 1, file);
 		header.size |= tmp;
-		header.size = header.size << 8 * (sizeof(header.size) - i);
+		header.size = header.size << 8 * (1 - (i / sizeof(header.size)));
+
+		size += tmp * (long)pow(128, sizeof(header.size) - i);
 	}
+
+	return size + sizeof(header);
 }
 
 // フレームの読み込み
 void mp3::LoadFream(std::vector<ID3v2Fream> & freams, FILE * file)
 {
-	ID3v2Fream fream{};
 	while (true)
 	{
+		ID3v2Fream fream{};
 		fread(&fream.id[0], sizeof(fream.id), 1, file);
 		if (fream.id[0] == 0)
 		{
@@ -38,7 +44,7 @@ void mp3::LoadFream(std::vector<ID3v2Fream> & freams, FILE * file)
 			char tmp = 0;
 			fread(&tmp, sizeof(char), 1, file);
 			fream.size |= tmp;
-			fream.size = fream.size << 8 * (sizeof(fream.size) - i);
+			fream.size = fream.size << 8 * (1 - (i / sizeof(fream.size)));
 		}
 		fread(&fream.flag, sizeof(fream.flag), 1, file);
 
@@ -59,13 +65,8 @@ int mp3::Load(const std::string & fileName)
 	}
 
 	ID3v2Header header{};
-	LoadHeader(header, file);
-
-	std::vector<ID3v2Fream>fream;
-	LoadFream(fream, file);
-
-	std::vector<char>tmp(5000, 0);
-	fread(&tmp[0], sizeof(char) * 5000, 1, file);
+	auto headerSize = LoadHeader(header, file);
+	fseek(file, headerSize, SEEK_SET);
 
 	fclose(file);
 
