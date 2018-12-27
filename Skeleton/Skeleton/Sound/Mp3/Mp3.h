@@ -8,11 +8,11 @@ namespace mp3
 	// ID3v2ヘッダー
 	struct ID3v2Header {
 		//識別子
-		char id[3];
+		unsigned char id[3];
 		//バージョン
 		short ver;
 		//フラグ
-		char flag;
+		unsigned char flag;
 		//サイズ
 		long size;
 	};
@@ -20,7 +20,7 @@ namespace mp3
 	// ID3v2フレーム
 	struct ID3v2Fream {
 		//フレームID
-		char id[4];
+		unsigned char id[4];
 		//サイズ
 		long size;
 		//フラグ
@@ -34,6 +34,9 @@ namespace mp3
 
 	// フレームの読み込み
 	void LoadFream(std::vector<ID3v2Fream>& freams, FILE* file);
+
+	// MPEGフレームの読み込み
+	void LoadMpeg(std::vector<unsigned char>& data, FILE* file);
 	
 	// 読み込み
 	int Load(const std::string& fileName);
