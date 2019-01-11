@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{4ac1727e-497a-4901-a5c5-89caaaaa532c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="etc">
+      <UniqueIdentifier>{5b239430-25d7-4cf6-9be3-3a52c8369fdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application">
+      <UniqueIdentifier>{9be3abb0-30c8-4959-9e82-0245c858958a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device">
+      <UniqueIdentifier>{42eb6423-fcc9-43dc-8672-e7d120a44cf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Command">
+      <UniqueIdentifier>{cc6cc8d7-d1eb-4ec8-8643-537abd423c56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Command\Queue">
+      <UniqueIdentifier>{43fc5f49-4804-4bee-abbd-76c0344ca405}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Command\List">
+      <UniqueIdentifier>{15faf1e2-c7c7-4849-a7ac-ad8605da1cce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Swap">
+      <UniqueIdentifier>{15910d2b-f3d1-4247-8951-3d5e7d80b30b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DescriptorMane">
+      <UniqueIdentifier>{4c3ad850-320e-41af-8ebd-97573f223634}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fence">
+      <UniqueIdentifier>{c5390f0e-7141-4f56-8671-104870e4fb80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{c56d231f-3ad1-479b-a45a-74cad408fbc9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\Window.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Application.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Device\Device.cpp">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Queue\Queue.cpp">
+      <Filter>Command\Queue</Filter>
+    </ClCompile>
+    <ClCompile Include="List\List.cpp">
+      <Filter>Command\List</Filter>
+    </ClCompile>
+    <ClCompile Include="Swap\Swap.cpp">
+      <Filter>Swap</Filter>
+    </ClCompile>
+    <ClCompile Include="DescriptorMane\DescriptorMane.cpp">
+      <Filter>DescriptorMane</Filter>
+    </ClCompile>
+    <ClCompile Include="Fence\Fence.cpp">
+      <Filter>Fence</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Render.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Window\Window.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\Icon.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="etc\tstring.h">
+      <Filter>etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Application.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\Device.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="etc\Release.h">
+      <Filter>etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Queue\Queue.h">
+      <Filter>Command\Queue</Filter>
+    </ClInclude>
+    <ClInclude Include="List\List.h">
+      <Filter>Command\List</Filter>
+    </ClInclude>
+    <ClInclude Include="Swap\Swap.h">
+      <Filter>Swap</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorMane\DescriptorMane.h">
+      <Filter>DescriptorMane</Filter>
+    </ClInclude>
+    <ClInclude Include="Fence\Fence.h">
+      <Filter>Fence</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Render.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Window\Icon.rc">
+      <Filter>Window</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
