@@ -13,6 +13,9 @@ public:
 	// デストラクタ
 	~Swap();
 
+	// 裏・表画面の遷移
+	void Present(void);
+
 	// スワップチェインの取得
 	IDXGISwapChain4* Get(void) const {
 		return swap;

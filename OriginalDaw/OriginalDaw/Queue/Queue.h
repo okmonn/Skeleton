@@ -2,6 +2,7 @@
 
 enum D3D12_COMMAND_LIST_TYPE : int;
 struct ID3D12CommandQueue;
+struct ID3D12CommandList;
 
 class Queue
 {
@@ -10,6 +11,9 @@ public:
 	Queue(const D3D12_COMMAND_LIST_TYPE& type);
 	// デストラクタ
 	~Queue();
+
+	// 実行
+	void Execution(ID3D12CommandList** list, const size_t& num);
 
 	// キューの取得
 	ID3D12CommandQueue* Get(void) const {

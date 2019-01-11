@@ -10,7 +10,8 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 {
 	while (Application::Get().CheckMsg() && Application::Get().CheckKey(VK_ESCAPE) == false)
 	{
-
+		Application::Get().Clear();
+		Application::Get().Execution();
 	}
 
 	return 0;

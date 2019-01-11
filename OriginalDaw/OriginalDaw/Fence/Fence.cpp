@@ -20,7 +20,7 @@ Fence::~Fence()
 // フェンスの生成
 long Fence::Create(void)
 {
-	auto hr = Device::Get().GetDev()->CreateFence(cnt, D3D12_FENCE_FLAGS::D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+	auto hr = Device::Get().GetDev()->CreateFence(cnt, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 	if (FAILED(hr))
 	{
 		OutputDebugString(_T("\nフェンスの生成：失敗\n"));

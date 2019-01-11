@@ -4,8 +4,10 @@
 #include "../List/List.h"
 #include "../Fence/Fence.h"
 #include "../Swap/Swap.h"
+#include "../Render/Render.h"
 #include <Windows.h>
 #include <d3d12.h>
+#include <dxgi1_6.h>
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -30,11 +32,12 @@ Application::~Application()
 // クラスの生成
 void Application::Create(void)
 {
-	win   = std::make_shared<Window>();
-	queue = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
-	list  = std::make_shared<List>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
-	fence = std::make_shared<Fence>(queue);
-	swap  = std::make_shared<Swap>(win, queue);
+	win    = std::make_shared<Window>();
+	queue  = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
+	list   = std::make_shared<List>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
+	fence  = std::make_shared<Fence>(queue);
+	swap   = std::make_shared<Swap>(win, queue);
+	render = std::make_shared<Render>(swap);
 }
 
 // メッセージの確認
@@ -68,4 +71,34 @@ bool Application::CheckKey(const int & key)
 	}
 
 	return false;
+}
+
+// 画面クリア
+void Application::Clear(void)
+{
+	list->Reset();
+
+	list->SetView(win->GetWidth(), win->GetHeight());
+	list->SetScissor(win->GetWidth(), win->GetHeight());
+
+	list->Barrier(D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_RENDER_TARGET, render->GetRsc());
+
+	render->Clear(list);
+}
+
+// コマンドの実行
+void Application::Execution(void)
+{
+	list->Barrier(D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PRESENT, render->GetRsc());
+
+	list->Close();
+	
+	ID3D12CommandList* com[] = {
+		list->GetList(),
+	};
+	queue->Execution(com, _countof(com));
+
+	swap->Present();
+
+	fence->Wait();
 }

@@ -44,6 +44,31 @@ long List::CreateList(const D3D12_COMMAND_LIST_TYPE & type)
 	return hr;
 }
 
+// リセット
+void List::Reset(ID3D12PipelineState * pipe)
+{
+	allo->Reset();
+	list->Reset(allo, pipe);
+}
+
+// 描画用ルートシグネチャのセット
+void List::SetRoot(ID3D12RootSignature * root)
+{
+	list->SetGraphicsRootSignature(root);
+}
+
+// コンピュート用ルートシグネチャのセット
+void List::SetComputeRoot(ID3D12RootSignature * root)
+{
+	list->SetComputeRootSignature(root);
+}
+
+// パイプラインのセット
+void List::SetPipe(ID3D12PipelineState * pipe)
+{
+	list->SetPipelineState(pipe);
+}
+
 // ビューポートのセット
 void List::SetView(const unsigned int & width, const unsigned int & height)
 {
@@ -68,4 +93,24 @@ void List::SetScissor(const unsigned int & width, const unsigned int & height)
 	scissor.top    = 0;
 
 	list->RSSetScissorRects(1, &scissor);
+}
+
+// バリア
+void List::Barrier(const D3D12_RESOURCE_STATES & befor, const D3D12_RESOURCE_STATES & affter, ID3D12Resource * rsc)
+{
+	D3D12_RESOURCE_BARRIER barrier{};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE::D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAGS::D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource   = rsc;
+	barrier.Transition.StateBefore = befor;
+	barrier.Transition.StateAfter  = affter;
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_FLAGS::D3D12_RESOURCE_BARRIER_FLAG_NONE;
+
+	list->ResourceBarrier(1, &barrier);
+}
+
+// リストのクローズ
+void List::Close(void)
+{
+	list->Close();
 }

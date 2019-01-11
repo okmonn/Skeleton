@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include <unordered_map>
 
 enum D3D12_DESCRIPTOR_HEAP_FLAGS : int;
@@ -9,6 +10,8 @@ struct D3D12_RESOURCE_DESC;
 struct D3D12_CLEAR_VALUE;
 struct ID3D12DescriptorHeap;
 struct ID3D12Resource;
+
+class Swap;
 
 enum RSC_TYPE {
 	RSC_TYPE_NON, 
@@ -35,9 +38,11 @@ public:
 
 	// リソースの生成
 	long CreateRsc(int& addr, const D3D12_HEAP_PROPERTIES& prop, const D3D12_RESOURCE_DESC& desc, const D3D12_RESOURCE_STATES& state, const D3D12_CLEAR_VALUE* clear = nullptr);
+	// リソースの生成
+	long CreateRsc(int& addr, std::weak_ptr<Swap>swap, const unsigned int& index = 0);
 
 	// RTVの生成
-	void RTV(int& heapAddr, int& rscAddr, const size_t& size, const unsigned int& index = 0);
+	void RTV(int& heapAddr, int& rscAddr, const unsigned int& index = 0);
 
 	// DSVの生成
 	void DSV(int& heapAddr, int& rscAddr, const size_t& size, const unsigned int& index = 0);
@@ -53,6 +58,15 @@ public:
 
 	// リソースの削除
 	void DeleteRsc(int& addr);
+
+	// ヒープの取得
+	ID3D12DescriptorHeap* GetHeap(int& addr) {
+		return heap[&addr];
+	}
+	// リソースの取得
+	ID3D12Resource* GetRsc(int& addr) {
+		return rsc[&addr];
+	}
 
 private:
 	// コンストラクタ

@@ -1,5 +1,6 @@
 #include "DescriptorMane.h"
 #include "../Device/Device.h"
+#include "../Swap/Swap.h"
 #include "../etc/Release.h"
 #include <dxgi1_6.h>
 
@@ -70,8 +71,23 @@ long DescriptorMane::CreateRsc(int & addr, const D3D12_HEAP_PROPERTIES & prop, c
 	return hr;
 }
 
+// リソースの生成
+long DescriptorMane::CreateRsc(int & addr, std::weak_ptr<Swap> swap, const unsigned int & index)
+{
+	auto hr = swap.lock()->Get()->GetBuffer(index, IID_PPV_ARGS(&rsc[&addr]));
+	if (FAILED(hr))
+	{
+		OutputDebugString(_T("リソースの生成：失敗\n"));
+		addr = -1;
+		return hr;
+	}
+
+	addr = RSC_TYPE::RSC_TYPE_NON;
+	return hr;
+}
+
 // RTVの生成
-void DescriptorMane::RTV(int & heapAddr, int & rscAddr, const size_t & size, const unsigned int & index)
+void DescriptorMane::RTV(int & heapAddr, int & rscAddr, const unsigned int & index)
 {
 	D3D12_RENDER_TARGET_VIEW_DESC desc{};
 	desc.Format               = rsc[&rscAddr]->GetDesc().Format;

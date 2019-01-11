@@ -52,3 +52,9 @@ long Swap::Create(void)
 
 	return hr;
 }
+
+// — E•\‰æ–Ê‚Ì‘JˆÚ
+void Swap::Present(void)
+{
+	swap->Present(1, 0);
+}

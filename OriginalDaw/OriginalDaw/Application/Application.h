@@ -6,6 +6,7 @@ class Queue;
 class List;
 class Fence;
 class Swap;
+class Render;
 
 class Application
 {
@@ -24,6 +25,12 @@ public:
 
 	// キー入力
 	bool CheckKey(const int& key);
+
+	// 画面クリア
+	void Clear(void);
+
+	// コマンドの実行
+	void Execution(void);
 
 private:
 	// コンストラクタ
@@ -49,4 +56,7 @@ private:
 
 	// スワップ
 	std::shared_ptr<Swap>swap;
+
+	// レンダー
+	std::shared_ptr<Render>render;
 };
