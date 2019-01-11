@@ -66,7 +66,7 @@ long DescriptorMane::CreateRsc(int & addr, const D3D12_HEAP_PROPERTIES & prop, c
 		return hr;
 	}
 
-	addr = 0;
+	addr = RSC_TYPE::RSC_TYPE_NON;
 	return hr;
 }
 
@@ -99,6 +99,7 @@ void DescriptorMane::DSV(int & heapAddr, int & rscAddr, const size_t & size, con
 	handle.ptr += Device::Get().GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_DSV) * index;
 
 	Device::Get().GetDev()->CreateDepthStencilView(rsc[&rscAddr], &desc, handle);
+	rscAddr = RSC_TYPE::RSC_TYPE_DSV;
 }
 
 // CBV‚Ì¶¬
@@ -112,6 +113,7 @@ void DescriptorMane::CBV(int & heapAddr, int & rscAddr, const size_t & size, con
 	handle.ptr += Device::Get().GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * index;
 
 	Device::Get().GetDev()->CreateConstantBufferView(&desc, handle);
+	rscAddr = RSC_TYPE::RSC_TYPE_CBV;
 }
 
 // SRV‚Ì¶¬
@@ -128,6 +130,7 @@ void DescriptorMane::SRV(int & heapAddr, int & rscAddr, const size_t & size, con
 	handle.ptr += Device::Get().GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * index;
 
 	Device::Get().GetDev()->CreateShaderResourceView(rsc[&rscAddr], &desc, handle);
+	rscAddr = RSC_TYPE::RSC_TYPE_SRV;
 }
 
 // ƒq[ƒv‚Ìíœ
