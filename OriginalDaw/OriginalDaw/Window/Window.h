@@ -1,6 +1,9 @@
 #pragma once
 #include "../etc/tstring.h"
 
+struct ID3D12DescriptorHeap;
+struct ID3D12Resource;
+
 class Window
 {
 public:
@@ -24,6 +27,10 @@ public:
 	unsigned int GetHeight(void) const {
 		return height;
 	}
+	// ヒープの取得
+	ID3D12DescriptorHeap* GetHeap(void);
+	// リソースの取得
+	ID3D12Resource* GetRsc(void);
 
 private:
 	// ウィンドウのコールバック
@@ -35,6 +42,9 @@ private:
 
 	// ウィンドウの生成
 	void Create(void);
+
+	// 定数バッファの生成
+	void ConstantBuffer(void);
 
 
 	// ウィンドウの横幅
@@ -51,4 +61,7 @@ private:
 
 	// ウィンドウ名
 	const wchar_t* name;
+
+	// 定数バッファID
+	int constant;
 };

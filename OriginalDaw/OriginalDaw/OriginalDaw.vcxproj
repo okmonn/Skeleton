@@ -128,7 +128,6 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Pipe\Pipe.cpp" />
     <ClCompile Include="Pipe\PipeMane.cpp" />
-    <ClCompile Include="Primitive\Point.cpp" />
     <ClCompile Include="Primitive\Primitive.cpp" />
     <ClCompile Include="Primitive\PrimitiveMane.cpp" />
     <ClCompile Include="Queue\Queue.cpp" />
@@ -149,8 +148,8 @@
     <ClInclude Include="List\List.h" />
     <ClInclude Include="Pipe\Pipe.h" />
     <ClInclude Include="Pipe\PipeMane.h" />
-    <ClInclude Include="Primitive\Point.h" />
     <ClInclude Include="Primitive\Primitive.h" />
+    <ClInclude Include="Primitive\PrimitiveInfo.h" />
     <ClInclude Include="Primitive\PrimitiveMane.h" />
     <ClInclude Include="Queue\Queue.h" />
     <ClInclude Include="Render\Render.h" />

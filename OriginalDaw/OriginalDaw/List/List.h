@@ -2,7 +2,7 @@
 
 enum D3D12_COMMAND_LIST_TYPE : int;
 enum D3D12_RESOURCE_STATES : int;
-enum D3D12_PRIMITIVE_TOPOLOGY : int;
+enum D3D_PRIMITIVE_TOPOLOGY : int;
 struct ID3D12CommandAllocator;
 struct ID3D12GraphicsCommandList;
 struct ID3D12DescriptorHeap;
@@ -50,7 +50,7 @@ public:
 	void SetVertexBufferView(const D3D12_VERTEX_BUFFER_VIEW& view);
 
 	// トポロジータイプのセット
-	void SetTopology(const D3D12_PRIMITIVE_TOPOLOGY& type);
+	void SetTopology(const D3D_PRIMITIVE_TOPOLOGY& type);
 
 	// 頂点描画
 	void DrawVertex(const size_t& vertexNum, const unsigned int& instance = 1);

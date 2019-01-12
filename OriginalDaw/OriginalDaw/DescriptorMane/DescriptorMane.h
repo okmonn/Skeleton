@@ -39,7 +39,7 @@ public:
 	// リソースの生成
 	long CreateRsc(int& addr, const D3D12_HEAP_PROPERTIES& prop, const D3D12_RESOURCE_DESC& desc, const D3D12_RESOURCE_STATES& state, const D3D12_CLEAR_VALUE* clear = nullptr);
 	// リソースの生成
-	long CreateRsc(int& addr, std::weak_ptr<Swap>swap, const unsigned int& index = 0);
+	long CreateRsc(int& addr, std::weak_ptr<Swap>swap, const unsigned int& index);
 
 	// RTVの生成
 	void RTV(int& heapAddr, int& rscAddr, const unsigned int& index = 0);

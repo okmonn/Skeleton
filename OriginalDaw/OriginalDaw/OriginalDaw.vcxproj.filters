@@ -58,9 +58,6 @@
     <Filter Include="Primitive">
       <UniqueIdentifier>{5e0cd445-69ed-4570-8766-c9b72eda296b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Primitive\Point">
-      <UniqueIdentifier>{23aa18bb-afb1-431e-bcbf-56bb0f3834fe}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -111,11 +108,8 @@
     <ClCompile Include="Primitive\Primitive.cpp">
       <Filter>Primitive</Filter>
     </ClCompile>
-    <ClCompile Include="Primitive\Point.cpp">
-      <Filter>Primitive\Point</Filter>
-    </ClCompile>
     <ClCompile Include="Primitive\PrimitiveMane.cpp">
-      <Filter>Primitive</Filter>
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,8 +167,8 @@
     <ClInclude Include="Primitive\Primitive.h">
       <Filter>Primitive</Filter>
     </ClInclude>
-    <ClInclude Include="Primitive\Point.h">
-      <Filter>Primitive\Point</Filter>
+    <ClInclude Include="Primitive\PrimitiveInfo.h">
+      <Filter>Primitive</Filter>
     </ClInclude>
     <ClInclude Include="Primitive\PrimitiveMane.h">
       <Filter>Primitive</Filter>

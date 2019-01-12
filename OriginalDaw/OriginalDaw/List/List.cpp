@@ -131,7 +131,7 @@ void List::SetVertexBufferView(const D3D12_VERTEX_BUFFER_VIEW & view)
 }
 
 // トポロジータイプのセット
-void List::SetTopology(const D3D12_PRIMITIVE_TOPOLOGY & type)
+void List::SetTopology(const D3D_PRIMITIVE_TOPOLOGY & type)
 {
 	list->IASetPrimitiveTopology(type);
 }
