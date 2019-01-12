@@ -45,7 +45,7 @@ public:
 	void RTV(int& heapAddr, int& rscAddr, const unsigned int& index = 0);
 
 	// DSVÇÃê∂ê¨
-	void DSV(int& heapAddr, int& rscAddr, const size_t& size, const unsigned int& index = 0);
+	void DSV(int& heapAddr, int& rscAddr, const unsigned int& index = 0);
 
 	// CBVÇÃê∂ê¨
 	void CBV(int& heapAddr, int& rscAddr, const size_t& size, const unsigned int& index = 0);

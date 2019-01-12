@@ -30,7 +30,7 @@ long Device::Create(void)
 		hr = D3D12CreateDevice(nullptr, i, IID_PPV_ARGS(&dev));
 		if (hr == S_OK)
 		{
-			OutputDebugString(_T("デバイスの生成：成功\n"));
+			OutputDebugString(_T("\nデバイスの生成：成功\n"));
 			break;
 		}
 	}

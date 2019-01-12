@@ -29,7 +29,7 @@ long DescriptorMane::CreateHeap(int& addr, const D3D12_DESCRIPTOR_HEAP_FLAGS & f
 {
 	if (heap.find(&addr) != heap.end())
 	{
-		OutputDebugString(_T("生成済み\n"));
+		OutputDebugString(_T("\n生成済み\n"));
 		return S_FALSE;
 	}
 
@@ -55,14 +55,14 @@ long DescriptorMane::CreateRsc(int & addr, const D3D12_HEAP_PROPERTIES & prop, c
 {
 	if (rsc.find(&addr) != rsc.end())
 	{
-		OutputDebugString(_T("生成済み\n"));
+		OutputDebugString(_T("\n生成済み\n"));
 		return S_FALSE;
 	}
 
 	auto hr = Device::Get().GetDev()->CreateCommittedResource(&prop, D3D12_HEAP_FLAGS::D3D12_HEAP_FLAG_NONE, &desc, state, clear, IID_PPV_ARGS(&rsc[&addr]));
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("リソースの生成：失敗\n"));
+		OutputDebugString(_T("\nリソースの生成：失敗\n"));
 		addr = -1;
 		return hr;
 	}
@@ -77,7 +77,7 @@ long DescriptorMane::CreateRsc(int & addr, std::weak_ptr<Swap> swap, const unsig
 	auto hr = swap.lock()->Get()->GetBuffer(index, IID_PPV_ARGS(&rsc[&addr]));
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("リソースの生成：失敗\n"));
+		OutputDebugString(_T("\nリソースの生成：失敗\n"));
 		addr = -1;
 		return hr;
 	}
@@ -103,11 +103,11 @@ void DescriptorMane::RTV(int & heapAddr, int & rscAddr, const unsigned int & ind
 }
 
 // DSVの生成
-void DescriptorMane::DSV(int & heapAddr, int & rscAddr, const size_t & size, const unsigned int & index)
+void DescriptorMane::DSV(int & heapAddr, int & rscAddr, const unsigned int & index)
 {
 	D3D12_DEPTH_STENCIL_VIEW_DESC desc{};
 	desc.Flags              = D3D12_DSV_FLAGS::D3D12_DSV_FLAG_NONE;
-	desc.Format             = rsc[&rscAddr]->GetDesc().Format;
+	desc.Format             = DXGI_FORMAT::DXGI_FORMAT_D32_FLOAT;
 	desc.Texture2D.MipSlice = 0;
 	desc.ViewDimension      = D3D12_DSV_DIMENSION::D3D12_DSV_DIMENSION_TEXTURE2D;
 

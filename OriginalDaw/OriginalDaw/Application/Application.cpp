@@ -1,10 +1,13 @@
 #include "Application.h"
+#include "../Root/RootMane.h"
+#include "../Pipe/PipeMane.h"
 #include "../Window/Window.h"
 #include "../Queue/Queue.h"
 #include "../List/List.h"
 #include "../Fence/Fence.h"
 #include "../Swap/Swap.h"
 #include "../Render/Render.h"
+#include "../Depth/Depth.h"
 #include <Windows.h>
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -38,6 +41,23 @@ void Application::Create(void)
 	fence  = std::make_shared<Fence>(queue);
 	swap   = std::make_shared<Swap>(win, queue);
 	render = std::make_shared<Render>(swap);
+	depth  = std::make_shared<Depth>(win);
+
+	CreateRoot();
+	CreatePipe();
+}
+
+// ルートの生成
+void Application::CreateRoot(void)
+{
+	RootMane::Get().Create("primitive", L"Shader/Primitive.hlsl");
+}
+
+// パイプの生成
+void Application::CreatePipe(void)
+{
+	PipeMane::Get().CreatePipe("point", RootMane::Get().GetRoot("primitive"), D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT,
+		{ 0, 3 }, false);
 }
 
 // メッセージの確認
@@ -83,7 +103,8 @@ void Application::Clear(void)
 
 	list->Barrier(D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_RENDER_TARGET, render->GetRsc());
 
-	render->Clear(list);
+	render->Clear(list, depth->GetHeap());
+	depth->Clear(list);
 }
 
 // コマンドの実行

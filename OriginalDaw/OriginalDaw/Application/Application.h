@@ -7,6 +7,7 @@ class List;
 class Fence;
 class Swap;
 class Render;
+class Depth;
 
 class Application
 {
@@ -41,6 +42,12 @@ private:
 	// クラスの生成
 	void Create(void);
 
+	// ルートの生成
+	void CreateRoot(void);
+
+	// パイプの生成
+	void CreatePipe(void);
+
 
 	// ウィンドウ
 	std::shared_ptr<Window>win;
@@ -59,4 +66,7 @@ private:
 
 	// レンダー
 	std::shared_ptr<Render>render;
+
+	// デプス
+	std::shared_ptr<Depth>depth;
 };

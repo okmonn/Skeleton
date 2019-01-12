@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Window">
-      <UniqueIdentifier>{4ac1727e-497a-4901-a5c5-89caaaaa532c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="etc">
       <UniqueIdentifier>{5b239430-25d7-4cf6-9be3-3a52c8369fdd}</UniqueIdentifier>
     </Filter>
@@ -45,6 +42,24 @@
     </Filter>
     <Filter Include="Render">
       <UniqueIdentifier>{c56d231f-3ad1-479b-a45a-74cad408fbc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Depth">
+      <UniqueIdentifier>{b813818e-807f-4aa1-8682-22cd21eab8a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pipe">
+      <UniqueIdentifier>{f8b7ddd6-cb3a-43dc-bc77-7a1a22efe7b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Root">
+      <UniqueIdentifier>{372cd840-a3aa-4382-92d1-2bc014028a38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{4ac1727e-497a-4901-a5c5-89caaaaa532c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Primitive">
+      <UniqueIdentifier>{5e0cd445-69ed-4570-8766-c9b72eda296b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Primitive\Point">
+      <UniqueIdentifier>{23aa18bb-afb1-431e-bcbf-56bb0f3834fe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -77,6 +92,30 @@
     </ClCompile>
     <ClCompile Include="Render\Render.cpp">
       <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Depth\Depth.cpp">
+      <Filter>Depth</Filter>
+    </ClCompile>
+    <ClCompile Include="Pipe\Pipe.cpp">
+      <Filter>Pipe</Filter>
+    </ClCompile>
+    <ClCompile Include="Root\Root.cpp">
+      <Filter>Root</Filter>
+    </ClCompile>
+    <ClCompile Include="Root\RootMane.cpp">
+      <Filter>Root</Filter>
+    </ClCompile>
+    <ClCompile Include="Pipe\PipeMane.cpp">
+      <Filter>Pipe</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitive\Primitive.cpp">
+      <Filter>Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitive\Point.cpp">
+      <Filter>Primitive\Point</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitive\PrimitiveMane.cpp">
+      <Filter>Primitive</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -116,10 +155,39 @@
     <ClInclude Include="Render\Render.h">
       <Filter>Render</Filter>
     </ClInclude>
+    <ClInclude Include="Depth\Depth.h">
+      <Filter>Depth</Filter>
+    </ClInclude>
+    <ClInclude Include="Pipe\Pipe.h">
+      <Filter>Pipe</Filter>
+    </ClInclude>
+    <ClInclude Include="Root\Root.h">
+      <Filter>Root</Filter>
+    </ClInclude>
+    <ClInclude Include="Root\RootMane.h">
+      <Filter>Root</Filter>
+    </ClInclude>
+    <ClInclude Include="Pipe\PipeMane.h">
+      <Filter>Pipe</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitive\Primitive.h">
+      <Filter>Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitive\Point.h">
+      <Filter>Primitive\Point</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitive\PrimitiveMane.h">
+      <Filter>Primitive</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Window\Icon.rc">
       <Filter>Window</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader\Primitive.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -51,24 +51,6 @@ void List::Reset(ID3D12PipelineState * pipe)
 	list->Reset(allo, pipe);
 }
 
-// 描画用ルートシグネチャのセット
-void List::SetRoot(ID3D12RootSignature * root)
-{
-	list->SetGraphicsRootSignature(root);
-}
-
-// コンピュート用ルートシグネチャのセット
-void List::SetComputeRoot(ID3D12RootSignature * root)
-{
-	list->SetComputeRootSignature(root);
-}
-
-// パイプラインのセット
-void List::SetPipe(ID3D12PipelineState * pipe)
-{
-	list->SetPipelineState(pipe);
-}
-
 // ビューポートのセット
 void List::SetView(const unsigned int & width, const unsigned int & height)
 {
@@ -109,8 +91,65 @@ void List::Barrier(const D3D12_RESOURCE_STATES & befor, const D3D12_RESOURCE_STA
 	list->ResourceBarrier(1, &barrier);
 }
 
+// 描画用ルートシグネチャのセット
+void List::SetRoot(ID3D12RootSignature * root)
+{
+	list->SetGraphicsRootSignature(root);
+}
+
+// コンピュート用ルートシグネチャのセット
+void List::SetComputeRoot(ID3D12RootSignature * root)
+{
+	list->SetComputeRootSignature(root);
+}
+
+// パイプラインのセット
+void List::SetPipe(ID3D12PipelineState * pipe)
+{
+	list->SetPipelineState(pipe);
+}
+
+// ヒープのセット
+void List::SetHeap(ID3D12DescriptorHeap ** heap, const size_t & num)
+{
+	list->SetDescriptorHeaps(num, heap);
+}
+
+// ヒープと描画用ルートシグネチャの関連付け
+void List::SetRootTable(const unsigned int & id, ID3D12DescriptorHeap * heap, const unsigned int & index)
+{
+	auto handle = heap->GetGPUDescriptorHandleForHeapStart();
+	handle.ptr += Device::Get().GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * index;
+
+	list->SetGraphicsRootDescriptorTable(id, handle);
+}
+
+// 頂点バッファのセット
+void List::SetVertexBufferView(const D3D12_VERTEX_BUFFER_VIEW & view)
+{
+	list->IASetVertexBuffers(0, 1, &view);
+}
+
+// トポロジータイプのセット
+void List::SetTopology(const D3D12_PRIMITIVE_TOPOLOGY & type)
+{
+	list->IASetPrimitiveTopology(type);
+}
+
+// 頂点描画
+void List::DrawVertex(const size_t & vertexNum, const unsigned int & instance)
+{
+	list->DrawInstanced(static_cast<unsigned int>(vertexNum), instance, 0, 0);
+}
+
 // リストのクローズ
 void List::Close(void)
 {
 	list->Close();
+}
+
+// バンドルの実行
+void List::ExecuteBundle(ID3D12GraphicsCommandList * list)
+{
+	this->list->ExecuteBundle(list);
 }

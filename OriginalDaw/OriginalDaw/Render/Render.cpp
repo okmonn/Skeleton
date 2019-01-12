@@ -40,7 +40,7 @@ void Render::Create(void)
 	rsc.resize(swapDesc.BufferCount);
 	for (size_t i = 0; i < rsc.size(); ++i)
 	{
-		DescriptorMane::Get().CreateRsc(rsc[i], swap);
+		DescriptorMane::Get().CreateRsc(rsc[i], swap, i);
 		DescriptorMane::Get().RTV(heap, rsc[i], i);
 	}
 }
@@ -48,15 +48,12 @@ void Render::Create(void)
 // クリア
 void Render::Clear(const std::weak_ptr<List>list, ID3D12DescriptorHeap * depth)
 {
-	//ヒープの先頭ハンドルの取得
 	D3D12_CPU_DESCRIPTOR_HANDLE handle = DescriptorMane::Get().GetHeap(heap)->GetCPUDescriptorHandleForHeapStart();
 	handle.ptr += Device::Get().GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_RTV) * swap.lock()->Get()->GetCurrentBackBufferIndex();
 
 	auto heapHandle = depth == nullptr ? nullptr : &depth->GetCPUDescriptorHandleForHeapStart();
-	//レンダーターゲットのセット
 	list.lock()->GetList()->OMSetRenderTargets(1, &handle, false, heapHandle);
 
-	//レンダーターゲットのクリア
 	list.lock()->GetList()->ClearRenderTargetView(handle, color, 0, nullptr);
 }
 

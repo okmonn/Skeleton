@@ -4,6 +4,9 @@
 #include "../etc/Release.h"
 #include <dxgi1_6.h>
 
+// バックバッファの数
+#define BACK_BUFFER 2
+
 // コンストラクタ
 Swap::Swap(std::weak_ptr<Window>win, std::weak_ptr<Queue>queue) : win(win), queue(queue), 
 	swap(nullptr)
@@ -22,7 +25,7 @@ long Swap::Create(void)
 {
 	DXGI_SWAP_CHAIN_DESC1 desc{};
 	desc.AlphaMode   = DXGI_ALPHA_MODE::DXGI_ALPHA_MODE_UNSPECIFIED;
-	desc.BufferCount = 2;
+	desc.BufferCount = BACK_BUFFER;
 	desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	desc.Flags       = 0;
 	desc.Format      = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
