@@ -8,12 +8,20 @@ int main()
 int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int nShowCmd)
 #endif
 {
-	while (Application::Get().CheckMsg() && Application::Get().CheckKey(VK_ESCAPE) == false)
-	{
-		Application::Get().Clear();
+	auto winSize = help::GetDisplayResolution();
+	Application app(winSize);
+	Application* app2 = new Application(app, winSize);
 
-		Application::Get().Execution();
+	while (app.CheckMsg() && help::CheckKey(VK_ESCAPE) == false)
+	{
+		app.Clear();
+		app2->Clear();
+
+		app.Execution();
+		app2->Execution();
 	}
 
+	delete app2;
+	
 	return 0;
 }

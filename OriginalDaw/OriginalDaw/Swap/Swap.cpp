@@ -29,12 +29,12 @@ long Swap::Create(void)
 	desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	desc.Flags       = 0;
 	desc.Format      = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
-	desc.Height      = win.lock()->GetHeight();
+	desc.Height      = static_cast<unsigned int>(win.lock()->GetSize().y);
 	desc.SampleDesc  = { 1, 0 };
 	desc.Scaling     = DXGI_SCALING::DXGI_SCALING_STRETCH;
 	desc.Stereo      = false;
 	desc.SwapEffect  = DXGI_SWAP_EFFECT::DXGI_SWAP_EFFECT_FLIP_DISCARD;
-	desc.Width       = win.lock()->GetWidth();
+	desc.Width       = static_cast<unsigned int>(win.lock()->GetSize().x);
 
 	IDXGIFactory4* fac = nullptr;
 	auto hr = CreateDXGIFactory(IID_PPV_ARGS(&fac));

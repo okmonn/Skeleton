@@ -1,5 +1,6 @@
 #pragma once
 #include "../etc/tstring.h"
+#include "../etc/Vector2.h"
 
 struct ID3D12DescriptorHeap;
 struct ID3D12Resource;
@@ -8,7 +9,7 @@ class Window
 {
 public:
 	// コンストラクタ
-	Window(const unsigned int& = 640, const unsigned int& = 480);
+	Window(const Vec2& size, void* parent);
 	// デストラクタ
 	~Window();
 
@@ -19,13 +20,9 @@ public:
 	void* Get(void) const {
 		return handle;
 	}
-	// ウィンドウの横幅の取得
-	unsigned int GetWidth(void) const {
-		return width;
-	}
-	// ウィンドウの縦幅の取得
-	unsigned int GetHeight(void) const {
-		return height;
+	// ウィンドウサイズの取得
+	Vec2 GetSize(void) const {
+		return size;
 	}
 	// ヒープの取得
 	ID3D12DescriptorHeap* GetHeap(void);
@@ -41,17 +38,14 @@ private:
 #endif
 
 	// ウィンドウの生成
-	void Create(void);
+	void Create(void* parent);
 
 	// 定数バッファの生成
 	void ConstantBuffer(void);
 
 
-	// ウィンドウの横幅
-	unsigned int width;
-
-	// ウィンドウの縦幅
-	unsigned int height;
+	// ウィンドウサイズ
+	Vec2 size;
 
 	// ウィンドウハンドル
 	void* handle;

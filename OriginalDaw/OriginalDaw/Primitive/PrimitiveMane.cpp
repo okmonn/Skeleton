@@ -30,10 +30,6 @@ PrimitiveMane::PrimitiveMane(std::weak_ptr<Window> win, std::weak_ptr<Root> root
 // デストラクタ
 PrimitiveMane::~PrimitiveMane()
 {
-	for (auto& i : pipeName)
-	{
-		PipeMane::Get().Delete(i);
-	}
 }
 
 // パイプの生成

@@ -33,9 +33,9 @@ void Texture::VertexBuffer(void)
 {
 	tex::Vertex vertex[] = {
 		{ { 0.0f,                           0.0f,                          0.0f }, { 0.0f, 0.0f } },
-		{ { (float)win.lock()->GetWidth(),  0.0f,                          0.0f }, { 1.0f, 0.0f } },
-		{ { 0.0f,                          (float)win.lock()->GetHeight(), 0.0f }, { 0.0f, 1.0f } },
-		{ { (float)win.lock()->GetWidth(), (float)win.lock()->GetHeight(), 0.0f }, { 1.0f, 1.0f } }
+		{ { (float)win.lock()->GetSize().x, 0.0f,                          0.0f }, { 1.0f, 0.0f } },
+		{ { 0.0f,                          (float)win.lock()->GetSize().y, 0.0f }, { 0.0f, 1.0f } },
+		{ { (float)win.lock()->GetSize().x,(float)win.lock()->GetSize().y, 0.0f }, { 1.0f, 1.0f } }
 	};
 
 	D3D12_HEAP_PROPERTIES prop{};
@@ -162,7 +162,7 @@ void Texture::SetDraw(const DirectX::XMFLOAT2 & pos, const DirectX::XMFLOAT2 & s
 {
 	XMStoreFloat4x4(&data->matrix,
 		DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat2(
-			&DirectX::XMFLOAT2(size.x / static_cast<float>(win.lock()->GetWidth()), size.y / static_cast<float>(win.lock()->GetHeight()))))
+			&DirectX::XMFLOAT2(size.x / static_cast<float>(win.lock()->GetSize().x), size.y / static_cast<float>(win.lock()->GetSize().y))))
 		* DirectX::XMMatrixTranslationFromVector(
 			DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(pos.x, pos.y)))
 	);

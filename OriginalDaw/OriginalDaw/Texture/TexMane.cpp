@@ -14,7 +14,6 @@ TexMane::TexMane(std::weak_ptr<Window> win, std::weak_ptr<Root> root) : win(win)
 // デストラクタ
 TexMane::~TexMane()
 {
-	PipeMane::Get().Delete("tex");
 }
 
 // 読み込み

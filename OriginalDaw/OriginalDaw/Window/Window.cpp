@@ -9,10 +9,10 @@
 #define RSC_MAX 1
 
 // コンストラクタ
-Window::Window(const unsigned int& width, const unsigned int& height) : width(width), height(height), 
+Window::Window(const Vec2 & size, void * parent) : size(size),
 	handle(nullptr), instance(nullptr), name(nullptr), constant(0)
 {
-	Create();
+	Create(parent);
 	ConstantBuffer();
 }
 
@@ -50,6 +50,10 @@ long __stdcall Window::WindowProc(void* hWnd, unsigned int message, long wParam,
 		break;
 
 	case WM_DESTROY:
+		if (GetParent(reinterpret_cast<HWND>(hWnd)) != nullptr)
+		{
+			break;
+		}
 		PostQuitMessage(0);
 		return 0;
 	}
@@ -58,7 +62,7 @@ long __stdcall Window::WindowProc(void* hWnd, unsigned int message, long wParam,
 }
 
 // ウィンドウの生成
-void Window::Create(void)
+void Window::Create(void * parent)
 {
 	WNDCLASSEX wnd{};
 	wnd.cbClsExtra    = 0;
@@ -69,21 +73,23 @@ void Window::Create(void)
 	wnd.hIcon         = LoadIcon(nullptr, MAKEINTRESOURCE(ICON_ID));
 	wnd.hIconSm       = LoadIcon(GetModuleHandle(0), MAKEINTRESOURCE(ICON_ID));
 	wnd.hInstance     = GetModuleHandle(0);
-	wnd.lpfnWndProc   = (WNDPROC)WindowProc;
-	wnd.lpszClassName = _T("DirectX12");
-	wnd.lpszMenuName  = _T("DirectX12");
+	wnd.lpfnWndProc   = reinterpret_cast<WNDPROC>(WindowProc);
+	wnd.lpszClassName = _T("おかもん");
+	wnd.lpszMenuName  = _T("おかもん");
 	wnd.style         = CS_HREDRAW | CS_VREDRAW;
 	RegisterClassEx(&wnd);
 
-	RECT rect{};
-	rect.bottom = static_cast<long>(height);
-	rect.left   = 0;
-	rect.right  = static_cast<long>(width);
-	rect.top    = 0;
-	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
+	auto flag = (parent == nullptr) ? (WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN) : (WS_OVERLAPPEDWINDOW | WS_CHILD);
 
-	handle = CreateWindow(wnd.lpszClassName, _T("おかもん"), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
-		(rect.right - rect.left), (rect.bottom - rect.top), nullptr, nullptr, wnd.hInstance, nullptr);
+	RECT rect{};
+	rect.bottom = static_cast<long>(size.y);
+	rect.left   = 0;
+	rect.right  = static_cast<long>(size.x);
+	rect.top    = 0;
+	AdjustWindowRect(&rect, flag, false);
+
+	handle = CreateWindow(wnd.lpszClassName, _T("おかもん"), flag, CW_USEDEFAULT, CW_USEDEFAULT,
+		(rect.right - rect.left), (rect.bottom - rect.top), reinterpret_cast<HWND>(parent), nullptr, wnd.hInstance, nullptr);
 	if (handle == nullptr)
 	{
 		OutputDebugString(_T("\nウィンドウの生成：失敗\n"));
@@ -133,7 +139,7 @@ void Window::ConstantBuffer(void)
 		return;
 	}
 
-	DirectX::XMFLOAT2 winSize = { static_cast<float>(width), static_cast<float>(height) };
+	DirectX::XMFLOAT2 winSize = { static_cast<float>(size.x), static_cast<float>(size.y) };
 	memcpy(data, &winSize, sizeof(DirectX::XMFLOAT2));
 
 	DescriptorMane::Get().GetRsc(constant)->Unmap(0, nullptr);

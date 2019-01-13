@@ -39,11 +39,11 @@ void Depth::Create(void)
 	desc.Dimension        = D3D12_RESOURCE_DIMENSION::D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 	desc.Flags            = D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
 	desc.Format           = DXGI_FORMAT::DXGI_FORMAT_R32_TYPELESS;
-	desc.Height           = win.lock()->GetHeight();
+	desc.Height           = static_cast<unsigned int>(win.lock()->GetSize().y);
 	desc.Layout           = D3D12_TEXTURE_LAYOUT::D3D12_TEXTURE_LAYOUT_UNKNOWN;
 	desc.MipLevels        = 0;
 	desc.SampleDesc       = { 1, 0 };
-	desc.Width            = win.lock()->GetWidth();
+	desc.Width            = static_cast<unsigned __int64>(win.lock()->GetSize().x);
 
 	D3D12_CLEAR_VALUE clear{};
 	clear.DepthStencil = { 1.0f, 0 };

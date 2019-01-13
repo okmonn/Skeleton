@@ -1,4 +1,5 @@
 #pragma once
+#include "../etc/Vector2.h"
 
 enum D3D12_COMMAND_LIST_TYPE : int;
 enum D3D12_RESOURCE_STATES : int;
@@ -23,10 +24,10 @@ public:
 	void Reset(ID3D12PipelineState* pipe = nullptr);
 
 	// ビューポートのセット
-	void SetView(const unsigned int& width, const unsigned int& height);
+	void SetView(const Vec2& size);
 
 	// シザーのセット
-	void SetScissor(const unsigned int& width, const unsigned int& height);
+	void SetScissor(const Vec2& size);
 
 	// バリア
 	void Barrier(const D3D12_RESOURCE_STATES & befor, const D3D12_RESOURCE_STATES & affter, ID3D12Resource * rsc);

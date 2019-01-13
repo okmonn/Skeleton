@@ -15,3 +15,20 @@ std::wstring help::ChangeWString(const std::string & st)
 
 	return wstr;
 }
+
+// メインディスプレイの解像度の取得
+Vec2 help::GetDisplayResolution(void)
+{
+	return Vec2(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+}
+
+// キー入力
+bool help::CheckKey(const int & key)
+{
+	if (GetKeyState(key) & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}

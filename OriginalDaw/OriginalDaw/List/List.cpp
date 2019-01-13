@@ -52,26 +52,26 @@ void List::Reset(ID3D12PipelineState * pipe)
 }
 
 // ビューポートのセット
-void List::SetView(const unsigned int & width, const unsigned int & height)
+void List::SetView(const Vec2 & size)
 {
 	D3D12_VIEWPORT view{};
-	view.Height   = static_cast<float>(height);
+	view.Height   = static_cast<float>(size.y);
 	view.MaxDepth = 1.0f;
 	view.MinDepth = 0.0f;
 	view.TopLeftX = 0.0f;
 	view.TopLeftY = 0.0f;
-	view.Width    = static_cast<float>(width);
+	view.Width    = static_cast<float>(size.x);
 
 	list->RSSetViewports(1, &view);
 }
 
 // シザーのセット
-void List::SetScissor(const unsigned int & width, const unsigned int & height)
+void List::SetScissor(const Vec2 & size)
 {
 	RECT scissor{};
-	scissor.bottom = static_cast<long>(height);
+	scissor.bottom = static_cast<long>(size.y);
 	scissor.left   = 0;
-	scissor.right  = static_cast<long>(width);
+	scissor.right  = static_cast<long>(size.x);
 	scissor.top    = 0;
 
 	list->RSSetScissorRects(1, &scissor);

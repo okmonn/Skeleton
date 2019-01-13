@@ -74,7 +74,7 @@ long Primitive::Map(void)
 }
 
 // •`‰æ
-void Primitive::Draw(std::weak_ptr<List> list, prm::Vertex * vertex, const size_t & num)
+void Primitive::Draw(std::weak_ptr<List> list, const prm::Vertex * vertex, const size_t & num)
 {
 	this->vertex.assign(vertex, vertex + num);
 	Map();

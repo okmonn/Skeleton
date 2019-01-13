@@ -50,6 +50,18 @@ void PipeMane::CreatePipe(const std::string & name, std::weak_ptr<Root> root, co
 	pipe[name]->CreateGraphics(*input.data(), input.size(), type, depth);
 }
 
+// パイプの生成
+void PipeMane::CreatePipe(const std::string & name, std::weak_ptr<Root> root)
+{
+	if (pipe.find(name) != pipe.end())
+	{
+		return;
+	}
+
+	pipe[name] = std::make_shared<Pipe>(root);
+	pipe[name]->CreateCompute();
+}
+
 // パイプの削除
 void PipeMane::Delete(const std::string & name)
 {

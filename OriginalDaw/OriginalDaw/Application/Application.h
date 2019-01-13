@@ -1,5 +1,5 @@
 #pragma once
-#include "../etc/Vector2.h"
+#include "../Helper/Helper.h"
 #include "../etc/Color.h"
 #include <memory>
 
@@ -16,20 +16,15 @@ class TexMane;
 class Application
 {
 public:
+	// コンストラクタ
+	Application(const Vec2& winSize);
+	Application(const Application& app, const Vec2& winSize);
+	Application(std::weak_ptr<Application>app, const Vec2& winSize);
 	// デストラクタ
 	~Application();
 
-	// インスタンス変数の取得
-	static Application& Get(void) {
-		static Application instance;
-		return instance;
-	}
-
 	// メッセージの確認
 	bool CheckMsg(void);
-
-	// キー入力
-	bool CheckKey(const int& key);
 
 	// ポイントの描画
 	void DrawPoint(const Vec2f& pos, const Color& color);
@@ -61,15 +56,14 @@ public:
 
 private:
 	// コンストラクタ
-	Application();
 	Application(const Application&) = delete;
 	void operator=(const Application&) = delete;
 
-	// クラスの生成
-	void Create(void);
-
 	// ルートの生成
 	void CreateRoot(void);
+
+	// 初期化
+	void Init(const Vec2& winSize, void* parent = nullptr);
 
 
 	// ウィンドウ
@@ -82,16 +76,16 @@ private:
 	std::shared_ptr<List>list;
 
 	// フェンス
-	std::shared_ptr<Fence>fence;
+	std::unique_ptr<Fence>fence;
 
 	// スワップ
 	std::shared_ptr<Swap>swap;
 
 	// レンダー
-	std::shared_ptr<Render>render;
+	std::unique_ptr<Render>render;
 
 	// デプス
-	std::shared_ptr<Depth>depth;
+	std::unique_ptr<Depth>depth;
 
 	// プリミティブ
 	std::unique_ptr<PrimitiveMane>primitive;

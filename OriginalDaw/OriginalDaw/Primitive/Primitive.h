@@ -18,7 +18,7 @@ public:
 	~Primitive();
 
 	// 描画
-	void Draw(std::weak_ptr<List>list, prm::Vertex* vertex, const size_t& num);
+	void Draw(std::weak_ptr<List>list, const prm::Vertex* vertex, const size_t& num);
 
 protected:
 	// 頂点バッファの生成

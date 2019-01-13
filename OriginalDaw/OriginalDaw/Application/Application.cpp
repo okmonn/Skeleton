@@ -18,7 +18,7 @@
 #pragma comment(lib, "dxgi.lib")
 
 // コンストラクタ
-Application::Application()
+Application::Application(const Vec2 & winSize)
 {
 #ifdef _DEBUG
 	ID3D12Debug* debug = nullptr;
@@ -26,7 +26,19 @@ Application::Application()
 	debug->EnableDebugLayer();
 #endif
 
-	Create();
+	Init(winSize);
+}
+
+// コンストラクタ
+Application::Application(const Application & app, const Vec2 & winSize)
+{
+	Init(winSize, app.win->Get());
+}
+
+// コンストラクタ
+Application::Application(std::weak_ptr<Application> app, const Vec2 & winSize)
+{
+	Init(winSize, app.lock()->win->Get());
 }
 
 // デストラクタ
@@ -34,28 +46,28 @@ Application::~Application()
 {
 }
 
-// クラスの生成
-void Application::Create(void)
-{
-	win    = std::make_shared<Window>();
-	queue  = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
-	list   = std::make_shared<List>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
-	fence  = std::make_shared<Fence>(queue);
-	swap   = std::make_shared<Swap>(win, queue);
-	render = std::make_shared<Render>(swap);
-	depth  = std::make_shared<Depth>(win);
-
-	CreateRoot();
-
-	primitive = std::make_unique<PrimitiveMane>(win, RootMane::Get().GetRoot("primitive"));
-	texture   = std::make_unique<TexMane>(win, RootMane::Get().GetRoot("texture"));
-}
-
 // ルートの生成
 void Application::CreateRoot(void)
 {
 	RootMane::Get().Create("primitive", L"Shader/Primitive.hlsl");
 	RootMane::Get().Create("texture",   L"Shader/Texture.hlsl");
+}
+
+// 初期化
+void Application::Init(const Vec2 & winSize, void * parent)
+{
+	win    = std::make_shared<Window>(winSize, parent);
+	queue  = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
+	list   = std::make_shared<List>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
+	fence  = std::make_unique<Fence>(queue);
+	swap   = std::make_shared<Swap>(win, queue);
+	render = std::make_unique<Render>(swap);
+	depth  = std::make_unique<Depth>(win);
+
+	CreateRoot();
+
+	primitive = std::make_unique<PrimitiveMane>(win, RootMane::Get().GetRoot("primitive"));
+	texture   = std::make_unique<TexMane>(win, RootMane::Get().GetRoot("texture"));
 }
 
 // メッセージの確認
@@ -78,17 +90,6 @@ bool Application::CheckMsg(void)
 	}
 
 	return true;
-}
-
-// キー入力
-bool Application::CheckKey(const int & key)
-{
-	if (GetKeyState(key) & 0x80)
-	{
-		return true;
-	}
-
-	return false;
 }
 
 // ポイントの描画
@@ -146,8 +147,8 @@ void Application::Clear(void)
 {
 	list->Reset();
 
-	list->SetView(win->GetWidth(), win->GetHeight());
-	list->SetScissor(win->GetWidth(), win->GetHeight());
+	list->SetView(win->GetSize());
+	list->SetScissor(win->GetSize());
 
 	list->Barrier(D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_RENDER_TARGET, render->GetRsc());
 
