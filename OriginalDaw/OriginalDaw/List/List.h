@@ -46,6 +46,9 @@ public:
 	// ヒープと描画用ルートシグネチャの関連付け
 	void SetRootTable(const unsigned int& id, ID3D12DescriptorHeap* heap, const unsigned int& index = 0);
 
+	// ヒープとコンピュート用ルートシグネチャの関連付け
+	void SetComputeRootTable(const unsigned int& id, ID3D12DescriptorHeap* heap, const unsigned int& index = 0);
+
 	// 頂点バッファのセット
 	void SetVertexBufferView(const D3D12_VERTEX_BUFFER_VIEW& view);
 
@@ -54,6 +57,9 @@ public:
 
 	// 頂点描画
 	void DrawVertex(const size_t& vertexNum, const unsigned int& instance = 1);
+
+	// コンピュートの実行
+	void Dispatch(const unsigned int& x, const unsigned int& y, const unsigned int& z);
 
 	// リストのクローズ
 	void Close(void);

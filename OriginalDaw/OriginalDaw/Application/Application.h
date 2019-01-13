@@ -11,6 +11,7 @@ class Swap;
 class Render;
 class Depth;
 class PrimitiveMane;
+class TexMane;
 
 class Application
 {
@@ -42,11 +43,21 @@ public:
 	// ボックスの描画
 	void DrawBox(const Vec2f& pos, const Vec2f& size, const Color& color);
 
+	// 画像の読み込み
+	void LoadTex(int& addr, const std::string& fileName);
+
+	// 画像の描画
+	void DrawTex(int& addr, const Vec2f& pos, const Vec2f& size, const Vec2f& uvPos, const Vec2f& uvSize,
+		const float& alpha = 1.0f, const bool& turnX = false, const bool& turnY = false);
+
 	// 画面クリア
 	void Clear(void);
 
 	// コマンドの実行
 	void Execution(void);
+
+	// 画像の削除
+	void DeleteTex(int& addr);
 
 private:
 	// コンストラクタ
@@ -59,9 +70,6 @@ private:
 
 	// ルートの生成
 	void CreateRoot(void);
-
-	// パイプの生成
-	void CreatePipe(void);
 
 
 	// ウィンドウ
@@ -87,4 +95,7 @@ private:
 
 	// プリミティブ
 	std::unique_ptr<PrimitiveMane>primitive;
+
+	// テクスチャ
+	std::unique_ptr<TexMane>texture;
 };

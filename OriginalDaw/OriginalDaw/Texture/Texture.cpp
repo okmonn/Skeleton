@@ -150,6 +150,7 @@ void Texture::Load(const std::string & fileName)
 {
 	TexLoader::Get().Load(fileName);
 	rsc = TexLoader::Get().GetRsc(fileName);
+	sub = TexLoader::Get().GetSub(fileName);
 
 	ShaderBuffer();
 	WriteSub(fileName);

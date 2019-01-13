@@ -9,6 +9,7 @@
 #include "../Render/Render.h"
 #include "../Depth/Depth.h"
 #include "../Primitive/PrimitiveMane.h"
+#include "../Texture/TexMane.h"
 #include <Windows.h>
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -45,22 +46,16 @@ void Application::Create(void)
 	depth  = std::make_shared<Depth>(win);
 
 	CreateRoot();
-	CreatePipe();
 
 	primitive = std::make_unique<PrimitiveMane>(win, RootMane::Get().GetRoot("primitive"));
+	texture   = std::make_unique<TexMane>(win, RootMane::Get().GetRoot("texture"));
 }
 
 // ルートの生成
 void Application::CreateRoot(void)
 {
 	RootMane::Get().Create("primitive", L"Shader/Primitive.hlsl");
-}
-
-// パイプの生成
-void Application::CreatePipe(void)
-{
-	PipeMane::Get().CreatePipe("point", RootMane::Get().GetRoot("primitive"), D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT,
-		{ 0, 3 }, false);
+	RootMane::Get().Create("texture",   L"Shader/Texture.hlsl");
 }
 
 // メッセージの確認
@@ -133,6 +128,19 @@ void Application::DrawBox(const Vec2f & pos, const Vec2f & size, const Color & c
 	DrawTriangle({ pos.x + size.x, pos.y }, pos + size, { pos.x, pos.y + size.y }, color);
 }
 
+// 画像の読み込み
+void Application::LoadTex(int & addr, const std::string & fileName)
+{
+	texture->Load(addr, fileName);
+}
+
+// 画像の描画
+void Application::DrawTex(int & addr, const Vec2f & pos, const Vec2f & size, const Vec2f & uvPos, const Vec2f & uvSize, 
+	const float & alpha, const bool & turnX, const bool & turnY)
+{
+	texture->Draw(list, addr, { pos.x, pos.y }, { size.x, size.y }, { uvPos.x, uvPos.y }, { uvSize.x, uvSize.y }, alpha, turnX, turnY);
+}
+
 // 画面クリア
 void Application::Clear(void)
 {
@@ -164,4 +172,10 @@ void Application::Execution(void)
 	fence->Wait();
 
 	primitive->Clear();
+}
+
+// 画像の削除
+void Application::DeleteTex(int & addr)
+{
+	texture->Delete(addr);
 }

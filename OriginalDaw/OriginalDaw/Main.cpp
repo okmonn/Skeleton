@@ -12,8 +12,6 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 	{
 		Application::Get().Clear();
 
-		Application::Get().DrawLine(0.0f, 200.0f, { 1.0f, 0.0f, 0.0f, 1.0f });
-
 		Application::Get().Execution();
 	}
 

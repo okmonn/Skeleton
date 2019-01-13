@@ -133,7 +133,7 @@ void DescriptorMane::CBV(int & heapAddr, int & rscAddr, const size_t & size, con
 }
 
 // SRV‚Ì¶¬
-void DescriptorMane::SRV(int & heapAddr, int & rscAddr, const size_t & size, const unsigned int & index)
+void DescriptorMane::SRV(int & heapAddr, int & rscAddr, const unsigned int & index)
 {
 	D3D12_SHADER_RESOURCE_VIEW_DESC desc{};
 	desc.Format                    = rsc[&rscAddr]->GetDesc().Format;
@@ -147,6 +147,21 @@ void DescriptorMane::SRV(int & heapAddr, int & rscAddr, const size_t & size, con
 
 	Device::Get().GetDev()->CreateShaderResourceView(rsc[&rscAddr], &desc, handle);
 	rscAddr = RSC_TYPE::RSC_TYPE_SRV;
+}
+
+// UAV‚Ì¶¬
+void DescriptorMane::UAV(int & heapAddr, int & rscAddr, const unsigned int & stride, const unsigned int & num, const unsigned int & index)
+{
+	D3D12_UNORDERED_ACCESS_VIEW_DESC desc{};
+	desc.ViewDimension              = D3D12_UAV_DIMENSION::D3D12_UAV_DIMENSION_BUFFER;
+	desc.Format                     = DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
+	desc.Buffer.NumElements         = num;
+	desc.Buffer.StructureByteStride = stride;
+
+	auto handle = heap[&heapAddr]->GetCPUDescriptorHandleForHeapStart();
+	handle.ptr += Device::Get().GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * index;
+
+	Device::Get().GetDev()->CreateUnorderedAccessView(rsc[&rscAddr], nullptr, &desc, handle);
 }
 
 // ƒq[ƒv‚Ìíœ

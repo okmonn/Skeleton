@@ -82,6 +82,9 @@
     <Filter Include="Helper">
       <UniqueIdentifier>{15c4e08e-035a-4cd0-899a-bf3fd482f6e8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Texture\Mane">
+      <UniqueIdentifier>{8535a21c-ebf7-47b2-8c88-b5e4c0f96e55}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -146,6 +149,9 @@
     </ClCompile>
     <ClCompile Include="Texture\Texture.cpp">
       <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture\TexMane.cpp">
+      <Filter>Texture\Mane</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -230,9 +236,15 @@
     <ClInclude Include="Helper\Helper.h">
       <Filter>Helper</Filter>
     </ClInclude>
+    <ClInclude Include="Texture\TexMane.h">
+      <Filter>Texture\Mane</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Primitive.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\Texture.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>

@@ -124,6 +124,15 @@ void List::SetRootTable(const unsigned int & id, ID3D12DescriptorHeap * heap, co
 	list->SetGraphicsRootDescriptorTable(id, handle);
 }
 
+// ヒープとコンピュート用ルートシグネチャの関連付け
+void List::SetComputeRootTable(const unsigned int & id, ID3D12DescriptorHeap * heap, const unsigned int & index)
+{
+	auto handle = heap->GetGPUDescriptorHandleForHeapStart();
+	handle.ptr += Device::Get().GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * index;
+
+	list->SetComputeRootDescriptorTable(id, handle);
+}
+
 // 頂点バッファのセット
 void List::SetVertexBufferView(const D3D12_VERTEX_BUFFER_VIEW & view)
 {
@@ -140,6 +149,12 @@ void List::SetTopology(const D3D_PRIMITIVE_TOPOLOGY & type)
 void List::DrawVertex(const size_t & vertexNum, const unsigned int & instance)
 {
 	list->DrawInstanced(static_cast<unsigned int>(vertexNum), instance, 0, 0);
+}
+
+// コンピュートの実行
+void List::Dispatch(const unsigned int & x, const unsigned int & y, const unsigned int & z)
+{
+	list->Dispatch(x, y, z);
 }
 
 // リストのクローズ
