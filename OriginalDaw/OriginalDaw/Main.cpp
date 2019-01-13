@@ -11,6 +11,9 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 	while (Application::Get().CheckMsg() && Application::Get().CheckKey(VK_ESCAPE) == false)
 	{
 		Application::Get().Clear();
+
+		Application::Get().DrawLine(0.0f, 200.0f, { 1.0f, 0.0f, 0.0f, 1.0f });
+
 		Application::Get().Execution();
 	}
 

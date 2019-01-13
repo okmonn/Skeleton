@@ -8,6 +8,7 @@
 #include "../Swap/Swap.h"
 #include "../Render/Render.h"
 #include "../Depth/Depth.h"
+#include "../Primitive/PrimitiveMane.h"
 #include <Windows.h>
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -45,6 +46,8 @@ void Application::Create(void)
 
 	CreateRoot();
 	CreatePipe();
+
+	primitive = std::make_unique<PrimitiveMane>(win, RootMane::Get().GetRoot("primitive"));
 }
 
 // ルートの生成
@@ -93,6 +96,43 @@ bool Application::CheckKey(const int & key)
 	return false;
 }
 
+// ポイントの描画
+void Application::DrawPoint(const Vec2f & pos, const Color & color)
+{
+	prm::Vertex v[] = {
+		{ { pos.x, pos.y, 0.0f }, { color.r, color.g, color.b, color.a } },
+	};
+	primitive->Draw(list, prm::PrimitiveType::point, v, _countof(v));
+}
+
+// ラインの描画
+void Application::DrawLine(const Vec2f & pos1, const Vec2f & pos2, const Color & color)
+{
+	prm::Vertex v[] = {
+		{ { pos1.x, pos1.y, 0.0f }, { color.r, color.g, color.b, color.a } },
+		{ { pos2.x, pos2.y, 0.0f }, { color.r, color.g, color.b, color.a } },
+	};
+	primitive->Draw(list, prm::PrimitiveType::line, v, _countof(v));
+}
+
+// トライアングルの描画
+void Application::DrawTriangle(const Vec2f & pos1, const Vec2f & pos2, const Vec2f & pos3, const Color & color)
+{
+	prm::Vertex v[] = {
+		{ { pos1.x, pos1.y, 0.0f }, { color.r, color.g, color.b, color.a } },
+		{ { pos2.x, pos2.y, 0.0f }, { color.r, color.g, color.b, color.a } },
+		{ { pos3.x, pos3.y, 0.0f }, { color.r, color.g, color.b, color.a } },
+	};
+	primitive->Draw(list, prm::PrimitiveType::triangle, v, _countof(v));
+}
+
+// ボックスの描画
+void Application::DrawBox(const Vec2f & pos, const Vec2f & size, const Color & color)
+{
+	DrawTriangle(pos, { pos.x + size.x, pos.y }, { pos.x, pos.y + size.y }, color);
+	DrawTriangle({ pos.x + size.x, pos.y }, pos + size, { pos.x, pos.y + size.y }, color);
+}
+
 // 画面クリア
 void Application::Clear(void)
 {
@@ -122,4 +162,6 @@ void Application::Execution(void)
 	swap->Present();
 
 	fence->Wait();
+
+	primitive->Clear();
 }

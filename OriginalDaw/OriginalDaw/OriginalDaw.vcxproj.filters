@@ -58,6 +58,30 @@
     <Filter Include="Primitive">
       <UniqueIdentifier>{5e0cd445-69ed-4570-8766-c9b72eda296b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{b20dda53-f1a3-40fd-b13b-1b4bab52414b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture\WIC">
+      <UniqueIdentifier>{5adbff74-5011-4226-a1d6-6f5a1eb633d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pipe\Mane">
+      <UniqueIdentifier>{9f8feff8-c1df-4256-84b3-1c41c7a37db5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Primitive\Mane">
+      <UniqueIdentifier>{f02c2dd6-b5f7-47aa-bf24-eced0de78310}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Root\Mane">
+      <UniqueIdentifier>{1c5e0275-6ca1-474c-a2d9-1d313b84cf0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window\Icon">
+      <UniqueIdentifier>{221aa12e-3b2c-42ca-9e6a-7fcd23311ab4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture\Loader">
+      <UniqueIdentifier>{4e3e368b-0e6d-4ddb-afeb-4946f7ea5852}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Helper">
+      <UniqueIdentifier>{15c4e08e-035a-4cd0-899a-bf3fd482f6e8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -99,24 +123,33 @@
     <ClCompile Include="Root\Root.cpp">
       <Filter>Root</Filter>
     </ClCompile>
-    <ClCompile Include="Root\RootMane.cpp">
-      <Filter>Root</Filter>
-    </ClCompile>
-    <ClCompile Include="Pipe\PipeMane.cpp">
-      <Filter>Pipe</Filter>
-    </ClCompile>
     <ClCompile Include="Primitive\Primitive.cpp">
       <Filter>Primitive</Filter>
     </ClCompile>
+    <ClCompile Include="Texture\WICTextureLoader12.cpp">
+      <Filter>Texture\WIC</Filter>
+    </ClCompile>
+    <ClCompile Include="Pipe\PipeMane.cpp">
+      <Filter>Pipe\Mane</Filter>
+    </ClCompile>
     <ClCompile Include="Primitive\PrimitiveMane.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Primitive\Mane</Filter>
+    </ClCompile>
+    <ClCompile Include="Root\RootMane.cpp">
+      <Filter>Root\Mane</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture\TexLoader.cpp">
+      <Filter>Texture\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="Helper\Helper.cpp">
+      <Filter>Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture\Texture.cpp">
+      <Filter>Texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window\Window.h">
-      <Filter>Window</Filter>
-    </ClInclude>
-    <ClInclude Include="Window\Icon.h">
       <Filter>Window</Filter>
     </ClInclude>
     <ClInclude Include="etc\tstring.h">
@@ -158,30 +191,54 @@
     <ClInclude Include="Root\Root.h">
       <Filter>Root</Filter>
     </ClInclude>
-    <ClInclude Include="Root\RootMane.h">
-      <Filter>Root</Filter>
-    </ClInclude>
-    <ClInclude Include="Pipe\PipeMane.h">
-      <Filter>Pipe</Filter>
-    </ClInclude>
     <ClInclude Include="Primitive\Primitive.h">
       <Filter>Primitive</Filter>
     </ClInclude>
     <ClInclude Include="Primitive\PrimitiveInfo.h">
       <Filter>Primitive</Filter>
     </ClInclude>
-    <ClInclude Include="Primitive\PrimitiveMane.h">
-      <Filter>Primitive</Filter>
+    <ClInclude Include="etc\Vector2.h">
+      <Filter>etc</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Window\Icon.rc">
-      <Filter>Window</Filter>
-    </ResourceCompile>
+    <ClInclude Include="etc\Color.h">
+      <Filter>etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\WICTextureLoader12.h">
+      <Filter>Texture\WIC</Filter>
+    </ClInclude>
+    <ClInclude Include="Pipe\PipeMane.h">
+      <Filter>Pipe\Mane</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitive\PrimitiveMane.h">
+      <Filter>Primitive\Mane</Filter>
+    </ClInclude>
+    <ClInclude Include="Root\RootMane.h">
+      <Filter>Root\Mane</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\Icon.h">
+      <Filter>Window\Icon</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\Texture.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\TexLoader.h">
+      <Filter>Texture\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\TextureInfo.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Helper\Helper.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Primitive.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Window\Icon.rc">
+      <Filter>Window\Icon</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

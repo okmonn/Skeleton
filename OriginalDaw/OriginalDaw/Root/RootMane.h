@@ -20,6 +20,9 @@ public:
 	// ルートの生成
 	void Create(const std::string& name, const std::wstring& fileName);
 
+	// ルートの削除
+	void Delete(const std::string& name);
+
 	// ルートの取得
 	std::shared_ptr<Root> GetRoot(const std::string& name) {
 		return root[name];

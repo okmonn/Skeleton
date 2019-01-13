@@ -22,3 +22,12 @@ void RootMane::Create(const std::string & name, const std::wstring & fileName)
 
 	root[name] = std::make_shared<Root>(fileName);
 }
+
+// ƒ‹[ƒg‚Ìíœ
+void RootMane::Delete(const std::string & name)
+{
+	if (root.find(name) != root.end())
+	{
+		root.erase(root.find(name));
+	}
+}

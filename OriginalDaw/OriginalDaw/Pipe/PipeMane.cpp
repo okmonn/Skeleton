@@ -49,3 +49,12 @@ void PipeMane::CreatePipe(const std::string & name, std::weak_ptr<Root> root, co
 	pipe[name] = std::make_shared<Pipe>(root);
 	pipe[name]->CreateGraphics(*input.data(), input.size(), type, depth);
 }
+
+// ƒpƒCƒv‚Ìíœ
+void PipeMane::Delete(const std::string & name)
+{
+	if (pipe.find(name) != pipe.end())
+	{
+		pipe.erase(pipe.find(name));
+	}
+}
