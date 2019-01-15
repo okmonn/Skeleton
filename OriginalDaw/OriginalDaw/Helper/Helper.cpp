@@ -126,3 +126,17 @@ void help::GetKeys(int * key)
 {
 	SetKeyboardState((unsigned char*)key);
 }
+
+// マウス座標の取得
+Vec2 help::GetMousePos(void)
+{
+	POINT point;
+	GetCursorPos(&point);
+	return { static_cast<int>(point.x), static_cast<int>(point.y) };
+}
+
+// マウス座標のセット
+void help::SetMousePos(const Vec2 & pos)
+{
+	SetCursorPos(pos.x, pos.y);
+}

@@ -1,6 +1,7 @@
 #pragma once
 #include "../Helper/Helper.h"
 #include "../etc/Color.h"
+#include "../etc/InputInfo.h"
 #include <memory>
 
 class Window;

@@ -8,7 +8,7 @@ TexMane::TexMane(std::weak_ptr<Window> win, std::weak_ptr<Root> root) : win(win)
 {
 	texture.clear();
 
-	PipeMane::Get().CreatePipe("tex", root, D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 2 }, false);
+	PipeMane::Get().Create("tex", root, D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 2 }, false);
 }
 
 // デストラクタ

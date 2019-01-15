@@ -100,6 +100,12 @@
     <Filter Include="Sound\Filter">
       <UniqueIdentifier>{b716e08c-793f-47cd-a306-5da7eadbb6b8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Compute">
+      <UniqueIdentifier>{61762d00-36d4-41fd-b669-460e24bec05b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compute\Effecter">
+      <UniqueIdentifier>{ea918c62-dd5d-4e54-8fb5-7ad777177b6e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -182,6 +188,12 @@
     </ClCompile>
     <ClCompile Include="Sound\Sound.cpp">
       <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Compute\Compute.cpp">
+      <Filter>Compute</Filter>
+    </ClCompile>
+    <ClCompile Include="Compute\Effector.cpp">
+      <Filter>Compute\Effecter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -289,6 +301,12 @@
     </ClInclude>
     <ClInclude Include="etc\InputInfo.h">
       <Filter>etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Compute\Compute.h">
+      <Filter>Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="Compute\Effector.h">
+      <Filter>Compute\Effecter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

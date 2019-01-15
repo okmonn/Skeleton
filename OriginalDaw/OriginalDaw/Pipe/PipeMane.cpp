@@ -33,7 +33,7 @@ PipeMane::~PipeMane()
 }
 
 // パイプの生成
-void PipeMane::CreatePipe(const std::string & name, std::weak_ptr<Root> root, const D3D12_PRIMITIVE_TOPOLOGY_TYPE & type, const std::initializer_list<int>& index, const bool & depth)
+void PipeMane::Create(const std::string & name, std::weak_ptr<Root> root, const D3D12_PRIMITIVE_TOPOLOGY_TYPE & type, const std::initializer_list<int>& index, const bool & depth)
 {
 	if (pipe.find(name) != pipe.end())
 	{
@@ -51,7 +51,7 @@ void PipeMane::CreatePipe(const std::string & name, std::weak_ptr<Root> root, co
 }
 
 // パイプの生成
-void PipeMane::CreatePipe(const std::string & name, std::weak_ptr<Root> root)
+void PipeMane::Create(const std::string & name, std::weak_ptr<Root> root)
 {
 	if (pipe.find(name) != pipe.end())
 	{

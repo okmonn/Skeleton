@@ -12,7 +12,7 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 	Application app(winSize);
 	Application* app2 = new Application(app, 300);
 
-	while (app.CheckMsg() && help::CheckKey('A') == false)
+	while (app.CheckMsg() && help::CheckKey(INPUT_LBUTTON) == false)
 	{
 		app.Clear();
 		app2->Clear();

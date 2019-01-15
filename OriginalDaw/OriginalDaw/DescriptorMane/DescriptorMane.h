@@ -54,7 +54,7 @@ public:
 	void SRV(int& heapAddr, int& rscAddr, const unsigned int& index = 0);
 
 	// UAV‚Ì¶¬
-	void UAV(int& heapAddr, int& rscAddr, const unsigned int& stride, const unsigned int& num, const unsigned int& index = 0);
+	void UAV(int& heapAddr, int& rscAddr, const size_t& stride, const size_t& num, const unsigned int& index = 0);
 
 	// ƒq[ƒv‚Ìíœ
 	void DeleteHeap(int& addr);

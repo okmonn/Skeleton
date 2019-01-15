@@ -20,8 +20,8 @@ public:
 	}
 
 	// パイプの生成
-	void CreatePipe(const std::string& name, std::weak_ptr<Root>root, const D3D12_PRIMITIVE_TOPOLOGY_TYPE& type, const std::initializer_list<int>&index, const bool& depth);
-	void CreatePipe(const std::string& name, std::weak_ptr<Root>root);
+	void Create(const std::string& name, std::weak_ptr<Root>root, const D3D12_PRIMITIVE_TOPOLOGY_TYPE& type, const std::initializer_list<int>&index, const bool& depth);
+	void Create(const std::string& name, std::weak_ptr<Root>root);
 
 	// パイプの削除
 	void Delete(const std::string& name);

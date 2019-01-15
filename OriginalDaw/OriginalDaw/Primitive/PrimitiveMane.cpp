@@ -35,9 +35,9 @@ PrimitiveMane::~PrimitiveMane()
 // ÉpÉCÉvÇÃê∂ê¨
 void PrimitiveMane::CreatePipe(void)
 {
-	PipeMane::Get().Get().CreatePipe(pipeName[static_cast<int>(prm::PrimitiveType::point)], root, topologyType[static_cast<int>(prm::PrimitiveType::point)], { 0, 3 }, false);
-	PipeMane::Get().Get().CreatePipe(pipeName[static_cast<int>(prm::PrimitiveType::line)], root, topologyType[static_cast<int>(prm::PrimitiveType::line)], { 0, 3 }, false);
-	PipeMane::Get().Get().CreatePipe(pipeName[static_cast<int>(prm::PrimitiveType::triangle)], root, topologyType[static_cast<int>(prm::PrimitiveType::triangle)], { 0, 3 }, false);
+	PipeMane::Get().Get().Create(pipeName[static_cast<int>(prm::PrimitiveType::point)], root, topologyType[static_cast<int>(prm::PrimitiveType::point)], { 0, 3 }, false);
+	PipeMane::Get().Get().Create(pipeName[static_cast<int>(prm::PrimitiveType::line)], root, topologyType[static_cast<int>(prm::PrimitiveType::line)], { 0, 3 }, false);
+	PipeMane::Get().Get().Create(pipeName[static_cast<int>(prm::PrimitiveType::triangle)], root, topologyType[static_cast<int>(prm::PrimitiveType::triangle)], { 0, 3 }, false);
 }
 
 // ï`âÊ

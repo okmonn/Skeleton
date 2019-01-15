@@ -43,10 +43,8 @@ long DescriptorMane::CreateHeap(int& addr, const D3D12_DESCRIPTOR_HEAP_FLAGS & f
 	if (FAILED(hr))
 	{
 		OutputDebugString(_T("\nÉqÅ[ÉvÇÃê∂ê¨ÅFé∏îs\n"));
-		return hr;
 	}
 
-	addr = 1;
 	return hr;
 }
 
@@ -150,13 +148,13 @@ void DescriptorMane::SRV(int & heapAddr, int & rscAddr, const unsigned int & ind
 }
 
 // UAVÇÃê∂ê¨
-void DescriptorMane::UAV(int & heapAddr, int & rscAddr, const unsigned int & stride, const unsigned int & num, const unsigned int & index)
+void DescriptorMane::UAV(int & heapAddr, int & rscAddr, const size_t & stride, const size_t & num, const unsigned int & index)
 {
 	D3D12_UNORDERED_ACCESS_VIEW_DESC desc{};
 	desc.ViewDimension              = D3D12_UAV_DIMENSION::D3D12_UAV_DIMENSION_BUFFER;
 	desc.Format                     = DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
-	desc.Buffer.NumElements         = num;
-	desc.Buffer.StructureByteStride = stride;
+	desc.Buffer.NumElements         = static_cast<unsigned int>(num);
+	desc.Buffer.StructureByteStride = static_cast<unsigned int>(stride);
 
 	auto handle = heap[&heapAddr]->GetCPUDescriptorHandleForHeapStart();
 	handle.ptr += Device::Get().GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * index;

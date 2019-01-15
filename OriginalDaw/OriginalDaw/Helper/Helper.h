@@ -30,4 +30,10 @@ namespace help {
 
 	// 全部のキー情報を格納
 	void GetKeys(int* key);
+
+	// マウス座標の取得
+	Vec2 GetMousePos(void);
+
+	// マウス座標のセット
+	void SetMousePos(const Vec2& pos);
 }
