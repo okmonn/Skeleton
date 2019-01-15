@@ -135,6 +135,11 @@
     <ClCompile Include="Render\Render.cpp" />
     <ClCompile Include="Root\Root.cpp" />
     <ClCompile Include="Root\RootMane.cpp" />
+    <ClCompile Include="Sound\Filter.cpp" />
+    <ClCompile Include="Sound\SndFunc.cpp" />
+    <ClCompile Include="Sound\SndLoader.cpp" />
+    <ClCompile Include="Sound\Sound.cpp" />
+    <ClCompile Include="Sound\Xaudio2.cpp" />
     <ClCompile Include="Swap\Swap.cpp" />
     <ClCompile Include="Texture\TexLoader.cpp" />
     <ClCompile Include="Texture\TexMane.cpp" />
@@ -148,6 +153,7 @@
     <ClInclude Include="DescriptorMane\DescriptorMane.h" />
     <ClInclude Include="Device\Device.h" />
     <ClInclude Include="etc\Color.h" />
+    <ClInclude Include="etc\InputInfo.h" />
     <ClInclude Include="etc\Release.h" />
     <ClInclude Include="etc\tstring.h" />
     <ClInclude Include="etc\Vector2.h" />
@@ -163,6 +169,12 @@
     <ClInclude Include="Render\Render.h" />
     <ClInclude Include="Root\Root.h" />
     <ClInclude Include="Root\RootMane.h" />
+    <ClInclude Include="Sound\Filter.h" />
+    <ClInclude Include="Sound\SndFunc.h" />
+    <ClInclude Include="Sound\SndLoader.h" />
+    <ClInclude Include="Sound\Sound.h" />
+    <ClInclude Include="Sound\VoiceCallback.h" />
+    <ClInclude Include="Sound\Xaudio2.h" />
     <ClInclude Include="Swap\Swap.h" />
     <ClInclude Include="Texture\TexLoader.h" />
     <ClInclude Include="Texture\TexMane.h" />

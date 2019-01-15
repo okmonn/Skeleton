@@ -86,7 +86,7 @@ void Window::Create(void * parent)
 	rect.left   = 0;
 	rect.right  = static_cast<long>(size.x);
 	rect.top    = 0;
-	AdjustWindowRect(&rect, flag, false);
+	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
 
 	handle = CreateWindow(wnd.lpszClassName, _T("‚¨‚©‚à‚ñ"), flag, CW_USEDEFAULT, CW_USEDEFAULT,
 		(rect.right - rect.left), (rect.bottom - rect.top), reinterpret_cast<HWND>(parent), nullptr, wnd.hInstance, nullptr);

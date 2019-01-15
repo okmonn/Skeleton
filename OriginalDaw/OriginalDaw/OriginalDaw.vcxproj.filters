@@ -85,6 +85,21 @@
     <Filter Include="Texture\Mane">
       <UniqueIdentifier>{8535a21c-ebf7-47b2-8c88-b5e4c0f96e55}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sound">
+      <UniqueIdentifier>{5f5ba8d6-5d29-4333-9b9e-bb901838a140}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound\Xaudio2">
+      <UniqueIdentifier>{65537e7d-547c-48fa-adcf-82716fbb408a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound\Func">
+      <UniqueIdentifier>{2101a5af-9dd8-49ee-bea9-66b2b4a70e7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound\Loader">
+      <UniqueIdentifier>{e3ac155e-715b-4b0c-b601-8173080dc4ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound\Filter">
+      <UniqueIdentifier>{b716e08c-793f-47cd-a306-5da7eadbb6b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -152,6 +167,21 @@
     </ClCompile>
     <ClCompile Include="Texture\TexMane.cpp">
       <Filter>Texture\Mane</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\Xaudio2.cpp">
+      <Filter>Sound\Xaudio2</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\SndFunc.cpp">
+      <Filter>Sound\Func</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\SndLoader.cpp">
+      <Filter>Sound\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\Filter.cpp">
+      <Filter>Sound\Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\Sound.cpp">
+      <Filter>Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -238,6 +268,27 @@
     </ClInclude>
     <ClInclude Include="Texture\TexMane.h">
       <Filter>Texture\Mane</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\Sound.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\Xaudio2.h">
+      <Filter>Sound\Xaudio2</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\SndFunc.h">
+      <Filter>Sound\Func</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\SndLoader.h">
+      <Filter>Sound\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\Filter.h">
+      <Filter>Sound\Filter</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\VoiceCallback.h">
+      <Filter>Sound\Xaudio2</Filter>
+    </ClInclude>
+    <ClInclude Include="etc\InputInfo.h">
+      <Filter>etc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

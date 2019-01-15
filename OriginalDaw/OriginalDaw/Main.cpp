@@ -10,9 +10,9 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 {
 	auto winSize = help::GetDisplayResolution();
 	Application app(winSize);
-	Application* app2 = new Application(app, winSize);
+	Application* app2 = new Application(app, 300);
 
-	while (app.CheckMsg() && help::CheckKey(VK_ESCAPE) == false)
+	while (app.CheckMsg() && help::CheckKey('A') == false)
 	{
 		app.Clear();
 		app2->Clear();

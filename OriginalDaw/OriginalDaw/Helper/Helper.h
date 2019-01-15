@@ -1,14 +1,33 @@
 #pragma once
 #include "../etc/Vector2.h"
 #include <string>
+#include <vector>
 
 namespace help {
 	// ユニコード文字に変換
 	std::wstring ChangeWString(const std::string& st);
 
+	// 文字列の検索
+	bool CheckChar(const std::string& find, const unsigned char* data, const size_t& num);
+
+	// ハニング窓関数
+	float Haninng(const unsigned int& i, const size_t& size);
+
+	// シンク関数
+	float Sinc(const float& i);
+
+	// 離散フーリエ変換
+	void DFT(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag);
+
+	// 逆離散フーリエ変換
+	void IDFT(const std::vector<float>& real, const std::vector<float>& imag, std::vector<float>& out);
+
 	// メインディスプレイの解像度の取得
 	Vec2 GetDisplayResolution(void);
 
 	// キー入力
-	bool CheckKey(const int& key);
+	int CheckKey(const int& key);
+
+	// 全部のキー情報を格納
+	void GetKeys(int* key);
 }
