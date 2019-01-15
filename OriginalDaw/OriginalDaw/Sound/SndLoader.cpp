@@ -2,18 +2,10 @@
 #include <Windows.h>
 #include <tchar.h>
 
-// スレッド数
-#define THREAD_MAX 5
-
-// オフセット
-#define OFFSET 10
-
 // コンストラクタ
-SndLoader::SndLoader() : 
-	flag(true)
+SndLoader::SndLoader()
 {
 	sound.clear();
-	th.resize(THREAD_MAX);
 
 	Create();
 }
@@ -21,33 +13,17 @@ SndLoader::SndLoader() :
 // デストラクタ
 SndLoader::~SndLoader()
 {
-	flag = false;
-	for (auto& i : th)
-	{
-		if (i.joinable() == true)
-		{
-			i.join();
-		}
-	}
 }
 
 // 読み込みテーブルの作成
 void SndLoader::Create(void)
 {
-	load[1][8] = [&](std::vector<float>& tmp, FILE* file)->void {
-		snd::LoadMono8(tmp, file);
+	load[8] = [&](std::vector<float>& tmp, FILE* file)->void {
+		snd::LoadWave8(tmp, file);
 	};
 
-	load[1][16] = [&](std::vector<float>& tmp, FILE* file)->void {
-		snd::LoadMono16(tmp, file);
-	};
-
-	load[2][8] = [&](std::vector<float>& tmp, FILE* file)->void {
-		snd::LoadStereo8(tmp, file);
-	};
-
-	load[2][16] = [&](std::vector<float>& tmp, FILE* file)->void {
-		snd::LoadStereo16(tmp, file);
+	load[16] = [&](std::vector<float>& tmp, FILE* file)->void {
+		snd::LoadWave16(tmp, file);
 	};
 }
 
@@ -80,38 +56,11 @@ int SndLoader::Load(const std::string & fileName)
 	sound[fileName].bit     = fmt.bit;
 	sound[fileName].length  = data.size / fmt.byte / fmt.channel;
 
-	// 別スレッドで読み込み
-	bool flag = true;
-	while (flag)
-	{
-		for (auto& i : th)
-		{
-			if (i.joinable() == false)
-			{
-				sound[fileName].data.resize((size_t)std::ceilf((float)data.size / (float)(fmt.sample / OFFSET) / (float)fmt.channel));
-				i = std::thread(&SndLoader::Stream, this, fileName);
-				flag = false;
-				break;
-			}
-		}
-	}
-}
+	sound[fileName].data.resize(data.size);
 
-// 非同期読み込み
-void SndLoader::Stream(const std::string & fileName)
-{
-	std::lock_guard<std::mutex>lock(mtx);
+	load[sound[fileName].bit](sound[fileName].data, sound[fileName].file);
 
-	int read = 0;
-
-	while (std::feof(sound[fileName].file) == 0 && flag == true)
-	{
-		sound[fileName].data[read].resize(sound[fileName].sample / 10);
-		load[sound[fileName].channel][sound[fileName].bit](sound[fileName].data[read], sound[fileName].file);
-		++read;
-	}
-
-	fclose(sound[fileName].file);
+	return 0;
 }
 
 // 削除

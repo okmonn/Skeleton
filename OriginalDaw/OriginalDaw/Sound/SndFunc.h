@@ -58,7 +58,7 @@ namespace snd
 		//再生時間
 		int length;
 		//波形情報
-		std::vector<std::vector<float>>data;
+		std::vector<float>data;
 	};
 
 	// サウンド情報
@@ -84,15 +84,9 @@ namespace snd
 	// DATAの読み込み
 	int LoadDATA(DATA& data, FILE* file);
 
-	// モノラル・8ビット
-	void LoadMono8(std::vector<float>& data, FILE* file);
+	// 8ビット波形の読み込み
+	void LoadWave8(std::vector<float>& data, FILE* file);
 
-	// モノラル・16ビット
-	void LoadMono16(std::vector<float>& data, FILE* file);
-
-	// ステレオ・8ビット
-	void LoadStereo8(std::vector<float>& data, FILE* file);
-
-	// ステレオ・16ビット
-	void LoadStereo16(std::vector<float>& data, FILE* file);
+	// 16ビット波形の読み込み
+	void LoadWave16(std::vector<float>& data, FILE* file);
 }

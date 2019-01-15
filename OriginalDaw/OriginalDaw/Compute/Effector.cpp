@@ -6,6 +6,7 @@
 #include "../Queue/Queue.h"
 #include "../List/List.h"
 #include "../Fence/Fence.h"
+#include <d3d12.h>
 
 // コンストラクタ
 Effector::Effector(const std::wstring & fileName)

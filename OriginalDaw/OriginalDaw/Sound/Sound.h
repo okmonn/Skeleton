@@ -2,6 +2,7 @@
 #include "SndFunc.h"
 #include <memory>
 #include <thread>
+#include <cmath>
 
 struct IXAudio2SourceVoice;
 struct XAUDIO2_VOICE_STATE;
@@ -25,6 +26,12 @@ public:
 	// サウンド情報からサウンドの生成
 	void CopyInfo(const snd::Info& info);
 
+	// ローパスフィルタ
+	void LowPass(const float& cutoff, const float& sample, const float& q = 1.0f / std::sqrtf(2.0f));
+
+	// ハイパスフィルタ
+	void HightPass(const float& cutoff, const float& sample, const float& q = 1.0f / std::sqrtf(2.0f));
+
 	// 再生
 	long Play(const bool& loop);
 
@@ -40,7 +47,7 @@ private:
 	void operator=(const Sound&) = delete;
 
 	// ソースボイスの生成
-	long CreateVoice(const std::string& fileName);
+	long CreateVoice(void);
 	long CreateVoice(const snd::Info& info);
 
 	// ファイルからの非同期処理
@@ -74,8 +81,8 @@ private:
 	// 読み込みファイル名
 	std::string name;
 
-	// サウンド情報
-	snd::Snd sound;
+	// 波形情報
+	std::vector<std::vector<float>>data;
 
 	// スレッド
 	std::thread th;

@@ -1,4 +1,5 @@
 #pragma once
+#include "../Sound/Sound.h"
 #include "../Helper/Helper.h"
 #include "../etc/Color.h"
 #include "../etc/InputInfo.h"

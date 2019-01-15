@@ -2,6 +2,9 @@
 #include "../DescriptorMane/DescriptorMane.h"
 #include "../Root/RootMane.h"
 #include "../Pipe/PipeMane.h"
+#include "../Queue/Queue.h"
+#include "../List/List.h"
+#include "../Fence/Fence.h"
 #include "../etc/Release.h"
 
 // コンストラクタ

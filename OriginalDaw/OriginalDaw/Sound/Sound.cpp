@@ -10,6 +10,9 @@
 // バッファ数
 #define BUFFER 2
 
+// オフセット
+#define OFFSET 10
+
 // スピーカー設定用配列
 const unsigned long spk[] = {
 	KSAUDIO_SPEAKER_MONO,
@@ -29,7 +32,8 @@ Sound::Sound() :
 	call   = std::make_unique<VoiceCallback>();
 	filter = std::make_unique<Filter>();
 	state  = std::make_unique<XAUDIO2_VOICE_STATE>();
-	sound  = {};
+
+	data.resize(BUFFER);
 }
 
 // コンストラクタ
@@ -39,7 +43,8 @@ Sound::Sound(const std::string & fileName) :
 	call   = std::make_unique<VoiceCallback>();
 	filter = std::make_unique<Filter>();
 	state  = std::make_unique<XAUDIO2_VOICE_STATE>();
-	sound  = {};
+
+	data.resize(BUFFER);
 
 	Load(fileName);
 }
@@ -51,7 +56,8 @@ Sound::Sound(const snd::Info & info) :
 	call   = std::make_unique<VoiceCallback>();
 	filter = std::make_unique<Filter>();
 	state  = std::make_unique<XAUDIO2_VOICE_STATE>();
-	sound  = {};
+	
+	data.resize(BUFFER);
 
 	CopyInfo(info);
 }
@@ -72,12 +78,12 @@ Sound::~Sound()
 }
 
 // ソースボイスの生成
-long Sound::CreateVoice(const std::string & fileName)
+long Sound::CreateVoice(void)
 {
 	WAVEFORMATEXTENSIBLE desc{};
 	desc.Format.cbSize          = sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX);
-	desc.Format.nChannels       = SndLoader::Get().GetSnd(fileName).channel;
-	desc.Format.nSamplesPerSec  = SndLoader::Get().GetSnd(fileName).sample;
+	desc.Format.nChannels       = SndLoader::Get().GetSnd(name).channel;
+	desc.Format.nSamplesPerSec  = SndLoader::Get().GetSnd(name).sample;
 	desc.Format.nBlockAlign     = sizeof(float) * desc.Format.nChannels;
 	desc.Format.wBitsPerSample  = sizeof(float) * 8;
 	desc.Format.nAvgBytesPerSec = desc.Format.nSamplesPerSec * desc.Format.nBlockAlign;
@@ -93,11 +99,6 @@ long Sound::CreateVoice(const std::string & fileName)
 		OutputDebugString(_T("\nソースボイスの生成：失敗\n"));
 		return hr;
 	}
-
-	sound.channel = desc.Format.nChannels;
-	sound.sample  = desc.Format.nSamplesPerSec;
-	sound.bit     = SndLoader::Get().GetSnd(fileName).bit;
-	sound.length  = SndLoader::Get().GetSnd(fileName).length;
 
 	return hr;
 }
@@ -125,11 +126,6 @@ long Sound::CreateVoice(const snd::Info & info)
 		return hr;
 	}
 
-	sound.channel = desc.Format.nChannels;
-	sound.sample  = desc.Format.nSamplesPerSec;
-	sound.bit     = info.bit;
-	sound.length  = info.data.size() / desc.Format.nAvgBytesPerSec / desc.Format.nChannels;
-
 	return hr;
 }
 
@@ -142,11 +138,9 @@ void Sound::Load(const std::string & fileName)
 	}
 
 	SndLoader::Get().Load(fileName);
-	CreateVoice(fileName);
 
 	name = fileName;
-
-	sound.data.resize(BUFFER);
+	CreateVoice();
 
 	th = std::thread(&Sound::StreamFile, this);
 }
@@ -155,11 +149,20 @@ void Sound::Load(const std::string & fileName)
 void Sound::CopyInfo(const snd::Info & info)
 {
 	CreateVoice(info);
+	
+	th = std::thread(&Sound::StreamInfo, this);
+}
 
-	for (auto& i : sound.data)
-	{
-		i = info.data;
-	}
+// ローパスフィルタ
+void Sound::LowPass(const float & cutoff, const float & sample, const float & q)
+{
+	filter->LowPass(cutoff, sample, q);
+}
+
+// ハイパスフィルタ
+void Sound::HightPass(const float & cutoff, const float & sample, const float & q)
+{
+	filter->HighPass(cutoff, sample, q);
 }
 
 // 再生
@@ -201,6 +204,7 @@ void Sound::Reset(void)
 void Sound::StreamFile(void)
 {
 	unsigned int index = 0;
+	auto itr = SndLoader::Get().GetSnd(name).data.begin();
 	while (flag)
 	{
 		voice->GetState(&(*state));
@@ -209,39 +213,28 @@ void Sound::StreamFile(void)
 			continue;
 		}
 
-		sound.data[index] = SndLoader::Get().GetSnd(name).data[read];
-		filter->Execution(sound.data[index]);
+		std::copy_n(&SndLoader::Get().GetSnd(name).data[read], SndLoader::Get().GetSnd(name).sample / OFFSET, std::back_inserter(data[index]));
 
 		XAUDIO2_BUFFER buf{};
-		buf.AudioBytes = sizeof(float) * static_cast<unsigned int>(sound.data[index].size());
-		buf.pAudioData = (unsigned char*)sound.data[index].data();
+		buf.AudioBytes = static_cast<unsigned int>(sizeof(float) * data[index].size());
+		buf.pAudioData = (unsigned char*)(data[index].data());
 		auto hr = voice->SubmitSourceBuffer(&buf);
 		if (FAILED(hr))
 		{
-			OutputDebugString(_T("\nバッファの追加：失敗\n"));
+			OutputDebugString(_T("\nサウンド情報をバッファに追加：失敗\n"));
 			continue;
 		}
 
-		if (read + 1 >= SndLoader::Get().GetSnd(name).data.size())
-		{
-			if (loop == false)
-			{
-				Stop();
-			}
-			read  = 0;
-			index = 0;
-		}
-		else
-		{
-			++read;
-			index = (index + 1 >= BUFFER) ? 0 : ++index;
-		}
+		index = (index + 1 >= BUFFER) ? 0 : ++index;
+		read += SndLoader::Get().GetSnd(name).sample / OFFSET;
 	}
 }
 
 // サウンド情報からの非同期処理
 void Sound::StreamInfo(void)
 {
+	Sleep(100);
+
 	unsigned int index = 0;
 	while (flag)
 	{
@@ -251,11 +244,11 @@ void Sound::StreamInfo(void)
 			continue;
 		}
 
-		filter->Execution(sound.data[index]);
+		filter->Execution(data[index]);
 
 		XAUDIO2_BUFFER buf{};
-		buf.AudioBytes = sizeof(float) * static_cast<unsigned int>(sound.data[index].size());
-		buf.pAudioData = (unsigned char*)sound.data[index].data();
+		buf.AudioBytes = sizeof(float) * static_cast<unsigned int>(data[index].size());
+		buf.pAudioData = (unsigned char*)data[index].data();
 		auto hr = voice->SubmitSourceBuffer(&buf);
 		if (FAILED(hr))
 		{

@@ -1,6 +1,7 @@
 #pragma once
 
 struct IXAudio2;
+struct IXAudio2MasteringVoice;
 
 class Xaudio2
 {
@@ -18,6 +19,10 @@ public:
 	IXAudio2* GetAudio(void) const {
 		return audio;
 	}
+	// マスタリングの取得
+	IXAudio2MasteringVoice* GetMastering(void) const {
+		return mastering;
+	}
 
 private:
 	// コンストラクタ
@@ -31,7 +36,13 @@ private:
 	// Xaudio2の生成
 	long Create(void);
 
+	// マスタリングの生成
+	long CreateMastering(void);
+
 
 	// Xaudio2
 	IXAudio2* audio;
+
+	// マスタリング
+	IXAudio2MasteringVoice* mastering;
 };

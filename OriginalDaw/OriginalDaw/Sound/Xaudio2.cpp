@@ -6,15 +6,20 @@
 
 // コンストラクタ
 Xaudio2::Xaudio2() : 
-	audio(nullptr)
+	audio(nullptr), mastering(nullptr)
 {
 	InitCom();
 	Create();
+	CreateMastering();
 }
 
 // デストラクタ
 Xaudio2::~Xaudio2()
 {
+	if (mastering != nullptr)
+	{
+		mastering->DestroyVoice();
+	}
 	if (audio != nullptr)
 	{
 		audio->Release();
@@ -41,6 +46,18 @@ long Xaudio2::Create(void)
 	if (FAILED(hr))
 	{
 		OutputDebugString(_T("\nXaudio2の生成：失敗\n"));
+	}
+
+	return hr;
+}
+
+// マスタリングの生成
+long Xaudio2::CreateMastering(void)
+{
+	auto hr = audio->CreateMasteringVoice(&mastering);
+	if (FAILED(hr))
+	{
+		OutputDebugString(_T("\nマスタリングの生成：失敗\n"));
 	}
 
 	return hr;

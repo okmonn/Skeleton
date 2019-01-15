@@ -12,11 +12,11 @@ public:
 
 	// ローパスフィルタ
 	// cutoffより低い周波数を通す
-	void LowPass(const float& cutoff, const float& sample, const float& q = 1.0f / std::sqrtf(2.0f));
+	void LowPass(const float& cutoff, const float& sample, const float& q);
 
 	// ハイパスフィルタ
 	// cutoffより高い周波数を通す
-	void HighPass(const float& cutoff, const float& sample, const float& q = 1.0f / std::sqrtf(2.0f));
+	void HighPass(const float& cutoff, const float& sample, const float& q);
 
 	// バンドパスフィルタ
 	// cutoffを中心にwb分の周波数を通す

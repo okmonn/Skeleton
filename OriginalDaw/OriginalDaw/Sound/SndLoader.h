@@ -1,7 +1,5 @@
 #pragma once
 #include "SndFunc.h"
-#include <mutex>
-#include <thread>
 #include <functional>
 #include <unordered_map>
 
@@ -37,22 +35,10 @@ private:
 	// 読み込みテーブルの作成
 	void Create(void);
 
-	// 非同期読み込み
-	void Stream(const std::string& fileName);
-
-
-	// スレッドフラグ
-	bool flag;
-
-	// ミューテックス
-	std::mutex mtx;
 
 	// サウンド情報
 	std::unordered_map<std::string, snd::Snd>sound;
 
-	// スレッド
-	std::vector<std::thread>th;
-
 	// 読み込みテーブル
-	std::unordered_map<int, std::unordered_map<int, std::function<void(std::vector<float>& tmp, FILE* file)>>>load;
+	std::unordered_map<int, std::function<void(std::vector<float>& tmp, FILE* file)>>load;
 };

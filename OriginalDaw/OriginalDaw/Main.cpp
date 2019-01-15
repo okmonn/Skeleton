@@ -9,19 +9,20 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 #endif
 {
 	auto winSize = help::GetDisplayResolution();
-	Application app(winSize);
-	Application* app2 = new Application(app, 300);
+	Application app(200);
 
-	while (app.CheckMsg() && help::CheckKey(INPUT_LBUTTON) == false)
+	int a = 0;
+	Sound s("mtgx.wav");
+
+	while (app.CheckMsg() && help::CheckKey(INPUT_ESCAPE) == false)
 	{
 		app.Clear();
-		app2->Clear();
-
+		if (help::CheckKey(INPUT_SPACE))
+		{
+			s.Play(false);
+		}
 		app.Execution();
-		app2->Execution();
 	}
 
-	delete app2;
-	
 	return 0;
 }
