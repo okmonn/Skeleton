@@ -54,11 +54,11 @@ int SndLoader::Load(const std::string & fileName)
 	sound[fileName].channel = fmt.channel;
 	sound[fileName].sample  = fmt.sample;
 	sound[fileName].bit     = fmt.bit;
-	sound[fileName].length  = data.size / fmt.byte / fmt.channel;
+	sound[fileName].length  = data.size / fmt.byte;
 
-	sound[fileName].data.resize(data.size);
+	sound[fileName].data = std::make_shared<std::vector<float>>(data.size);
 
-	load[sound[fileName].bit](sound[fileName].data, sound[fileName].file);
+	load[sound[fileName].bit](*sound[fileName].data, sound[fileName].file);
 
 	return 0;
 }

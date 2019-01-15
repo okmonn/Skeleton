@@ -4,6 +4,9 @@
 #include <vector>
 
 namespace help {
+	// バイト変換
+	int Byte(const int& i);
+
 	// ユニコード文字に変換
 	std::wstring ChangeWString(const std::string& st);
 

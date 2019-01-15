@@ -20,7 +20,7 @@ public:
 
 	// バンドパスフィルタ
 	// cutoffを中心にwb分の周波数を通す
-	void BandPass(const float& cutoff, const float& sample, const float& bw = 1.0f);
+	void BandPass(const float& cutoff, const float& sample, const float& bw);
 
 	// ノッチフィルタ
 	// cutoffを中心にwb分の周波数以外を通す

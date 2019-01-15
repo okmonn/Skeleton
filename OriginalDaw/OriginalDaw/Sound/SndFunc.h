@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <memory>
 
 struct _iobuf;
 typedef _iobuf FILE;
@@ -58,7 +59,7 @@ namespace snd
 		//再生時間
 		int length;
 		//波形情報
-		std::vector<float>data;
+		std::shared_ptr<std::vector<float>>data;
 	};
 
 	// サウンド情報

@@ -1,4 +1,5 @@
 #include "Application/Application.h"
+#include "Input/Input.h"
 #include <Windows.h>
 
 // エントリーポイント
@@ -8,19 +9,17 @@ int main()
 int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int nShowCmd)
 #endif
 {
+	auto& i = Input::Get();
 	auto winSize = help::GetDisplayResolution();
-	Application app(200);
+	Application app(winSize);
 
-	int a = 0;
 	Sound s("mtgx.wav");
+	s.Play(false);
 
 	while (app.CheckMsg() && help::CheckKey(INPUT_ESCAPE) == false)
 	{
 		app.Clear();
-		if (help::CheckKey(INPUT_SPACE))
-		{
-			s.Play(false);
-		}
+		
 		app.Execution();
 	}
 

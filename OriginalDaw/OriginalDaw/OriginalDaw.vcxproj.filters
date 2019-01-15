@@ -106,6 +106,9 @@
     <Filter Include="Compute\Effecter">
       <UniqueIdentifier>{ea918c62-dd5d-4e54-8fb5-7ad777177b6e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{04a57c4d-cfc0-4e2b-b3a6-bb6161c861de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -194,6 +197,9 @@
     </ClCompile>
     <ClCompile Include="Compute\Effector.cpp">
       <Filter>Compute\Effecter</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\Input.cpp">
+      <Filter>Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -307,6 +313,9 @@
     </ClInclude>
     <ClInclude Include="Compute\Effector.h">
       <Filter>Compute\Effecter</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\Input.h">
+      <Filter>Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

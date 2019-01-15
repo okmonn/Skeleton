@@ -3,6 +3,7 @@
 #include "SndLoader.h"
 #include "VoiceCallback.h"
 #include "Filter.h"
+#include "../Helper/Helper.h"
 #include <ks.h>
 #include <ksmedia.h>
 #include <tchar.h>
@@ -97,7 +98,6 @@ long Sound::CreateVoice(void)
 	if (FAILED(hr))
 	{
 		OutputDebugString(_T("\nソースボイスの生成：失敗\n"));
-		return hr;
 	}
 
 	return hr;
@@ -123,7 +123,6 @@ long Sound::CreateVoice(const snd::Info & info)
 	if (FAILED(hr))
 	{
 		OutputDebugString(_T("\nソースボイスの生成：失敗\n"));
-		return hr;
 	}
 
 	return hr;
@@ -149,6 +148,11 @@ void Sound::Load(const std::string & fileName)
 void Sound::CopyInfo(const snd::Info & info)
 {
 	CreateVoice(info);
+
+	for (auto& i : data)
+	{
+		i = info.data;
+	}
 	
 	th = std::thread(&Sound::StreamInfo, this);
 }
@@ -163,6 +167,12 @@ void Sound::LowPass(const float & cutoff, const float & sample, const float & q)
 void Sound::HightPass(const float & cutoff, const float & sample, const float & q)
 {
 	filter->HighPass(cutoff, sample, q);
+}
+
+// バンドパスフィルタ
+void Sound::BandPass(const float & cutoff, const float & sample, const float & bw)
+{
+	filter->BandPass(cutoff, sample, bw);
 }
 
 // 再生
@@ -204,7 +214,7 @@ void Sound::Reset(void)
 void Sound::StreamFile(void)
 {
 	unsigned int index = 0;
-	auto itr = SndLoader::Get().GetSnd(name).data.begin();
+	unsigned int size  = 0;
 	while (flag)
 	{
 		voice->GetState(&(*state));
@@ -213,7 +223,9 @@ void Sound::StreamFile(void)
 			continue;
 		}
 
-		std::copy_n(&SndLoader::Get().GetSnd(name).data[read], SndLoader::Get().GetSnd(name).sample / OFFSET, std::back_inserter(data[index]));
+		size = (SndLoader::Get().GetSnd(name).data->size() - read > static_cast<unsigned int>(SndLoader::Get().GetSnd(name).sample / OFFSET)) ? 
+			SndLoader::Get().GetSnd(name).sample / OFFSET : SndLoader::Get().GetSnd(name).data->size() - read;
+		data[index].assign(&SndLoader::Get().GetSnd(name).data->at(read), &SndLoader::Get().GetSnd(name).data->at(read + size));
 
 		XAUDIO2_BUFFER buf{};
 		buf.AudioBytes = static_cast<unsigned int>(sizeof(float) * data[index].size());
@@ -226,15 +238,22 @@ void Sound::StreamFile(void)
 		}
 
 		index = (index + 1 >= BUFFER) ? 0 : ++index;
-		read += SndLoader::Get().GetSnd(name).sample / OFFSET;
+		read += size;
+		if (read >= SndLoader::Get().GetSnd(name).data->size() / help::Byte(SndLoader::Get().GetSnd(name).bit))
+		{
+			if (loop == false)
+			{
+				Stop();
+				index = 0;
+				read  = 0;
+			}
+		}
 	}
 }
 
 // サウンド情報からの非同期処理
 void Sound::StreamInfo(void)
 {
-	Sleep(100);
-
 	unsigned int index = 0;
 	while (flag)
 	{
@@ -256,14 +275,11 @@ void Sound::StreamInfo(void)
 			continue;
 		}
 
+		index = (index + 1 >= BUFFER) ? 0 : ++index;
 		if (loop == false)
 		{
 			Stop();
-			Reset();
-		}
-		else
-		{
-			index = (index + 1 >= BUFFER) ? 0 : ++index;
+			index = 0;
 		}
 	}
 }

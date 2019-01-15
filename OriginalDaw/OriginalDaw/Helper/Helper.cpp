@@ -4,6 +4,12 @@
 // 円周率
 #define PI 3.14159265f
 
+// バイト変換
+int help::Byte(const int & i)
+{
+	return i / 8;
+}
+
 // ユニコード文字に変換
 std::wstring help::ChangeWString(const std::string & st)
 {

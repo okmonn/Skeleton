@@ -32,6 +32,9 @@ public:
 	// ハイパスフィルタ
 	void HightPass(const float& cutoff, const float& sample, const float& q = 1.0f / std::sqrtf(2.0f));
 
+	// バンドパスフィルタ
+	void BandPass(const float& cutoff, const float& sample, const float& bw = 1.0f);
+
 	// 再生
 	long Play(const bool& loop);
 

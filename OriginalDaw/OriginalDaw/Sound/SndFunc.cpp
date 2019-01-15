@@ -99,8 +99,9 @@ void snd::LoadWave8(std::vector<float>& data, FILE * file)
 	{
 		return;
 	}
-
-	fread(data.data(), sizeof(unsigned char) * data.size(), 1, file);
+	std::vector<unsigned char>tmp(data.size());
+	fread(tmp.data(), sizeof(unsigned char) * tmp.size(), 1, file);
+	data.assign(tmp.begin(), tmp.end());
 	std::for_each(data.begin(), data.end(), [&](float& i)->void {
 		i /= OVERFLLOW_CHAR - 1.0f;
 	});
@@ -115,8 +116,9 @@ void snd::LoadWave16(std::vector<float>& data, FILE * file)
 	{
 		return;
 	}
-
-	fread(data.data(), sizeof(short) * data.size(), 1, file);
+	std::vector<short>tmp(data.size());
+	fread(tmp.data(), sizeof(short) * tmp.size(), 1, file);
+	data.assign(tmp.begin(), tmp.end());
 	std::for_each(data.begin(), data.end(), [&](float& i)->void {
 		i /= OVERFLLOW_SHORT;
 	});
