@@ -11,7 +11,7 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 {
 	auto& i = Input::Get();
 	auto winSize = help::GetDisplayResolution();
-	Application app(winSize);
+	Application app(200);
 
 	Sound s("mtgx.wav");
 	s.Play(false);

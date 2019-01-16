@@ -1,4 +1,5 @@
 #include "Filter.h"
+#include <algorithm>
 
 // â~é¸ó¶
 #define PI 3.14159265f
@@ -116,10 +117,8 @@ void Filter::Highshelf(const float & cutoff, const float & gain, const float & s
 // é¿çs
 void Filter::Execution(std::vector<float>& data)
 {
-	float tmp = 0.0f;
-	for (auto& i : data)
-	{
-		tmp = i;
+	std::for_each(data.begin(), data.end(), [&](float& i)->void {
+		float tmp = i;
 		i = b[0] / a[0] * tmp + b[1] / a[0] * input[0] + b[2] / a[0] * input[1]
 			- a[1] / a[0] * out[0] - a[2] / a[0] * out[1];
 
@@ -128,5 +127,5 @@ void Filter::Execution(std::vector<float>& data)
 
 		out[1] = out[0];
 		out[0] = i;
-	}
+	});
 }

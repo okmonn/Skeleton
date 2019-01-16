@@ -1,4 +1,5 @@
 #include "SndLoader.h"
+#include "../Helper/Helper.h"
 #include <Windows.h>
 #include <tchar.h>
 
@@ -56,7 +57,7 @@ int SndLoader::Load(const std::string & fileName)
 	sound[fileName].bit     = fmt.bit;
 	sound[fileName].length  = data.size / fmt.byte;
 
-	sound[fileName].data = std::make_shared<std::vector<float>>(data.size);
+	sound[fileName].data = std::make_shared<std::vector<float>>(data.size / help::Byte(fmt.bit));
 
 	load[sound[fileName].bit](*sound[fileName].data, sound[fileName].file);
 
