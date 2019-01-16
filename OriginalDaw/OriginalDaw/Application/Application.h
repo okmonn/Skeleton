@@ -14,6 +14,7 @@ class Render;
 class Depth;
 class PrimitiveMane;
 class TexMane;
+class FontMane;
 
 class Application
 {
@@ -97,4 +98,7 @@ private:
 
 	// テクスチャ
 	std::unique_ptr<TexMane>texture;
+
+	// フォント
+	std::unique_ptr<FontMane>font;
 };

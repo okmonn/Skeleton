@@ -1,5 +1,5 @@
 #pragma once
-#include "../etc/tstring.h"
+#include <string>
 #include <memory>
 #include <unordered_map>
 
@@ -16,10 +16,10 @@ public:
 	}
 
 	// フォントデータの読み込み
-	long Load(const std::tstring& fontName, const unsigned int& size);
+	long Load(const std::string& fontName, const unsigned int& size);
 
 	// フォントデータの取得
-	void* GetFont(const std::tstring& fontName, const unsigned int& size) {
+	void* GetFont(const std::string& fontName, const unsigned int& size) {
 		return font[fontName][size];
 	}
 
@@ -31,5 +31,5 @@ private:
 
 
 	// フォントデータ
-	std::unordered_map<std::tstring, std::unordered_map<unsigned int, void*>>font;
+	std::unordered_map<std::string, std::unordered_map<unsigned int, void*>>font;
 };

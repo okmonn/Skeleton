@@ -344,6 +344,9 @@
     <ClInclude Include="Font\FontMane.h">
       <Filter>Font\Mane</Filter>
     </ClInclude>
+    <ClInclude Include="Font\FontInfo.h">
+      <Filter>Font</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Primitive.hlsl">

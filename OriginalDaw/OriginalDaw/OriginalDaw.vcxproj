@@ -167,6 +167,7 @@
     <ClInclude Include="etc\Vector2.h" />
     <ClInclude Include="Fence\Fence.h" />
     <ClInclude Include="Font\Font.h" />
+    <ClInclude Include="Font\FontInfo.h" />
     <ClInclude Include="Font\FontLoader.h" />
     <ClInclude Include="Font\FontMane.h" />
     <ClInclude Include="Helper\Helper.h" />

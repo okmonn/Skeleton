@@ -1,4 +1,5 @@
 #include "FontLoader.h"
+#include "../Helper/Helper.h"
 #include <Windows.h>
 #include <tchar.h>
 
@@ -6,6 +7,8 @@
 FontLoader::FontLoader()
 {
 	font.clear();
+
+	Load("ＭＳ Ｐ明朝", 32);
 }
 
 // デストラクタ
@@ -24,7 +27,7 @@ FontLoader::~FontLoader()
 }
 
 // フォントデータの読み込み
-long FontLoader::Load(const std::tstring & fontName, const unsigned int & size)
+long FontLoader::Load(const std::string & fontName, const unsigned int & size)
 {
 	if (font.find(fontName) != font.end())
 	{
@@ -37,6 +40,12 @@ long FontLoader::Load(const std::tstring & fontName, const unsigned int & size)
 		return S_FALSE;
 	}
 
+#if _UNICODE
+	auto tmp = help::ChangeWString(fontName);
+#else 
+	auto tmp = fontName;
+#endif
+
 	LOGFONT log{};
 	log.lfHeight         = static_cast<long>(size);
 	log.lfCharSet        = SHIFTJIS_CHARSET;
@@ -44,7 +53,7 @@ long FontLoader::Load(const std::tstring & fontName, const unsigned int & size)
 	log.lfClipPrecision  = CLIP_DEFAULT_PRECIS;
 	log.lfQuality        = PROOF_QUALITY;
 	log.lfPitchAndFamily = FIXED_PITCH | FF_MODERN;
-	memcpy(log.lfFaceName, &fontName[0], sizeof(fontName[0]) * fontName.size());
+	memcpy(log.lfFaceName, &tmp[0], sizeof(tmp[0]) * tmp.size());
 	//wsprintf(log.lfFaceName, fontName.c_str());
 
 	font[fontName][size] = CreateFontIndirect(&log);
