@@ -46,6 +46,12 @@ Application::~Application()
 {
 }
 
+// ウィンドウサイズの取得
+Vec2 Application::GetWinSize(void)
+{
+	return win->GetSize();
+}
+
 // ルートの生成
 void Application::CreateRoot(void)
 {

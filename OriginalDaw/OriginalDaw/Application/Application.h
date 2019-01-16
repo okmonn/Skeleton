@@ -25,6 +25,9 @@ public:
 	// デストラクタ
 	~Application();
 
+	// ウィンドウサイズの取得
+	Vec2 GetWinSize(void);
+
 	// メッセージの確認
 	bool CheckMsg(void);
 
