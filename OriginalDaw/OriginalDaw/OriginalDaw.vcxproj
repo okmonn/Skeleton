@@ -126,6 +126,9 @@
     <ClCompile Include="DescriptorMane\DescriptorMane.cpp" />
     <ClCompile Include="Device\Device.cpp" />
     <ClCompile Include="Fence\Fence.cpp" />
+    <ClCompile Include="Font\Font.cpp" />
+    <ClCompile Include="Font\FontLoader.cpp" />
+    <ClCompile Include="Font\FontMane.cpp" />
     <ClCompile Include="Helper\Helper.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="List\List.cpp" />
@@ -163,6 +166,9 @@
     <ClInclude Include="etc\tstring.h" />
     <ClInclude Include="etc\Vector2.h" />
     <ClInclude Include="Fence\Fence.h" />
+    <ClInclude Include="Font\Font.h" />
+    <ClInclude Include="Font\FontLoader.h" />
+    <ClInclude Include="Font\FontMane.h" />
     <ClInclude Include="Helper\Helper.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="List\List.h" />

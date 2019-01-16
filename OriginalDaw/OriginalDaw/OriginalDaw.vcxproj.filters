@@ -109,6 +109,15 @@
     <Filter Include="Input">
       <UniqueIdentifier>{04a57c4d-cfc0-4e2b-b3a6-bb6161c861de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Font">
+      <UniqueIdentifier>{b3193e91-599b-4b5d-aa3d-cae40bcc29f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Font\Loader">
+      <UniqueIdentifier>{58dd9dfb-5514-4bfa-874f-099f6ec644fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Font\Mane">
+      <UniqueIdentifier>{5b04ea25-5dab-4be8-a0c9-cc2ad30c1984}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -200,6 +209,15 @@
     </ClCompile>
     <ClCompile Include="Input\Input.cpp">
       <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Font\Font.cpp">
+      <Filter>Font</Filter>
+    </ClCompile>
+    <ClCompile Include="Font\FontLoader.cpp">
+      <Filter>Font\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="Font\FontMane.cpp">
+      <Filter>Font\Mane</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -316,6 +334,15 @@
     </ClInclude>
     <ClInclude Include="Input\Input.h">
       <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Font\Font.h">
+      <Filter>Font</Filter>
+    </ClInclude>
+    <ClInclude Include="Font\FontLoader.h">
+      <Filter>Font\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Font\FontMane.h">
+      <Filter>Font\Mane</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
