@@ -10,7 +10,6 @@
 #include "../Depth/Depth.h"
 #include "../Primitive/PrimitiveMane.h"
 #include "../Texture/TexMane.h"
-#include "../Font/FontMane.h"
 #include <Windows.h>
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -75,7 +74,6 @@ void Application::Init(const Vec2 & winSize, void * parent)
 
 	primitive = std::make_unique<PrimitiveMane>(win, RootMane::Get().GetRoot("primitive"));
 	texture   = std::make_unique<TexMane>(win, RootMane::Get().GetRoot("texture"));
-	font = std::make_unique<FontMane>(win, RootMane::Get().GetRoot("texture"));
 }
 
 // メッセージの確認

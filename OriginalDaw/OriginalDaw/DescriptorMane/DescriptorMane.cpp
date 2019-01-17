@@ -62,10 +62,8 @@ long DescriptorMane::CreateRsc(int & addr, const D3D12_HEAP_PROPERTIES & prop, c
 	{
 		OutputDebugString(_T("\nリソースの生成：失敗\n"));
 		addr = -1;
-		return hr;
 	}
 
-	addr = RSC_TYPE::RSC_TYPE_NON;
 	return hr;
 }
 
@@ -77,10 +75,8 @@ long DescriptorMane::CreateRsc(int & addr, std::weak_ptr<Swap> swap, const unsig
 	{
 		OutputDebugString(_T("\nリソースの生成：失敗\n"));
 		addr = -1;
-		return hr;
 	}
 
-	addr = RSC_TYPE::RSC_TYPE_NON;
 	return hr;
 }
 
@@ -97,7 +93,6 @@ void DescriptorMane::RTV(int & heapAddr, int & rscAddr, const unsigned int & ind
 	handle.ptr += Device::Get().GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_RTV) * index;
 
 	Device::Get().GetDev()->CreateRenderTargetView(rsc[&rscAddr], &desc, handle);
-	rscAddr = RSC_TYPE::RSC_TYPE_RTV;
 }
 
 // DSVの生成
@@ -113,7 +108,6 @@ void DescriptorMane::DSV(int & heapAddr, int & rscAddr, const unsigned int & ind
 	handle.ptr += Device::Get().GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_DSV) * index;
 
 	Device::Get().GetDev()->CreateDepthStencilView(rsc[&rscAddr], &desc, handle);
-	rscAddr = RSC_TYPE::RSC_TYPE_DSV;
 }
 
 // CBVの生成
@@ -127,7 +121,6 @@ void DescriptorMane::CBV(int & heapAddr, int & rscAddr, const size_t & size, con
 	handle.ptr += Device::Get().GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * index;
 
 	Device::Get().GetDev()->CreateConstantBufferView(&desc, handle);
-	rscAddr = RSC_TYPE::RSC_TYPE_CBV;
 }
 
 // SRVの生成
@@ -144,7 +137,6 @@ void DescriptorMane::SRV(int & heapAddr, int & rscAddr, const unsigned int & ind
 	handle.ptr += Device::Get().GetDev()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * index;
 
 	Device::Get().GetDev()->CreateShaderResourceView(rsc[&rscAddr], &desc, handle);
-	rscAddr = RSC_TYPE::RSC_TYPE_SRV;
 }
 
 // UAVの生成

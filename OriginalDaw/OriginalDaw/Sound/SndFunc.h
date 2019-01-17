@@ -62,6 +62,12 @@ namespace snd
 		std::shared_ptr<std::vector<float>>data;
 	};
 
+	// パラメータ
+	struct Param {
+		//音量
+		float volume;
+	};
+
 	// サウンド情報
 	struct Info {
 		// チャンネル数

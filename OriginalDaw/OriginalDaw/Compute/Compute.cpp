@@ -1,4 +1,5 @@
 #include "Compute.h"
+#include "../Device/Device.h"
 #include "../DescriptorMane/DescriptorMane.h"
 #include "../Root/RootMane.h"
 #include "../Pipe/PipeMane.h"
@@ -30,8 +31,26 @@ void Compute::Load(const std::string & name, const std::wstring & fileName)
 	PipeMane::Get().Create(name, RootMane::Get().GetRoot(name));
 }
 
+// マップ
+long Compute::Map(const std::string & name)
+{
+	if (info.find(name) == info.end())
+	{
+		return S_FALSE;
+	}
+
+	D3D12_RANGE range{ 0, 1 };
+	auto hr = DescriptorMane::Get().GetRsc(info[name].rsc)->Map(0, &range, &info[name].data);
+	if (FAILED(hr))
+	{
+		OutputDebugString(_T("\nコンピュート用リソースのマップ：失敗\n"));
+	}
+
+	return hr;
+}
+
 // CBVの生成
-void Compute::CBV(const std::string & name, const size_t & size, const unsigned int & index)
+void Compute::CBV(const std::string & name, const size_t & size)
 {
 	if (info.find(name) != info.end())
 	{
@@ -62,10 +81,12 @@ void Compute::CBV(const std::string & name, const size_t & size, const unsigned 
 	info[name].rsc = heap++;
 
 	DescriptorMane::Get().CBV(heap, info[name].rsc, size, info[name].rsc);
+
+	Map(name);
 }
 
 // UAVの生成
-void Compute::UAV(const std::string & name, const size_t & stride, const size_t & num, const unsigned int & index)
+void Compute::UAV(const std::string & name, const size_t & stride, const size_t & num)
 {
 	if (info.find(name) != info.end())
 	{
@@ -96,36 +117,37 @@ void Compute::UAV(const std::string & name, const size_t & stride, const size_t 
 	info[name].rsc = heap++;
 
 	DescriptorMane::Get().UAV(heap, info[name].rsc, stride, num, info[name].rsc);
-}
 
-// マップ
-long Compute::Map(const std::string & name)
-{
-	if (info.find(name) != info.end())
-	{
-		return S_FALSE;
-	}
-
-	D3D12_RANGE range{ 0, 1 };
-	auto hr = DescriptorMane::Get().GetRsc(info[name].rsc)->Map(0, &range, &info[name].data);
-	if (FAILED(hr))
-	{
-		OutputDebugString(_T("\nコンピュート用リソースのマップ：失敗\n"));
-	}
-
-	return hr;
+	Map(name);
 }
 
 // アンマップ
 void Compute::Unmap(const std::string & name)
 {
-	if (info.find(name) != info.end())
+	if (info.find(name) == info.end())
 	{
 		return;
 	}
 
 	D3D12_RANGE range{ 0, 1 };
 	DescriptorMane::Get().GetRsc(info[name].rsc)->Unmap(0, &range);
+}
+
+// ヒープのセット
+void Compute::SetHeap(void)
+{
+	auto h = DescriptorMane::Get().GetHeap(heap);
+	list->SetHeap(&h, 1);
+}
+
+// リソースのセット
+void Compute::SetRsc(void)
+{
+	auto h = DescriptorMane::Get().GetHeap(heap);
+	for (auto itr = info.begin(); itr != info.end(); ++itr)
+	{
+		list->SetComputeRootTable(itr->second.rsc, h, itr->second.rsc);
+	}
 }
 
 // 終了

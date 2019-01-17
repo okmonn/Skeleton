@@ -13,14 +13,6 @@ struct ID3D12Resource;
 
 class Swap;
 
-enum RSC_TYPE {
-	RSC_TYPE_NON, 
-	RSC_TYPE_RTV,
-	RSC_TYPE_DSV,
-	RSC_TYPE_CBV,
-	RSC_TYPE_SRV
-};
-
 class DescriptorMane
 {
 public:

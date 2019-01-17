@@ -3,6 +3,7 @@
 #include "SndLoader.h"
 #include "VoiceCallback.h"
 #include "Filter.h"
+#include "../Compute/Effector.h"
 #include "../Helper/Helper.h"
 #include <ks.h>
 #include <ksmedia.h>
@@ -32,7 +33,9 @@ Sound::Sound() :
 {
 	call   = std::make_unique<VoiceCallback>();
 	filter = std::make_unique<Filter>();
+	effe   = std::make_unique<Effector>(L"Shader/Effector.hlsl");
 	state  = std::make_unique<XAUDIO2_VOICE_STATE>();
+	param  = {};
 
 	data.resize(BUFFER);
 }
@@ -43,7 +46,9 @@ Sound::Sound(const std::string & fileName) :
 {
 	call   = std::make_unique<VoiceCallback>();
 	filter = std::make_unique<Filter>();
+	effe   = std::make_unique<Effector>(L"Shader/Effector.hlsl");
 	state  = std::make_unique<XAUDIO2_VOICE_STATE>();
+	param  = {};
 
 	data.resize(BUFFER);
 
@@ -56,7 +61,9 @@ Sound::Sound(const snd::Info & info) :
 {
 	call   = std::make_unique<VoiceCallback>();
 	filter = std::make_unique<Filter>();
+	effe   = std::make_unique<Effector>(L"Shader/Effector.hlsl");
 	state  = std::make_unique<XAUDIO2_VOICE_STATE>();
+	param  = {};
 	
 	data.resize(BUFFER);
 
@@ -226,6 +233,10 @@ void Sound::StreamFile(void)
 		size = (SndLoader::Get().GetSnd(name).data->size() - read > static_cast<unsigned int>(SndLoader::Get().GetSnd(name).sample / OFFSET)) ? 
 			SndLoader::Get().GetSnd(name).sample / OFFSET : SndLoader::Get().GetSnd(name).data->size() - read;
 		data[index].assign(&SndLoader::Get().GetSnd(name).data->at(read), &SndLoader::Get().GetSnd(name).data->at(read + size));
+
+		effe->Copy("param", param);
+		effe->Execution(data[index]);
+		filter->Execution(data[index]);
 
 		XAUDIO2_BUFFER buf{};
 		buf.AudioBytes = static_cast<unsigned int>(sizeof(float) * data[index].size());

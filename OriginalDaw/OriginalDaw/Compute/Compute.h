@@ -26,17 +26,23 @@ protected:
 	// シェーダの読み込み
 	void Load(const std::string& name, const std::wstring& fileName);
 
-	// CBVの生成
-	void CBV(const std::string& name, const size_t& size, const unsigned int& index);
-
-	// UAVの生成
-	void UAV(const std::string& name, const size_t& stride, const size_t& num, const unsigned int& index);
-
 	// マップ
 	long Map(const std::string& name);
 
+	// CBVの生成
+	void CBV(const std::string& name, const size_t& size);
+
+	// UAVの生成
+	void UAV(const std::string& name, const size_t& stride, const size_t& num);
+
 	// アンマップ
 	void Unmap(const std::string& name);
+
+	// ヒープのセット
+	void SetHeap(void);
+
+	// リソースのセット
+	void SetRsc(void);
 
 	// 終了
 	void End(void);

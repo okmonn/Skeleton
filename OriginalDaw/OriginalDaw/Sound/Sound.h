@@ -8,6 +8,7 @@ struct IXAudio2SourceVoice;
 struct XAUDIO2_VOICE_STATE;
 class VoiceCallback;
 class Filter;
+class Effector;
 
 class Sound
 {
@@ -66,6 +67,9 @@ private:
 	// フィルター
 	std::unique_ptr<Filter>filter;
 
+	// エフェクター
+	std::unique_ptr<Effector>effe;
+
 	// ボイスステータス
 	std::unique_ptr<XAUDIO2_VOICE_STATE>state;
 
@@ -83,6 +87,9 @@ private:
 
 	// 読み込みファイル名
 	std::string name;
+
+	// パラメータ
+	snd::Param param;
 
 	// 波形情報
 	std::vector<std::vector<float>>data;
