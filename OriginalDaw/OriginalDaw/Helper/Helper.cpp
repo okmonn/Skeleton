@@ -10,6 +10,12 @@ int help::Byte(const int & i)
 	return i / 8;
 }
 
+// ラジアン変換
+float help::Radian(const float & i)
+{
+	return (i * PI) / 180.0f;
+}
+
 // ユニコード文字に変換
 std::wstring help::ChangeWString(const std::string & st)
 {

@@ -161,11 +161,13 @@ void Texture::SetDraw(const DirectX::XMFLOAT2 & pos, const DirectX::XMFLOAT2 & s
 	const float & alpha, const bool & turnX, const bool & turnY)
 {
 	XMStoreFloat4x4(&data->matrix,
-		DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat2(
+		DirectX::XMMatrixRotationZ(1.0f)
+		* DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat2(
 			&DirectX::XMFLOAT2(size.x / static_cast<float>(win.lock()->GetSize().x), size.y / static_cast<float>(win.lock()->GetSize().y))))
 		* DirectX::XMMatrixTranslationFromVector(
 			DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(pos.x, pos.y)))
 	);
+
 	data->uvPos   = uvPos;
 	data->uvSize  = uvSize;
 	data->reverse = { (turnX) ? 1.0f : 0.0f, (turnY) ? 1.0f : 0.0f };
