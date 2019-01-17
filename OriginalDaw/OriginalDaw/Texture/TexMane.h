@@ -22,7 +22,7 @@ public:
 
 	// ï`âÊ
 	void Draw(std::weak_ptr<List>list, int& addr, const DirectX::XMFLOAT2& pos, const DirectX::XMFLOAT2& size,
-		const DirectX::XMFLOAT2& uvPos, const DirectX::XMFLOAT2& uvSize, const float& alpha, const bool& turnX, const bool& turnY);
+		const DirectX::XMFLOAT2& uvPos, const DirectX::XMFLOAT2& uvSize, const float& alpha, const float& angle, const bool& turnX, const bool& turnY);
 
 	// çÌèú
 	void Delete(int& addr);

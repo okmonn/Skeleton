@@ -143,9 +143,9 @@ void Application::LoadTex(int & addr, const std::string & fileName)
 
 // ‰æ‘œ‚Ì•`‰æ
 void Application::DrawTex(int & addr, const Vec2f & pos, const Vec2f & size, const Vec2f & uvPos, const Vec2f & uvSize, 
-	const float & alpha, const bool & turnX, const bool & turnY)
+	const float & alpha, const float & angle, const bool & turnX, const bool & turnY)
 {
-	texture->Draw(list, addr, { pos.x, pos.y }, { size.x, size.y }, { uvPos.x, uvPos.y }, { uvSize.x, uvSize.y }, alpha, turnX, turnY);
+	texture->Draw(list, addr, { pos.x, pos.y }, { size.x, size.y }, { uvPos.x, uvPos.y }, { uvSize.x, uvSize.y }, alpha, angle, turnX, turnY);
 }
 
 // ‰æ–ÊƒNƒŠƒA

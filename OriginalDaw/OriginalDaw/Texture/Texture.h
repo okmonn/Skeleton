@@ -20,7 +20,7 @@ public:
 
 	// •`‰æ€”õ
 	void SetDraw(const DirectX::XMFLOAT2& pos, const DirectX::XMFLOAT2& size, const DirectX::XMFLOAT2& uvPos, const DirectX::XMFLOAT2& uvSize,
-		const float& alpha, const bool& turnX, const bool& turnY);
+		const float& alpha, const float& angle, const bool& turnX, const bool& turnY);
 
 	// •`‰æ
 	void Draw(std::weak_ptr<List>list);

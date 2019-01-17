@@ -30,14 +30,14 @@ void TexMane::Load(int & addr, const std::string & fileName)
 
 // •`‰æ
 void TexMane::Draw(std::weak_ptr<List> list, int & addr, const DirectX::XMFLOAT2 & pos, const DirectX::XMFLOAT2 & size,
-	const DirectX::XMFLOAT2 & uvPos, const DirectX::XMFLOAT2 & uvSize, const float & alpha, const bool & turnX, const bool & turnY)
+	const DirectX::XMFLOAT2 & uvPos, const DirectX::XMFLOAT2 & uvSize, const float & alpha, const float & angle, const bool & turnX, const bool & turnY)
 {
 	if (texture.find(&addr) == texture.end())
 	{
 		return;
 	}
 
-	texture[&addr]->SetDraw(pos, size, uvPos, uvSize, alpha, turnX, turnY);
+	texture[&addr]->SetDraw(pos, size, uvPos, uvSize, alpha, angle, turnX, turnY);
 	texture[&addr]->Draw(list);
 }
 

@@ -48,7 +48,7 @@ public:
 
 	// ‰æ‘œ‚Ì•`‰æ
 	void DrawTex(int& addr, const Vec2f& pos, const Vec2f& size, const Vec2f& uvPos, const Vec2f& uvSize,
-		const float& alpha = 1.0f, const bool& turnX = false, const bool& turnY = false);
+		const float& alpha = 1.0f, const float& angle = 0.0f, const bool& turnX = false, const bool& turnY = false);
 
 	// ‰æ–ÊƒNƒŠƒA
 	void Clear(void);
