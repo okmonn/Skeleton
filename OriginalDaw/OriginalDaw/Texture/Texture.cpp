@@ -160,13 +160,6 @@ void Texture::Load(const std::string & fileName)
 void Texture::SetDraw(const DirectX::XMFLOAT2 & pos, const DirectX::XMFLOAT2 & size, const DirectX::XMFLOAT2 & uvPos, const DirectX::XMFLOAT2 & uvSize, 
 	const float & alpha, const float & angle, const bool & turnX, const bool & turnY)
 {
-	/*DirectX::XMStoreFloat4x4(&data->matrix,
-		DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat2(
-			&DirectX::XMFLOAT2(size.x / static_cast<float>(win.lock()->GetSize().x), size.y / static_cast<float>(win.lock()->GetSize().y))))
-		* DirectX::XMMatrixRotationZ(angle)
-		* DirectX::XMMatrixTranslationFromVector(
-			DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(pos.x, pos.y)))
-	);*/
 	DirectX::XMStoreFloat4x4(&data->matrix,
 		DirectX::XMMatrixAffineTransformation2D(
 			DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(size.x / static_cast<float>(win.lock()->GetSize().x), size.y / static_cast<float>(win.lock()->GetSize().y))), 
