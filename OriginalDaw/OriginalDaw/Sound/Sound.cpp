@@ -13,7 +13,7 @@
 #define BUFFER 2
 
 // オフセット
-#define OFFSET 10
+#define OFFSET 100
 
 // スピーカー設定用配列
 const unsigned long spk[] = {
@@ -27,28 +27,37 @@ const unsigned long spk[] = {
 	KSAUDIO_SPEAKER_7POINT1_SURROUND
 };
 
+// パラメータの初期値
+const snd::Param paramInit = {
+	1.0f
+};
+
 // コンストラクタ
 Sound::Sound() : 
-	voice(nullptr), loop(false), flag(true), read(0)
+	voice(nullptr), loop(false), flag(true), index(0), read(0), loopPos(0)
 {
 	call   = std::make_unique<VoiceCallback>();
 	filter = std::make_unique<Filter>();
 	effe   = std::make_unique<Effector>(L"Shader/Effector.hlsl");
 	state  = std::make_unique<XAUDIO2_VOICE_STATE>();
-	param  = {};
+	param  = paramInit;
+
+	copy = {};
 
 	data.resize(BUFFER);
 }
 
 // コンストラクタ
 Sound::Sound(const std::string & fileName) :
-	voice(nullptr), loop(false), flag(true), read(0)
+	voice(nullptr), loop(false), flag(true), index(0), read(0), loopPos(0)
 {
 	call   = std::make_unique<VoiceCallback>();
 	filter = std::make_unique<Filter>();
 	effe   = std::make_unique<Effector>(L"Shader/Effector.hlsl");
 	state  = std::make_unique<XAUDIO2_VOICE_STATE>();
-	param  = {};
+	param  = paramInit;
+
+	copy = {};
 
 	data.resize(BUFFER);
 
@@ -57,14 +66,16 @@ Sound::Sound(const std::string & fileName) :
 
 // コンストラクタ
 Sound::Sound(const snd::Info & info) :
-	voice(nullptr), loop(false), flag(true), index(0), read(0)
+	voice(nullptr), loop(false), flag(true), index(0), read(0), loopPos(0)
 {
 	call   = std::make_unique<VoiceCallback>();
 	filter = std::make_unique<Filter>();
 	effe   = std::make_unique<Effector>(L"Shader/Effector.hlsl");
 	state  = std::make_unique<XAUDIO2_VOICE_STATE>();
-	param  = {};
-	
+	param  = paramInit;
+
+	copy = {};
+
 	data.resize(BUFFER);
 
 	CopyInfo(info);
@@ -90,8 +101,8 @@ long Sound::CreateVoice(void)
 {
 	WAVEFORMATEXTENSIBLE desc{};
 	desc.Format.cbSize          = sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX);
-	desc.Format.nChannels       = SndLoader::Get().GetSnd(name).channel;
-	desc.Format.nSamplesPerSec  = SndLoader::Get().GetSnd(name).sample;
+	desc.Format.nChannels       = copy.channel;
+	desc.Format.nSamplesPerSec  = copy.sample;
 	desc.Format.nBlockAlign     = sizeof(float) * desc.Format.nChannels;
 	desc.Format.wBitsPerSample  = sizeof(float) * 8;
 	desc.Format.nAvgBytesPerSec = desc.Format.nSamplesPerSec * desc.Format.nBlockAlign;
@@ -102,31 +113,6 @@ long Sound::CreateVoice(void)
 	desc.SubFormat                   = KSDATAFORMAT_SUBTYPE_IEEE_FLOAT;
 
 	auto hr = Xaudio2::Get().GetAudio()->CreateSourceVoice(&voice, (WAVEFORMATEX*)(&desc), 0, 1.0f, &(*call));
-	if (FAILED(hr))
-	{
-		OutputDebugString(_T("\nソースボイスの生成：失敗\n"));
-	}
-
-	return hr;
-}
-
-// ソースボイスの生成
-long Sound::CreateVoice(const snd::Info & info)
-{
-	WAVEFORMATEXTENSIBLE desc{};
-	desc.Format.cbSize          = sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX);
-	desc.Format.nChannels       = info.channel;
-	desc.Format.nSamplesPerSec  = info.sample;
-	desc.Format.nBlockAlign     = sizeof(float) * desc.Format.nChannels;
-	desc.Format.wBitsPerSample  = sizeof(float) * 8;
-	desc.Format.nAvgBytesPerSec = desc.Format.nSamplesPerSec * desc.Format.nBlockAlign;
-	desc.Format.wFormatTag      = WAVE_FORMAT_EXTENSIBLE;
-
-	desc.dwChannelMask               = spk[desc.Format.nChannels - 1];
-	desc.Samples.wValidBitsPerSample = desc.Format.wBitsPerSample;
-	desc.SubFormat                   = KSDATAFORMAT_SUBTYPE_IEEE_FLOAT;
-
-	auto hr = Xaudio2::Get().GetAudio()->CreateSourceVoice(&voice, (WAVEFORMATEX*)(&desc), 0, 1.0f, nullptr);
 	if (FAILED(hr))
 	{
 		OutputDebugString(_T("\nソースボイスの生成：失敗\n"));
@@ -146,23 +132,32 @@ void Sound::Load(const std::string & fileName)
 	SndLoader::Get().Load(fileName);
 
 	name = fileName;
+	copy.channel = SndLoader::Get().GetSnd(name).channel;
+	copy.sample  = SndLoader::Get().GetSnd(name).sample;
+	copy.bit     = SndLoader::Get().GetSnd(name).bit;
+	copy.length  = SndLoader::Get().GetSnd(name).length;
+
 	CreateVoice();
 
-	effe->Init(SndLoader::Get().GetSnd(name).sample / OFFSET);
+	effe->Init(copy.sample * help::Byte(copy.bit) * copy.channel / OFFSET);
 
 	th = std::thread(&Sound::StreamFile, this);
 }
 
-// サウンド情報からサウンドの生成
+// サウンド情報構造体のコピー
 void Sound::CopyInfo(const snd::Info & info)
 {
-	CreateVoice(info);
-
-	for (auto& i : data)
+	if (th.joinable() == true)
 	{
-		i = info.data;
+		return;
 	}
-	
+
+	copy = info;
+
+	CreateVoice();
+
+	effe->Init(copy.sample * help::Byte(copy.bit) * copy.channel / OFFSET);
+
 	th = std::thread(&Sound::StreamInfo, this);
 }
 
@@ -201,8 +196,6 @@ long Sound::Play(const bool& loop)
 // 停止
 long Sound::Stop(void)
 {
-	WaitForSingleObject(call->handle, INFINITE);
-
 	auto hr = voice->Stop();
 	if (FAILED(hr))
 	{
@@ -212,17 +205,24 @@ long Sound::Stop(void)
 	return hr;
 }
 
-// 再生ポイントのリセット
-void Sound::Reset(void)
+// ループ開始位置のセット
+void Sound::SetLoopPos(void)
 {
+	loopPos = read;
+}
+
+// ループ開始位置に移動
+void Sound::MoveLoopPos(void)
+{
+	WaitForSingleObject(call->handle, INFINITE);
+
 	state->BuffersQueued = 0;
-	read = 0;
+	read = loopPos;
 }
 
 // ファイルからの非同期処理
 void Sound::StreamFile(void)
 {
-	unsigned int index = 0;
 	unsigned int size  = 0;
 	while (flag)
 	{
@@ -232,8 +232,10 @@ void Sound::StreamFile(void)
 			continue;
 		}
 
-		size = (SndLoader::Get().GetSnd(name).data->size() - read > static_cast<unsigned int>(SndLoader::Get().GetSnd(name).sample / OFFSET)) ? 
-			SndLoader::Get().GetSnd(name).sample / OFFSET : SndLoader::Get().GetSnd(name).data->size() - read;
+		unsigned int bps = copy.sample * help::Byte(copy.bit) * copy.channel / OFFSET;
+
+		size = (SndLoader::Get().GetSnd(name).data->size() - read > bps) ? 
+			bps : SndLoader::Get().GetSnd(name).data->size() - read;
 		data[index].assign(&SndLoader::Get().GetSnd(name).data->at(read), &SndLoader::Get().GetSnd(name).data->at(read + size));
 
 		effe->Copy("param", param);
@@ -252,21 +254,23 @@ void Sound::StreamFile(void)
 
 		index = (index + 1 >= BUFFER) ? 0 : ++index;
 		read += size;
-		if (read >= SndLoader::Get().GetSnd(name).data->size() / help::Byte(SndLoader::Get().GetSnd(name).bit))
+		if (read + 1 >= SndLoader::Get().GetSnd(name).data->size() / help::Byte(copy.bit))
 		{
 			if (loop == false)
 			{
 				Stop();
 				index = 0;
-				read  = 0;
 			}
+
+			read = 0;
 		}
 	}
 }
 
-// サウンド情報からの非同期処理
+// コピーデータから非同期処理
 void Sound::StreamInfo(void)
 {
+	unsigned int size = 0;
 	while (flag)
 	{
 		voice->GetState(&(*state));
@@ -275,24 +279,37 @@ void Sound::StreamInfo(void)
 			continue;
 		}
 
+		unsigned int bps = copy.sample * help::Byte(copy.bit) * copy.channel / OFFSET;
+
+		size = (copy.data.size() - read - 1> bps) ?
+			bps : copy.data.size() - read - 1;
+		data[index].assign(&copy.data[read], &copy.data[read + size]);
+
+		effe->Copy("param", param);
+		effe->Execution(data[index]);
 		filter->Execution(data[index]);
 
 		XAUDIO2_BUFFER buf{};
-		buf.AudioBytes = sizeof(float) * static_cast<unsigned int>(data[index].size());
-		buf.pAudioData = (unsigned char*)data[index].data();
+		buf.AudioBytes = static_cast<unsigned int>(sizeof(float) * data[index].size());
+		buf.pAudioData = (unsigned char*)(data[index].data());
 		auto hr = voice->SubmitSourceBuffer(&buf);
 		if (FAILED(hr))
 		{
-			OutputDebugString(_T("\nバッファの追加：失敗\n"));
+			OutputDebugString(_T("\nサウンド情報をバッファに追加：失敗\n"));
 			continue;
 		}
 
 		index = (index + 1 >= BUFFER) ? 0 : ++index;
-		if (loop == false)
+		read += size;
+		if (read + 1 >= copy.data.size() / help::Byte(copy.bit))
 		{
-			Stop();
-			index = 0;
+			if (loop == false)
+			{
+				Stop();
+				index = 0;
+			}
+
+			read = 0;
 		}
 	}
 }
-

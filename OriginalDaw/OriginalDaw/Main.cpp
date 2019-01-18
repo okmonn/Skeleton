@@ -1,6 +1,7 @@
 #include "Application/Application.h"
 #include "Input/Input.h"
 #include <Windows.h>
+#include <vector>
 
 // エントリーポイント
 #ifdef _DEBUG
@@ -14,7 +15,6 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 	Application app(winSize);
 
 	Sound s("mtgx.wav");
-	s.Play(false);
 
 	int n = 0;
 	app.LoadTex(n, "handle.png");
@@ -29,6 +29,23 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 		if (help::CheckKey(INPUT_RIGHT))
 		{
 			++angle;
+		}
+
+		if (i.Triger(INPUT_SPACE))
+		{
+			s.Play(false);
+		}
+		else if (i.Triger(INPUT_A))
+		{
+			s.Stop();
+		}
+		else if (i.Triger(INPUT_RETURN))
+		{
+			s.SetLoopPos();
+		}
+		else if (i.Triger(INPUT_Z))
+		{
+			s.MoveLoopPos();
 		}
 	}
 

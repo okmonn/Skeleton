@@ -24,7 +24,7 @@ public:
 	// 読み込み
 	void Load(const std::string& fileName);
 
-	// サウンド情報からサウンドの生成
+	// サウンド情報構造体のコピー
 	void CopyInfo(const snd::Info& info);
 
 	// ローパスフィルタ
@@ -42,8 +42,11 @@ public:
 	// 停止
 	long Stop(void);
 
-	// 再生ポイントのリセット
-	void Reset(void);
+	// ループ開始位置のセット
+	void SetLoopPos(void);
+
+	// ループ開始位置に移動
+	void MoveLoopPos(void);
 
 	// 現在のサウンド情報の取得
 	std::vector<float> GetData(void) const {
@@ -57,12 +60,11 @@ private:
 
 	// ソースボイスの生成
 	long CreateVoice(void);
-	long CreateVoice(const snd::Info& info);
 
 	// ファイルからの非同期処理
 	void StreamFile(void);
 
-	// サウンド情報からの非同期処理
+	// コピーデータから非同期処理
 	void StreamInfo(void);
 
 
@@ -93,11 +95,17 @@ private:
 	// 読み込みインデックス
 	unsigned int read;
 
+	// ループ開始位置
+	unsigned int loopPos;
+
 	// 読み込みファイル名
 	std::string name;
 
 	// パラメータ
 	snd::Param param;
+	
+	// コピー情報
+	snd::Info copy;
 
 	// 波形情報
 	std::vector<std::vector<float>>data;

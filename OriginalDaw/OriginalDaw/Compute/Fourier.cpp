@@ -92,12 +92,12 @@ void Fourier::Execution(const std::vector<float>& input, std::vector<float>& rea
 	{
 		if (index[i] > i)
 		{
-			auto re        = real[index[i]];
-			auto im        = imag[index[i]];
-			real[index[i]] = real[i];
-			imag[index[i]] = imag[i];
-			real[i]        = re;
-			imag[i]        = im;
+			auto re = real[static_cast<unsigned int>(index[i])];
+			auto im = imag[static_cast<unsigned int>(index[i])];
+			real[static_cast<unsigned int>(index[i])] = real[i];
+			imag[static_cast<unsigned int>(index[i])] = imag[i];
+			real[i] = re;
+			imag[i] = im;
 		}
 	}
 }
