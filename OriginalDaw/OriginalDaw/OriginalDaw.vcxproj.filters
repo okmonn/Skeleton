@@ -115,6 +115,9 @@
     <Filter Include="Main\Input">
       <UniqueIdentifier>{04a57c4d-cfc0-4e2b-b3a6-bb6161c861de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Library\Compute\Fourier">
+      <UniqueIdentifier>{097b50f3-1929-4975-99cf-ed779ad79bd4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -206,6 +209,9 @@
     </ClCompile>
     <ClCompile Include="Input\Input.cpp">
       <Filter>Main\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Compute\Fourier.cpp">
+      <Filter>Library\Compute\Fourier</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -323,6 +329,9 @@
     <ClInclude Include="Input\Input.h">
       <Filter>Main\Input</Filter>
     </ClInclude>
+    <ClInclude Include="Compute\Fourier.h">
+      <Filter>Library\Compute\Fourier</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Primitive.hlsl">
@@ -332,6 +341,9 @@
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="Shader\Effector.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\Fourier.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>

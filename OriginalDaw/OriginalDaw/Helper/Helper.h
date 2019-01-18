@@ -26,7 +26,13 @@ namespace help {
 	void DFT(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag);
 
 	// 逆離散フーリエ変換
-	void IDFT(const std::vector<float>& real, const std::vector<float>& imag, std::vector<float>& out);
+	std::vector<float> IDFT(const std::vector<float>& real, const std::vector<float>& imag);
+
+	// 高速フーリエ変換
+	void FFT(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag);
+
+	// 逆高速フーリエ変換
+	std::vector<float> IFFT(const std::vector<float>& inputReal, const std::vector<float>& inputImag);
 
 	// メインディスプレイの解像度の取得
 	Vec2 GetDisplayResolution(void);

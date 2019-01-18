@@ -1,25 +1,21 @@
 #pragma once
 #include "Compute.h"
-#include "../Sound/SndFunc.h"
 #include <vector>
 
-class Effector :
+class Fourier : 
 	public Compute
 {
 public:
 	// コンストラクタ
-	Effector(const std::wstring& fileName);
+	Fourier(std::wstring& fileName);
 	// デストラクタ
-	~Effector();
+	~Fourier();
 
 	// 初期化
 	void Init(const size_t& num);
 
-	// データのコピー
-	void Copy(const std::string& name, const snd::Param& param);
-
 	// 実行
-	void Execution(std::vector<float>& data);
+	void Execution(const std::vector<float>& input, std::vector<float>& real, std::vector<float>imag);
 
 private:
 	// データのコピー

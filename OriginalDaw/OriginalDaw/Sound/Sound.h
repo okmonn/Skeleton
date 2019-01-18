@@ -45,6 +45,11 @@ public:
 	// 再生ポイントのリセット
 	void Reset(void);
 
+	// 現在のサウンド情報の取得
+	std::vector<float> GetData(void) const {
+		return data[index];
+	}
+
 private:
 	//コピーコンストラクタ
 	Sound(const Sound&) = delete;
@@ -81,6 +86,9 @@ private:
 
 	// スレッドフラグ
 	bool flag;
+
+	// バッファインデックス
+	unsigned int index;
 
 	// 読み込みインデックス
 	unsigned int read;

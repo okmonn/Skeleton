@@ -57,7 +57,7 @@ Sound::Sound(const std::string & fileName) :
 
 // コンストラクタ
 Sound::Sound(const snd::Info & info) :
-	voice(nullptr), loop(false), flag(true), read(0)
+	voice(nullptr), loop(false), flag(true), index(0), read(0)
 {
 	call   = std::make_unique<VoiceCallback>();
 	filter = std::make_unique<Filter>();
@@ -147,6 +147,8 @@ void Sound::Load(const std::string & fileName)
 
 	name = fileName;
 	CreateVoice();
+
+	effe->Init(SndLoader::Get().GetSnd(name).sample / OFFSET);
 
 	th = std::thread(&Sound::StreamFile, this);
 }
@@ -265,7 +267,6 @@ void Sound::StreamFile(void)
 // サウンド情報からの非同期処理
 void Sound::StreamInfo(void)
 {
-	unsigned int index = 0;
 	while (flag)
 	{
 		voice->GetState(&(*state));

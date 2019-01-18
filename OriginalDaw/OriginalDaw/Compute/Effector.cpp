@@ -15,8 +15,6 @@
 Effector::Effector(const std::wstring & fileName)
 {
 	Load("effect", fileName);
-
-	Init();
 }
 
 // デストラクタ
@@ -26,14 +24,14 @@ Effector::~Effector()
 }
 
 // 初期化
-void Effector::Init(void)
+void Effector::Init(const size_t & num)
 {
 	DescriptorMane::Get().CreateHeap(heap, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, 
 		RSC_MAX, D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	CBV("param", (sizeof(snd::Param) + 0xff) &~ 0xff);
-	UAV("input",  sizeof(float), 4410);
-	UAV("output", sizeof(float), 4410);
+	UAV("input",  sizeof(float), num);
+	UAV("output", sizeof(float), num);
 }
 
 // データのコピー
