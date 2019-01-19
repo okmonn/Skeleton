@@ -56,7 +56,7 @@ float Haninng(uint i, uint size)
 		//Šï”
 		0.5f - 0.5f * cos(2.0f * PI * (i + 0.5f) / size);
 
-    if (tmp == 0.0f)
+    if(tmp == 0.0f)
     {
         tmp = 1.0f;
     }
@@ -70,7 +70,7 @@ void DFT(uint id)
     uint2 size;
     input.GetDimensions(size.x, size.y);
 
-    real[id] = input[id];
+    real[id] = 0.0f;
     imag[id] = 0.0f;
 
     for (uint i = 0; i < size.x; ++i)
@@ -78,8 +78,10 @@ void DFT(uint id)
         float re =  cos(2.0f * PI * id * i / size.x);
         float im = -sin(2.0f * PI * id * i / size.x);
 
-        real[id] += re * (input[i] * Haninng(i, size.x)) - im * 0.0f;
-        imag[id] += re * 0.0f                            + im * (input[i] * Haninng(i, size.x));
+        real[id] += re * input[i];
+        imag[id] += im * input[i];
+        //real[id] += re * input[i] * Haninng(i, size.x);
+        //imag[id] += im * input[i] * Haninng(i, size.x);
     }
 }
 
@@ -89,7 +91,7 @@ void IDFT(uint id)
     uint2 size;
     input.GetDimensions(size.x, size.y);
 
-    input[id] = real[id];
+    input[id] = 0.0f;
 
     for (uint i = 0; i < size.x; ++i)
     {
@@ -99,7 +101,7 @@ void IDFT(uint id)
         input[id] += (re * real[i] - im * imag[i]) / size.x;
     }
 
-    input[id] /= Haninng(id, size.x);
+    //input[id] /= Haninng(id, size.x);
 }
 
 // ‚‘¬ƒt[ƒŠƒG•ÏŠ·
@@ -171,8 +173,8 @@ void IFFT(uint id)
 
             if (st < stage)
             {
-                real[index1] = re0 + re1;
-                imag[index1] = im0 + im1;
+                real[index1] =  re0 + re1;
+                imag[index1] =  im0 + im1;
                 real[index2] = (re0 - re1) * re2 - (im0 - im1) * im2;
                 imag[index2] = (im0 - im1) * re2 + (re0 - re1) * im2;
             }

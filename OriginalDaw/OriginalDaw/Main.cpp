@@ -17,8 +17,54 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 	Fourier f(L"Shader/Fourier.hlsl");
 
 	const float PI = 3.14159265f;
-	std::vector<float>real;
-	std::vector<float>imag;
+
+	auto haninng = [&](const unsigned int& i, const unsigned int& num)->float {
+		float tmp = 0.0f;
+
+		tmp = (num % 2 == 0) ?
+			//偶数
+			0.5f - 0.5f * cos(2.0f * PI * i / num) :
+			//奇数
+			0.5f - 0.5f * cos(2.0f * PI * (i + 0.5f) / num);
+
+		return tmp;
+	};
+
+	auto dft = [&](const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag)->void {
+		real.assign(input.size(), 0.0f);
+		imag.assign(input.size(), 0.0f);
+		
+		for (unsigned int i = 0; i < input.size(); ++i)
+		{
+			for (unsigned int n = 0; n < input.size(); ++n)
+			{
+				float re =  cos(2.0f * PI * i * n / input.size());
+				float im = -sin(2.0f * PI * i * n / input.size());
+
+				real[i] += re * input[n] * haninng(n, input.size());
+				imag[i] += im * input[n] * haninng(n, input.size());
+			}
+		}
+	};
+
+	auto idft = [&](const std::vector<float>& real, const std::vector<float>& imag)->std::vector<float> {
+		unsigned int size = real.size();
+		std::vector<float>output(size, 0.0f);
+
+		for (unsigned int i = 0; i < size; ++i)
+		{
+			for (unsigned int n = 0; n < size; ++n)
+			{
+				float re = cos(2.0f * PI * i * n / size);
+				float im = sin(2.0f * PI * i * n / size);
+
+				output[i] += (re * real[n] - im * imag[n]) / size;
+			}
+
+			output[i] /= haninng(i, size);
+		}
+		return output;
+	};
 
 	auto fft = [&](const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag)->void{
 		unsigned int radix = (UINT)ceil(log2((float)input.size()));
@@ -149,14 +195,58 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 
 	snd::Info info{};
 	info.channel = 1;
-	info.sample  = 44100;
+	info.sample  = 8000;
 	info.bit     = 8;
-//	info.data.resize(info.sample * help::Byte(info.bit) * info.channel);
-	info.data.resize(500);
+	info.data.resize(info.sample * help::Byte(info.bit) * info.channel);
+	info.data.resize(64);
 	for (unsigned int i = 0; i < info.data.size(); ++i)
 	{
-		info.data[i] = 1.0f * sin((2.0f * PI * 440.0f * i) / info.sample);
+		info.data[i] = 0.25f * sin((2.0f * PI * 250.0f * i) / info.sample);
 	}
+	//離散
+	{
+		f.Init(info.data.size());
+
+		//通常
+		std::vector<float>real;
+		std::vector<float>imag;
+		
+		f.SetParam(FourierType::DFT);
+		f.Execution(info.data, real, imag);
+		for (int i = 0; i < info.data.size(); ++i)
+		{
+			float a = sqrt(real[i] * real[i] + imag[i] * imag[i]);
+			float b = atan(imag[i] / real[i]);
+			printf("%d:%f：%f\n", i, a, b);
+		}
+		/*dft(info.data, real, imag);
+		for (int i = 0; i < 64; ++i)
+		{
+			float a = sqrt(real[i] * real[i] + imag[i] * imag[i]);
+			float b = atan(imag[i] / real[i]);
+			printf("%d:%f：%f\n", i, a, b);
+		}*/
+		//逆
+		f.SetParam(FourierType::IDFT);
+		std::vector<float>tmp;
+		f.Execution(tmp, real, imag);
+		for (int i = 0; i < 64; ++i)
+		{
+			printf("%d:%f：%f\n", i, info.data[i], tmp[i]);
+		}
+	}
+	//高速
+	{
+	}
+
+	Sound s(info);
+	s.Play(true);
+	/*for (unsigned int i = 0; i < tmp.size(); ++i)
+	{
+		if(info.data[i] != tmp[i])
+		printf("%d:%f：%f\n", i, info.data[i], tmp[i]);
+	}*/
+
 	//fft(info.data, real, imag);
 	//ifft(real, imag, info.data.size());
 	//info.data = real;
@@ -165,15 +255,12 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 	//	if(info.data[i] != real[i])
 	//	printf("%d:%f：%f\n", i, info.data[i], real[i]);
 	//}
-	unsigned int stage = (UINT)std::ceil((float)log2(info.data.size()));
+	/*unsigned int stage = (UINT)std::ceil((float)log2(info.data.size()));
 	f.Init(pow(2, stage));
 	f.SetParam(FourierType::FFT, stage);
 	f.Execution(info.data, real, imag);
 	f.SetParam(FourierType::IFFT, stage);
-	f.Execution(info.data, real, imag);
-	Sound s(info);
-	s.Play(false);
-
+	f.Execution(info.data, real, imag);*/
 	int n = 0;
 	app.LoadTex(n, "handle.png");
 	float angle = 0.0f;

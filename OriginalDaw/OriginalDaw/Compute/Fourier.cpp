@@ -79,6 +79,8 @@ void Fourier::Execution(std::vector<float>& input, std::vector<float>& real, std
 {
 	Copy("param", param);
 	Copy("input", input);
+	Copy("real",  real);
+	Copy("imag",  imag);
 
 	list->Reset();
 
@@ -88,7 +90,7 @@ void Fourier::Execution(std::vector<float>& input, std::vector<float>& real, std
 	SetHeap();
 	SetRsc();
 
-	unsigned int num = (param.type == FourierType::FFT || param.type == FourierType::IFFT) ? param.stage : input.size();
+	unsigned int num = (param.stage == 0) ? DescriptorMane::Get().GetRsc(info["input"].rsc)->GetDesc().Width / sizeof(float) : param.stage;
 
 	list->Dispatch(num, 1, 1);
 
@@ -104,10 +106,10 @@ void Fourier::Execution(std::vector<float>& input, std::vector<float>& real, std
 	std::vector<float>index;
 	UpData("index", index);
 	UpData("input", input);
-	UpData("real", real);
-	UpData("imag", imag);
+	UpData("real",  real);
+	UpData("imag",  imag);
 
-	if (!(param.type == FourierType::DFT || param.type == FourierType::IDFT))
+	/*if (!(param.type == FourierType::DFT || param.type == FourierType::IDFT))
 	{
 		for (unsigned int i = 0; i < index.size(); ++i)
 		{
@@ -127,5 +129,5 @@ void Fourier::Execution(std::vector<float>& input, std::vector<float>& real, std
 			}
 		}
 		input.assign(&real[0], &real[input.size()]);
-	}
+	}*/
 }
