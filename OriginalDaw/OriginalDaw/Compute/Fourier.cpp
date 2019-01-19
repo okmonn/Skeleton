@@ -13,9 +13,10 @@
 #define RSC_MAX 5
 
 // コンストラクタ
-Fourier::Fourier(const std::wstring & fileName) : 
-	type(FourierType::DFT)
+Fourier::Fourier(const std::wstring & fileName)
 {
+	param = {};
+
 	Load("fourier", fileName);
 }
 
@@ -31,7 +32,7 @@ void Fourier::Init(const size_t & num)
 	DescriptorMane::Get().CreateHeap(heap, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
 		RSC_MAX, D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-	CBV("type", (sizeof(type) + 0xff) &~0xff);
+	CBV("param", (sizeof(param) + 0xff) &~0xff);
 	UAV("input", sizeof(float), num);
 	UAV("real",  sizeof(float), num);
 	UAV("imag",  sizeof(float), num);
@@ -50,14 +51,14 @@ void Fourier::Copy(const std::string & name, const std::vector<float>& data)
 }
 
 // データのコピー
-void Fourier::Copy(const std::string & name, const FourierType & type)
+void Fourier::Copy(const std::string & name, const Param & param)
 {
 	if (info.find(name) == info.end())
 	{
 		return;
 	}
 
-	memcpy(info[name].data, &type, sizeof(type));
+	memcpy(info[name].data, &param, sizeof(param));
 }
 
 // データの更新
@@ -76,7 +77,7 @@ void Fourier::UpData(const std::string & name, std::vector<float>& data)
 // 実行
 void Fourier::Execution(std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag)
 {
-	Copy("type", type);
+	Copy("param", param);
 	Copy("input", input);
 
 	list->Reset();
@@ -87,7 +88,8 @@ void Fourier::Execution(std::vector<float>& input, std::vector<float>& real, std
 	SetHeap();
 	SetRsc();
 
-	unsigned int num = static_cast<unsigned int>(std::log2(input.size()));
+	unsigned int num = (param.type == FourierType::FFT || param.type == FourierType::IFFT) ? param.stage : input.size();
+
 	list->Dispatch(num, 1, 1);
 
 	list->Close();
@@ -105,16 +107,25 @@ void Fourier::Execution(std::vector<float>& input, std::vector<float>& real, std
 	UpData("real", real);
 	UpData("imag", imag);
 
-	/*for (unsigned int i = 0; i < input.size(); ++i)
+	if (!(param.type == FourierType::DFT || param.type == FourierType::IDFT))
 	{
-		if (index[i] > i)
+		for (unsigned int i = 0; i < index.size(); ++i)
 		{
-			auto re = real[static_cast<unsigned int>(index[i])];
-			auto im = imag[static_cast<unsigned int>(index[i])];
-			real[static_cast<unsigned int>(index[i])] = real[i];
-			imag[static_cast<unsigned int>(index[i])] = imag[i];
-			real[i] = re;
-			imag[i] = im;
+			if (index[i] > i)
+			{
+				float re = real[index[i]];
+				float im = imag[index[i]];
+				real[index[i]] = real[i];
+				imag[index[i]] = imag[i];
+				real[i] = re;
+				imag[i] = im;
+			}
+			if (param.type == FourierType::IFFT)
+			{
+				real[i] /= real.size();
+				imag[i] /= imag.size();
+			}
 		}
-	}*/
+		input.assign(&real[0], &real[input.size()]);
+	}
 }

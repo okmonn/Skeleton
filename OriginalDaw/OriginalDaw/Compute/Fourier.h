@@ -13,6 +13,14 @@ enum class FourierType {
 class Fourier : 
 	public Compute
 {
+	// パラメータ
+	struct Param {
+		//タイプ
+		FourierType type;
+		//数
+		unsigned int stage;
+	};
+
 public:
 	// コンストラクタ
 	Fourier(const std::wstring& fileName);
@@ -23,8 +31,8 @@ public:
 	void Init(const size_t& num);
 
 	// タイプの変更
-	void ChangeType(const FourierType& type) {
-		this->type = type;
+	void SetParam(const FourierType& type, const unsigned int& stage = 0) {
+		param = { type, stage };
 	}
 
 	// 実行
@@ -33,12 +41,12 @@ public:
 private:
 	// データのコピー
 	void Copy(const std::string& name, const std::vector<float>& data);
-	void Copy(const std::string& name, const FourierType& type);
+	void Copy(const std::string& name, const Param& param);
 
 	// データの更新
 	void UpData(const std::string& name, std::vector<float>& data);
 
 	
-	// タイプ
-	FourierType type;
+	// パラメータ
+	Param param;
 };

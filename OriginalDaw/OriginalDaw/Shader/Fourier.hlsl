@@ -33,10 +33,13 @@ RWStructuredBuffer<float> imag  : register(u2);
 // 並び替え用インデックス
 RWStructuredBuffer<float> index : register(u3);
 
-// タイプ
+// パラメータ
 cbuffer Type : register(b0)
 {
+    //タイプ
     uint type;
+    //数
+    uint stage;
 }
 
 // 円周率
@@ -99,51 +102,93 @@ void IDFT(uint id)
     input[id] /= Haninng(id, size.x);
 }
 
-//// 高速フーリエ変換
-//void FFT(uint id)
-//{
-//    float2 size = 0.0f;
-//    input.GetDimensions(size.x, size.y);
+// 高速フーリエ変換
+void FFT(uint id)
+{
+    uint2 size;
+    real.GetDimensions(size.x, size.y);
+    uint st = id + 1;
 
-//    uint st = id + 1;
+    for (uint i = 0; i < pow(2.0f, id); ++i)
+    {
+        for (uint n = 0; n < pow(2.0f, stage - st); ++n)
+        {
+            uint index1 = pow(2.0f, stage - st + 1) * i + n;
+            uint index2 = pow(2.0f, stage - st) + index1;
 
-//    float stage = log2(size.x);
-//    for (uint i = 0; i < pow(id, 2.0f); ++i)
-//    {
-//        for (uint n = 0; n < pow(stage - st, 2.0f); ++n)
-//        {
-//            uint index1 = pow(stage - st + 1.0f, 2.0f) * i + n;
-//            uint index2 = pow(stage - st, 2.0f) + index1;
+            float p = pow(2.0f, st - 1.0f) * n;
 
-//            float p = pow(id, 2.0f) * n;
+            float re0 =  real[index1];
+            float im0 =  imag[index1];
+            float re1 =  real[index2];
+            float im1 =  imag[index2];
+            float re2 =  cos((2.0f * PI * p) / size.x);
+            float im2 = -sin((2.0f * PI * p) / size.x);
 
-//            float re1 = input[index1];
-//            float re2 = input[index2];
-//            float re3 = cos((2.0f * PI * p) / size.x);
+            if(st < stage)
+            {
+                real[index1] =  re0 + re1;
+                imag[index1] =  im0 + im1;
+                real[index2] = (re0 - re1) * re2 - (im0 - im1) * im2;
+                imag[index2] = (im0 - im1) * re2 + (re0 - re1) * im2;
+            }
+            else
+            {
+                real[index1] = re0 + re1;
+                imag[index1] = im0 + im1;
+                real[index2] = re0 - re1;
+                imag[index2] = im0 - im1;
+            }
+        }
 
-//            float im1 = imag[index1];
-//            float im2 = imag[index2];
-//            float im3 = -sin((2.0f * PI * p) / size.x);
+        uint m = pow(2.0f, id) + i;
+        index[m] = index[i] + pow(2.0f, stage - st);
+    }
+}
 
-//            if(st < stage)
-//            {
-//                real[index1] =  re1 + re2;
-//                real[index2] = (re1 - re2) * re3 - (im1 - im2) * im3;
-//                imag[index1] =  im1 + im2;
-//                imag[index2] = (im1 - im2) * re3 + (re1 - re2) * im3;
-//            }
-//            else
-//            {
-//                real[index1] = re1 + re2;
-//                real[index2] = re1 - re2;
-//                imag[index1] = im1 + im2;
-//                imag[index2] = im1 - im2;
-//            }
-//        }
+// 逆高速変換
+void IFFT(uint id)
+{
+    uint2 size;
+    real.GetDimensions(size.x, size.y);
+    uint st = id + 1;
 
-//        index[pow(id, 2.0f) + i] = (uint) index[i] + (uint) pow(stage - st, 2.0f);
-//    }
-//}
+    for (uint i = 0; i < pow(2.0f, id); ++i)
+    {
+        for (uint n = 0; n < pow(2.0f, stage - st); ++n)
+        {
+            uint index1 = pow(2.0f, stage - st + 1) * i + n;
+            uint index2 = pow(2.0f, stage - st) + index1;
+
+            float p = pow(2.0f, st - 1.0f) * n;
+
+            float re0 = real[index1];
+            float im0 = imag[index1];
+            float re1 = real[index2];
+            float im1 = imag[index2];
+            float re2 = cos((2.0f * PI * p) / size.x);
+            float im2 = sin((2.0f * PI * p) / size.x);
+
+            if (st < stage)
+            {
+                real[index1] = re0 + re1;
+                imag[index1] = im0 + im1;
+                real[index2] = (re0 - re1) * re2 - (im0 - im1) * im2;
+                imag[index2] = (im0 - im1) * re2 + (re0 - re1) * im2;
+            }
+            else
+            {
+                real[index1] = re0 + re1;
+                imag[index1] = im0 + im1;
+                real[index2] = re0 - re1;
+                imag[index2] = im0 - im1;
+            }
+        }
+
+        uint m = pow(2.0f, id) + i;
+        index[m] = index[i] + pow(2.0f, stage - st);
+    }
+}
 
 
 [RootSignature(RS)]

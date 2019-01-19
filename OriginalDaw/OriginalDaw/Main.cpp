@@ -157,18 +157,20 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 	{
 		info.data[i] = 1.0f * sin((2.0f * PI * 440.0f * i) / info.sample);
 	}
-	fft(info.data, real, imag);
-	ifft(real, imag, info.data.size());
+	//fft(info.data, real, imag);
+	//ifft(real, imag, info.data.size());
 	//info.data = real;
-	for (unsigned int i = 0; i < info.data.size(); ++i)
-	{
-		if(info.data[i] != real[i])
-		printf("%d:%fF%f\n", i, info.data[i], real[i]);
-	}
-	/*f.Init(info.data.size());
+	//for (unsigned int i = 0; i < info.data.size(); ++i)
+	//{
+	//	if(info.data[i] != real[i])
+	//	printf("%d:%fF%f\n", i, info.data[i], real[i]);
+	//}
+	unsigned int stage = (UINT)std::ceil((float)log2(info.data.size()));
+	f.Init(pow(2, stage));
+	f.SetParam(FourierType::FFT, stage);
 	f.Execution(info.data, real, imag);
-	f.ChangeType(FourierType::IDFT);
-	f.Execution(info.data, real, imag);*/
+	f.SetParam(FourierType::IFFT, stage);
+	f.Execution(info.data, real, imag);
 	Sound s(info);
 	s.Play(false);
 
