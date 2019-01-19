@@ -1,5 +1,7 @@
 // ルートシグネチャの宣言
 #define RS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
+                    "DescriptorTable(CBV(b0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
+                                    "visibility = SHADER_VISIBILITY_ALL),"\
                     "DescriptorTable(UAV(u0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
                                     "visibility = SHADER_VISIBILITY_ALL),"\
                     "DescriptorTable(UAV(u1, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
@@ -31,11 +33,17 @@ RWStructuredBuffer<float> imag  : register(u2);
 // 並び替え用インデックス
 RWStructuredBuffer<float> index : register(u3);
 
+// タイプ
+cbuffer Type : register(b0)
+{
+    uint type;
+}
+
 // 円周率
 #define PI 3.14159265f
 
 // ハニング
-float Hanning(float i, uint size)
+float Haninng(uint i, uint size)
 {
     float tmp = 0.0f;
 
@@ -67,63 +75,93 @@ void DFT(uint id)
         float re =  cos(2.0f * PI * id * i / size.x);
         float im = -sin(2.0f * PI * id * i / size.x);
 
-        real[id] += re * (input[i] * Hanning(i, size.x)) - im * 0.0f;
-        imag[id] += re * 0.0f + im * (input[i] * Hanning(i, size.x));
+        real[id] += re * (input[i] * Haninng(i, size.x)) - im * 0.0f;
+        imag[id] += re * 0.0f                            + im * (input[i] * Haninng(i, size.x));
     }
 }
 
-// 高速フーリエ変換
-void FFT(uint id)
+// 逆離散フーリエ変換
+void IDFT(uint id)
 {
-    float2 size = 0.0f;
+    uint2 size;
     input.GetDimensions(size.x, size.y);
 
-    uint st = id + 1;
+    input[id] = real[id];
 
-    float stage = log2(size.x);
-    for (uint i = 0; i < pow(id, 2.0f); ++i)
+    for (uint i = 0; i < size.x; ++i)
     {
-        for (uint n = 0; n < pow(stage - st, 2.0f); ++n)
-        {
-            uint index1 = pow(stage - st + 1.0f, 2.0f) * i + n;
-            uint index2 = pow(stage - st, 2.0f) + index1;
+        float re = cos(2.0f * PI * id * i / size.x);
+        float im = sin(2.0f * PI * id * i / size.x);
 
-            float p = pow(id, 2.0f) * n;
-
-            float re1 = input[index1];
-            float re2 = input[index2];
-            float re3 = cos((2.0f * PI * p) / size.x);
-
-            float im1 = imag[index1];
-            float im2 = imag[index2];
-            float im3 = -sin((2.0f * PI * p) / size.x);
-
-            if(st < stage)
-            {
-                real[index1] =  re1 + re2;
-                real[index2] = (re1 - re2) * re3 - (im1 - im2) * im3;
-                imag[index1] =  im1 + im2;
-                imag[index2] = (im1 - im2) * re3 + (re1 - re2) * im3;
-            }
-            else
-            {
-                real[index1] = re1 + re2;
-                real[index2] = re1 - re2;
-                imag[index1] = im1 + im2;
-                imag[index2] = im1 - im2;
-            }
-        }
-
-        index[pow(id, 2.0f) + i] = (uint) index[i] + (uint) pow(stage - st, 2.0f);
+        input[id] += (re * real[i] - im * imag[i]) / size.x;
     }
+
+    input[id] /= Haninng(id, size.x);
 }
+
+//// 高速フーリエ変換
+//void FFT(uint id)
+//{
+//    float2 size = 0.0f;
+//    input.GetDimensions(size.x, size.y);
+
+//    uint st = id + 1;
+
+//    float stage = log2(size.x);
+//    for (uint i = 0; i < pow(id, 2.0f); ++i)
+//    {
+//        for (uint n = 0; n < pow(stage - st, 2.0f); ++n)
+//        {
+//            uint index1 = pow(stage - st + 1.0f, 2.0f) * i + n;
+//            uint index2 = pow(stage - st, 2.0f) + index1;
+
+//            float p = pow(id, 2.0f) * n;
+
+//            float re1 = input[index1];
+//            float re2 = input[index2];
+//            float re3 = cos((2.0f * PI * p) / size.x);
+
+//            float im1 = imag[index1];
+//            float im2 = imag[index2];
+//            float im3 = -sin((2.0f * PI * p) / size.x);
+
+//            if(st < stage)
+//            {
+//                real[index1] =  re1 + re2;
+//                real[index2] = (re1 - re2) * re3 - (im1 - im2) * im3;
+//                imag[index1] =  im1 + im2;
+//                imag[index2] = (im1 - im2) * re3 + (re1 - re2) * im3;
+//            }
+//            else
+//            {
+//                real[index1] = re1 + re2;
+//                real[index2] = re1 - re2;
+//                imag[index1] = im1 + im2;
+//                imag[index2] = im1 - im2;
+//            }
+//        }
+
+//        index[pow(id, 2.0f) + i] = (uint) index[i] + (uint) pow(stage - st, 2.0f);
+//    }
+//}
 
 
 [RootSignature(RS)]
 [numthreads(1, 1, 1)]
 void CS(uint3 gID : SV_GroupID, uint3 gtID : SV_GroupThreadID, uint3 disID : SV_DispatchThreadID)
 {
-    FFT(gID.x);
+    [branch]
+    switch (type)
+    {
+        case 0:
+            DFT(gID.x);
+            break;
+        case 1:
+            IDFT(gID.x);
+            break;
+        default:
+            break;
+    }
 
     AllMemoryBarrierWithGroupSync();
 }
