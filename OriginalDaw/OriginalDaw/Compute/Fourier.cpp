@@ -75,7 +75,7 @@ void Fourier::UpData(const std::string & name, std::vector<float>& data)
 }
 
 // é¿çs
-void Fourier::Execution(std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag)
+void Fourier::Execution(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag)
 {
 	Copy("param", param);
 	Copy("input", input);
@@ -90,7 +90,8 @@ void Fourier::Execution(std::vector<float>& input, std::vector<float>& real, std
 	SetHeap();
 	SetRsc();
 
-	unsigned int num = (param.stage == 0) ? DescriptorMane::Get().GetRsc(info["input"].rsc)->GetDesc().Width / sizeof(float) : param.stage;
+	unsigned int num = (param.stage == 0) ? 
+		static_cast<unsigned int>(DescriptorMane::Get().GetRsc(info["input"].rsc)->GetDesc().Width) / sizeof(float) : param.stage;
 
 	list->Dispatch(num, 1, 1);
 
@@ -105,29 +106,25 @@ void Fourier::Execution(std::vector<float>& input, std::vector<float>& real, std
 
 	std::vector<float>index;
 	UpData("index", index);
-	UpData("input", input);
 	UpData("real",  real);
 	UpData("imag",  imag);
 
-	/*if (!(param.type == FourierType::DFT || param.type == FourierType::IDFT))
+	if (param.stage != 0)
 	{
 		for (unsigned int i = 0; i < index.size(); ++i)
 		{
-			if (index[i] > i)
+			if (static_cast<unsigned int>(index[i]) > i)
 			{
-				float re = real[index[i]];
-				float im = imag[index[i]];
-				real[index[i]] = real[i];
-				imag[index[i]] = imag[i];
+				float re = real[static_cast<unsigned int>(index[i])];
+				float im = imag[static_cast<unsigned int>(index[i])];
+				real[static_cast<unsigned int>(index[i])] = real[i];
+				imag[static_cast<unsigned int>(index[i])] = imag[i];
 				real[i] = re;
 				imag[i] = im;
 			}
-			if (param.type == FourierType::IFFT)
-			{
-				real[i] /= real.size();
-				imag[i] /= imag.size();
-			}
 		}
-		input.assign(&real[0], &real[input.size()]);
-	}*/
+
+		real.assign(&real[0], &real[input.size()]);
+		imag.assign(&imag[0], &imag[input.size()]);
+	}
 }

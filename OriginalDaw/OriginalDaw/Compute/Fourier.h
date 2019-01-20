@@ -4,10 +4,10 @@
 
 // フーリエ変換タイプ
 enum class FourierType {
+	//離散フーリエ変換
 	DFT,
-	IDFT,
-	FFT,
-	IFFT
+	//高速フーリエ変換
+	FFT
 };
 
 class Fourier : 
@@ -36,7 +36,7 @@ public:
 	}
 
 	// 実行
-	void Execution(std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag);
+	void Execution(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag);
 
 private:
 	// データのコピー

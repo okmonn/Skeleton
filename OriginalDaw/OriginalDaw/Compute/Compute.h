@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 #include <memory>
 #include <unordered_map>
 
@@ -22,6 +23,10 @@ public:
 	// デストラクタ
 	virtual ~Compute();
 
+	// データのコピー
+	template<typename T>
+	void Copy(const std::string& name, const T& data);
+
 protected:
 	// シェーダの読み込み
 	void Load(const std::string& name, const std::wstring& fileName);
@@ -38,11 +43,21 @@ protected:
 	// アンマップ
 	void Unmap(const std::string& name);
 
+	// リセット
+	void Reset(const std::string& name);
+
+	// データのコピー
+	template<typename T>
+	void Copy(const std::string& name, const std::vector<T>& data);
+
 	// ヒープのセット
 	void SetHeap(void);
 
 	// リソースのセット
 	void SetRsc(void);
+
+	// データの更新
+	void UpData(const std::string& name, std::vector<float>& data);
 
 	// 終了
 	void End(void);
@@ -63,3 +78,27 @@ protected:
 	// リソース情報
 	std::unordered_map<std::string, Info>info;
 };
+
+// データのコピー
+template<typename T>
+inline void Compute::Copy(const std::string & name, const T & data)
+{
+	if (info.find(name) == info.end())
+	{
+		return;
+	}
+
+	memcpy(info[name].data, &data, sizeof(T));
+}
+
+// データのコピー
+template<typename T>
+inline void Compute::Copy(const std::string & name, const std::vector<T>& data)
+{
+	if (info.find(name) == info.end())
+	{
+		return;
+	}
+
+	memcpy(info[name].data, data.data(), sizeof(T) * data.size());
+}

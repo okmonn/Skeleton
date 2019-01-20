@@ -1,7 +1,5 @@
 // ルートシグネチャの宣言
 #define RS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
-                    "DescriptorTable(CBV(b0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
-                                    "visibility = SHADER_VISIBILITY_ALL),"\
                     "DescriptorTable(UAV(u0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
                                     "visibility = SHADER_VISIBILITY_ALL),"\
                     "DescriptorTable(UAV(u1, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
@@ -30,17 +28,9 @@ RWStructuredBuffer<float> input : register(u0);
 RWStructuredBuffer<float> real  : register(u1);
 // 虚数部
 RWStructuredBuffer<float> imag  : register(u2);
-// 並び替え用インデックス
+// 配列インデックス
 RWStructuredBuffer<float> index : register(u3);
 
-// パラメータ
-cbuffer Type : register(b0)
-{
-    //タイプ
-    float type;
-    //数
-    float stage;
-}
 
 // 円周率
 #define PI 3.14159265f
@@ -59,38 +49,13 @@ float Haninng(uint i, uint size)
     return tmp;
 }
 
-// 離散フーリエ変換
-void DFT(uint id)
-{
-    uint2 size;
-    input.GetDimensions(size.x, size.y);
-
-    real[id] = 0.0f;
-    imag[id] = 0.0f;
-
-    for (uint i = 0; i < size.x; ++i)
-    {
-        float re =  cos(2.0f * PI * id * i / size.x);
-        float im = -sin(2.0f * PI * id * i / size.x);
-
-        real[id] += re * input[i] * Haninng(i, size.x);
-        imag[id] += im * input[i] * Haninng(i, size.x);
-    }
-
-    real[id] = trunc(real[id]);
-    imag[id] = trunc(imag[id]);
-
-    real[id] = lerp(real[id], 0.0f,
-                    step(true, real[id] == -0.0f));
-    imag[id] = lerp(imag[id], 0.0f,
-                    step(true, imag[id] == -0.0f));
-}
-
 // 高速フーリエ変換
 void FFT(uint id)
 {
     uint2 size;
-    real.GetDimensions(size.x, size.y);
+    input.GetDimensions(size.x, size.y);
+
+    uint stage = ceil(log2(size.x));
     uint st = id + 1;
 
     for (uint i = 0; i < pow(2.0f, id); ++i)
@@ -100,26 +65,24 @@ void FFT(uint id)
             uint index1 = pow(2.0f, stage - st + 1) * i + n;
             uint index2 = pow(2.0f, stage - st) + index1;
 
-            float p = pow(2.0f, st - 1.0f) * n;
+            float p = pow(2.0f, id) * n;
 
-            float re0 = real[index1];
-            float im0 = imag[index1];
-            float re1 = real[index2];
-            float im1 = imag[index2];
-            float re2 = cos((2.0f * PI * p) / size.x);
+            float re0 =  input[index1];
+            float im0 =  imag[index1];
+            float re1 =  input[index2];
+            float im1 =  imag[index2];
+            float re2 =  cos((2.0f * PI * p) / size.x);
             float im2 = -sin((2.0f * PI * p) / size.x);
 
+            real[index1] = re0 + re1;
+            imag[index1] = im0 + im1;
             if (st < stage)
             {
-                real[index1] = re0 + re1;
-                imag[index1] = im0 + im1;
                 real[index2] = (re0 - re1) * re2 - (im0 - im1) * im2;
                 imag[index2] = (im0 - im1) * re2 + (re0 - re1) * im2;
             }
             else
             {
-                real[index1] = re0 + re1;
-                imag[index1] = im0 + im1;
                 real[index2] = re0 - re1;
                 imag[index2] = im0 - im1;
             }
@@ -134,18 +97,7 @@ void FFT(uint id)
 [numthreads(1, 1, 1)]
 void CS(uint3 gID : SV_GroupID, uint3 gtID : SV_GroupThreadID, uint3 disID : SV_DispatchThreadID)
 {
-    [branch]
-    switch (type)
-    {
-        case 0:
-            DFT(gID.x);
-            break;
-        case 1:
-            FFT(gID.x);
-            break;
-        default:
-            break;
-    }
+    FFT(gID.x);
 
     AllMemoryBarrierWithGroupSync();
 }

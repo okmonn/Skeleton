@@ -1,6 +1,7 @@
 #include "Application/Application.h"
 #include "Input/Input.h"
-#include "Compute/Fourier.h"
+#include "Compute/Dft.h"
+#include "Compute/Fft.h"
 #include <Windows.h>
 #include <vector>
 
@@ -14,7 +15,6 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 	auto& i = Input::Get();
 	auto winSize = help::GetDisplayResolution();
 	Application app(winSize);
-	Fourier f(L"Shader/Fourier.hlsl");
 
 	const float PI = 3.14159265f;
 
@@ -28,42 +28,6 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 			0.5f - 0.5f * cos(2.0f * PI * (i + 0.5f) / num);
 
 		return tmp;
-	};
-
-	auto dft = [&](const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag)->void {
-		real.assign(input.size(), 0.0f);
-		imag.assign(input.size(), 0.0f);
-		
-		for (unsigned int i = 0; i < input.size(); ++i)
-		{
-			for (unsigned int n = 0; n < input.size(); ++n)
-			{
-				float re =  cos(2.0f * PI * i * n / input.size());
-				float im = -sin(2.0f * PI * i * n / input.size());
-
-				real[i] += re * input[n] * haninng(n, input.size());
-				imag[i] += im * input[n] * haninng(n, input.size());
-			}
-		}
-	};
-
-	auto idft = [&](const std::vector<float>& real, const std::vector<float>& imag)->std::vector<float> {
-		unsigned int size = real.size();
-		std::vector<float>output(size, 0.0f);
-
-		for (unsigned int i = 0; i < size; ++i)
-		{
-			for (unsigned int n = 0; n < size; ++n)
-			{
-				float re = cos(2.0f * PI * i * n / size);
-				float im = sin(2.0f * PI * i * n / size);
-
-				output[i] += (re * real[n] - im * imag[n]) / size;
-			}
-
-			output[i] /= haninng(i, size);
-		}
-		return output;
 	};
 
 	auto fft = [&](const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag)->void{
@@ -201,66 +165,20 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 	info.data.resize(64);
 	for (unsigned int i = 0; i < info.data.size(); ++i)
 	{
-		info.data[i] = 0.25f * sin((2.0f * PI * 250.0f * i) / info.sample);
+		info.data[i] = 0.25f * sin(2.0f * PI * 250.0f * i / info.sample);
+		//info.data[i] = 2.0f * sin(4.0f * (2.0f * PI / info.data.size()) * i)
+			//+ 3.0f * cos(2.0f * (2.0f * PI / info.data.size()) * i);
 	}
-	//離散
+	std::vector<float>real;
+	std::vector<float>imag;
+	FFT f(info.data.size());
+	fft(info.data, real, imag);
+	for (int i = 0; i < info.data.size(); ++i)
 	{
-		f.Init(info.data.size());
-
-		//通常
-		std::vector<float>real;
-		std::vector<float>imag;
-		
-		f.SetParam(FourierType::DFT);
-		f.Execution(info.data, real, imag);
-		for (int i = 0; i < info.data.size(); ++i)
-		{
-			float a = sqrt(real[i] * real[i] + imag[i] * imag[i]);
-			float b = atan(imag[i] / real[i]);
-			printf("%d:%f：%f\n", i, a, b);
-		}
-		/*dft(info.data, real, imag);
-		for (int i = 0; i < 64; ++i)
-		{
-			float a = sqrt(real[i] * real[i] + imag[i] * imag[i]);
-			float b = atan(imag[i] / real[i]);
-			printf("%d:%f：%f\n", i, a, b);
-		}*/
-		//逆
-		f.SetParam(FourierType::IDFT);
-		std::vector<float>tmp;
-		f.Execution(tmp, real, imag);
-		for (int i = 0; i < 64; ++i)
-		{
-			printf("%d:%f：%f\n", i, info.data[i], tmp[i]);
-		}
-	}
-	//高速
-	{
+		printf("%d:%f：%f\n", i, real[i], imag[i]);
 	}
 
-	Sound s(info);
-	s.Play(true);
-	/*for (unsigned int i = 0; i < tmp.size(); ++i)
-	{
-		if(info.data[i] != tmp[i])
-		printf("%d:%f：%f\n", i, info.data[i], tmp[i]);
-	}*/
 
-	//fft(info.data, real, imag);
-	//ifft(real, imag, info.data.size());
-	//info.data = real;
-	//for (unsigned int i = 0; i < info.data.size(); ++i)
-	//{
-	//	if(info.data[i] != real[i])
-	//	printf("%d:%f：%f\n", i, info.data[i], real[i]);
-	//}
-	/*unsigned int stage = (UINT)std::ceil((float)log2(info.data.size()));
-	f.Init(pow(2, stage));
-	f.SetParam(FourierType::FFT, stage);
-	f.Execution(info.data, real, imag);
-	f.SetParam(FourierType::IFFT, stage);
-	f.Execution(info.data, real, imag);*/
 	int n = 0;
 	app.LoadTex(n, "handle.png");
 	float angle = 0.0f;

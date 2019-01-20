@@ -133,6 +133,19 @@ void Compute::Unmap(const std::string & name)
 	DescriptorMane::Get().GetRsc(info[name].rsc)->Unmap(0, &range);
 }
 
+// リセット
+void Compute::Reset(const std::string & name)
+{
+	if (info.find(name) == info.end())
+	{
+		return;
+	}
+
+	unsigned int size = static_cast<unsigned int>(DescriptorMane::Get().GetRsc(info[name].rsc)->GetDesc().Width);
+
+	memset(info[name].data, 0, size);
+}
+
 // ヒープのセット
 void Compute::SetHeap(void)
 {
@@ -148,6 +161,19 @@ void Compute::SetRsc(void)
 	{
 		list->SetComputeRootTable(itr->second.rsc, h, itr->second.rsc);
 	}
+}
+
+// データの更新
+void Compute::UpData(const std::string & name, std::vector<float>& data)
+{
+	if (info.find(name) == info.end())
+	{
+		return;
+	}
+
+	unsigned int size = static_cast<unsigned int>(DescriptorMane::Get().GetRsc(info[name].rsc)->GetDesc().Width) / sizeof(float);
+
+	data.assign((float*)info[name].data, (float*)info[name].data + size);
 }
 
 // 終了

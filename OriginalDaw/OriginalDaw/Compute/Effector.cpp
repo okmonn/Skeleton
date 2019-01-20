@@ -34,39 +34,6 @@ void Effector::Init(const size_t & num)
 	UAV("output", sizeof(float), num);
 }
 
-// データのコピー
-void Effector::Copy(const std::string & name, const std::vector<float>& data)
-{
-	if (info.find(name) == info.end())
-	{
-		return;
-	}
-
-	memcpy(info[name].data, data.data(), sizeof(float) * data.size());
-}
-
-// データのコピー
-void Effector::Copy(const std::string & name, const snd::Param & param)
-{
-	if (info.find(name) == info.end())
-	{
-		return;
-	}
-
-	memcpy(info[name].data, &param, sizeof(snd::Param));
-}
-
-// データの更新
-void Effector::UpData(const std::string & name, std::vector<float>& data)
-{
-	if (info.find(name) == info.end())
-	{
-		return;
-	}
-
-	data.assign((float*)info[name].data, (float*)info[name].data + data.size());
-}
-
 // 実行
 void Effector::Execution(std::vector<float> & data)
 {

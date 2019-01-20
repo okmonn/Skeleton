@@ -118,6 +118,12 @@
     <Filter Include="Library\Compute\Fourier">
       <UniqueIdentifier>{097b50f3-1929-4975-99cf-ed779ad79bd4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Library\Compute\Fourier\DFT">
+      <UniqueIdentifier>{a54f2f0b-fcd4-4021-ac62-634fd954a67d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Compute\Fourier\FFT">
+      <UniqueIdentifier>{180d08ff-95ea-4eb8-a4a3-98ee57f0c674}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -212,6 +218,12 @@
     </ClCompile>
     <ClCompile Include="Compute\Fourier.cpp">
       <Filter>Library\Compute\Fourier</Filter>
+    </ClCompile>
+    <ClCompile Include="Compute\Dft.cpp">
+      <Filter>Library\Compute\Fourier\DFT</Filter>
+    </ClCompile>
+    <ClCompile Include="Compute\Fft.cpp">
+      <Filter>Library\Compute\Fourier\FFT</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -332,6 +344,12 @@
     <ClInclude Include="Compute\Fourier.h">
       <Filter>Library\Compute\Fourier</Filter>
     </ClInclude>
+    <ClInclude Include="Compute\Dft.h">
+      <Filter>Library\Compute\Fourier\DFT</Filter>
+    </ClInclude>
+    <ClInclude Include="Compute\Fft.h">
+      <Filter>Library\Compute\Fourier\FFT</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Primitive.hlsl">
@@ -344,6 +362,12 @@
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="Shader\Fourier.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\DFT.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\FFT.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>
