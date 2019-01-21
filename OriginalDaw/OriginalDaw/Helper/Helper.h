@@ -10,20 +10,23 @@ namespace help {
 	// ラジアン変換
 	float Radian(const float& i);
 
-	// ハニング窓
-	float Haninng(const unsigned int& i, const unsigned int& num);
+	// 任意の桁から四捨五入
+	float Round(const float& i, const int& num);
+
+	// ハニング窓関数
+	double Haninng(const unsigned int& i, const size_t& num);
 
 	// 離散フーリエ変換
-	void DFT(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag);
+	void DFT(const std::vector<double>& input, std::vector<double>& real, std::vector<double>& imag);
 
 	// 逆離散フーリエ変換
-	std::vector<float> IDFT(const std::vector<float>& real, const std::vector<float>& imag);
+	std::vector<double> IDFT(const std::vector<double>& real, const std::vector<double>& imag);
 
 	// 高速フーリエ変換
-	void FFT(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag);
+	void FFT(const std::vector<double>& input, std::vector<double>& real, std::vector<double>& imag);
 
 	// 逆高速フーリエ変換
-	std::vector<float> IFFT(const std::vector<float>& real, std::vector<float>& imag, const unsigned int& outNum);
+	std::vector<double> IFFT(const std::vector<double>& real, std::vector<double>& imag, const unsigned int& outNum);
 
 	// ユニコード文字に変換
 	std::wstring ChangeWString(const std::string& st);

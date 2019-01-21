@@ -27,22 +27,16 @@ RWStructuredBuffer<float> real : register(u1);
 // 虚数部
 RWStructuredBuffer<float> imag : register(u2);
 
-
 // 円周率
 #define PI 3.14159265f
 
 // ハニング
-float Haninng(uint i, uint size)
+double Haninng(uint i, uint size)
 {
-    float tmp = 0.0f;
-
-    tmp = (size % 2 == 0) ?
-		//偶数
-		0.5f - 0.5f * cos(2.0f * PI * i / size) :
-		//奇数
-		0.5f - 0.5f * cos(2.0f * PI * (i + 0.5f) / size);
-
-    return tmp;
+    return 1.0f;
+    return (size % 2 == 0)
+        ? 0.5f - 0.5f * cos(2.0f * PI * i / size)
+        : 0.5f - 0.5f * cos(2.0f * PI * (i + 0.5f) / size);
 }
 
 // 離散フーリエ変換
@@ -66,10 +60,10 @@ void DFT(uint id)
     real[id] = round(real[id]);
     imag[id] = round(imag[id]);
 
-    //real[id] = lerp(real[id], 0.0f,
-    //                step(true, real[id] == -0.0f));
-    //imag[id] = lerp(imag[id], 0.0f,
-    //                step(true, imag[id] == -0.0f));
+    real[id] = lerp(real[id], 0.0f,
+                    step(true, real[id] == -0.0f));
+    imag[id] = lerp(imag[id], 0.0f,
+                    step(true, imag[id] == -0.0f));
 }
 
 [RootSignature(RS)]

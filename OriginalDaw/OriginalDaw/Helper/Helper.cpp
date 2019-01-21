@@ -2,7 +2,7 @@
 #include <Windows.h>
 
 // 円周率
-#define PI 3.14159265f
+#define PI 3.14159265
 
 // バイト変換
 int help::Byte(const int & i)
@@ -13,49 +13,62 @@ int help::Byte(const int & i)
 // ラジアン変換
 float help::Radian(const float & i)
 {
-	return (i * PI) / 180.0f;
+	return (i * 3.14159265f) / 180.0f;
 }
 
-// ハニング窓
-float help::Haninng(const unsigned int & i, const unsigned int & num)
+// 任意の桁から四捨五入
+float help::Round(const float & i, const int & num)
+{
+	float tmp = i;
+	tmp *= std::pow(10.0f, -num - 1);
+	float hr = std::floor(tmp + 0.5f);
+	hr *= std::pow(10.0f, num + 1);
+	return hr;
+}
+
+// ハニング窓関数
+double help::Haninng(const unsigned int & i, const size_t & num)
 {
 	return (num % 2 == 0)
-		? 0.5f - 0.5f * cos(2.0f * PI * i / num)
-		: 0.5f - 0.5f * cos(2.0f * PI * (i + 0.5f) / num);
+		? 0.5 - 0.5 * std::cos(2.0 * PI * i / num)
+		: 0.5 - 0.5 * std::cos(2.0 * PI * (i + 0.5) / num);
 }
 
 // 離散フーリエ変換
-void help::DFT(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag)
+void help::DFT(const std::vector<double>& input, std::vector<double>& real, std::vector<double>& imag)
 {
-	real.resize(input.size(), 0.0f);
-	imag.resize(input.size(), 0.0f);
+	real.resize(input.size(), 0.0);
+	imag.resize(input.size(), 0.0);
 
 	for (unsigned int i = 0; i < input.size(); ++i)
 	{
 		for (unsigned int n = 0; n < input.size(); ++n)
 		{
-			float re =  cos(2.0f * PI * i * n / real.size());
-			float im = -sin(2.0f * PI * i * n / imag.size());
+			double re =  std::cos(2.0 * PI * i * n / real.size());
+			double im = -std::sin(2.0 * PI * i * n / imag.size());
 
 			real[i] += re * input[n];
 			imag[i] += im * input[n];
 		}
+
+		/*real[i] = std::round(real[i]);
+		imag[i] = std::round(imag[i]);*/
 	}
 }
 
 // 逆離散フーリエ変換
-std::vector<float> help::IDFT(const std::vector<float>& real, const std::vector<float>& imag)
+std::vector<double> help::IDFT(const std::vector<double>& real, const std::vector<double>& imag)
 {
-	std::vector<float>output(real.size(), 0.0f);
+	std::vector<double>output(real.size(), 0.0f);
 
 	for (unsigned int i = 0; i < output.size(); ++i)
 	{
 		for (unsigned int n = 0; n < output.size(); ++n)
 		{
-			float re = cos(2.0f * PI * i * n / real.size());
-			float im = sin(2.0f * PI * i * n / imag.size());
+			double re = std::cos(2.0 * PI * i * n / real.size());
+			double im = std::sin(2.0 * PI * i * n / imag.size());
 
-			output[i] += re * real[n] * Haninng(i, real.size()) - im * imag[n];
+			output[i] += re * real[n] - im * imag[n];
 		}
 
 		output[i] /= real.size();
@@ -65,34 +78,34 @@ std::vector<float> help::IDFT(const std::vector<float>& real, const std::vector<
 }
 
 // 高速フーリエ変換
-void help::FFT(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag)
+void help::FFT(const std::vector<double>& input, std::vector<double>& real, std::vector<double>& imag)
 {
-	unsigned int stage = static_cast<unsigned int>(ceil(log2(input.size())));
-	unsigned int num = static_cast<unsigned int>(pow(2, stage));
+	unsigned int stage = static_cast<unsigned int>(std::ceil(log2(input.size())));
+	unsigned int num = static_cast<unsigned int>(std::pow(2, stage));
 
 	real = input;
 	real.resize(num);
-	imag.assign(num, 0.0f);
+	imag.assign(num, 0.0);
 
 	std::vector<unsigned int>index(num, 0);
 
 	for (unsigned int st = 1; st <= stage; ++st)
 	{
-		for (unsigned int i = 0; i < static_cast<unsigned int>(pow(2, st - 1)); ++i)
+		for (unsigned int i = 0; i < static_cast<unsigned int>(std::pow(2, st - 1)); ++i)
 		{
-			for (unsigned int n = 0; n < static_cast<unsigned int>(pow(2, stage - st)); ++n)
+			for (unsigned int n = 0; n < static_cast<unsigned int>(std::pow(2, stage - st)); ++n)
 			{
-				unsigned int index1 = static_cast<unsigned int>(pow(2, stage - st + 1)) * i + n;
-				unsigned int index2 = static_cast<unsigned int>(pow(2, stage - st)) + index1;
+				unsigned int index1 = static_cast<unsigned int>(std::pow(2, stage - st + 1)) * i + n;
+				unsigned int index2 = static_cast<unsigned int>(std::pow(2, stage - st)) + index1;
 
-				float p = static_cast<float>(pow(2, st - 1) * n);
+				double p = std::pow(2, st - 1) * n;
 
-				float re0 =  real[index1];
-				float im0 =  imag[index1];
-				float re1 =  real[index2];
-				float im1 =  imag[index2];
-				float re2 =  cos(2.0f * PI * p / num);
-				float im2 = -sin(2.0f * PI * p / num);
+				double re0 =  real[index1];
+				double im0 =  imag[index1];
+				double re1 =  real[index2];
+				double im1 =  imag[index2];
+				double re2 =  std::cos(2.0 * PI * p / num);
+				double im2 = -std::sin(2.0 * PI * p / num);
 
 				real[index1] = re0 + re1;
 				imag[index1] = im0 + im1;
@@ -108,8 +121,8 @@ void help::FFT(const std::vector<float>& input, std::vector<float>& real, std::v
 				}
 			}
 
-			unsigned int m = static_cast<unsigned int>(pow(2, st - 1) + i);
-			index[m] = index[i] + static_cast<unsigned int>(pow(2, stage - st));
+			unsigned int m = static_cast<unsigned int>(std::pow(2, st - 1) + i);
+			index[m] = index[i] + static_cast<unsigned int>(std::pow(2, stage - st));
 		}
 	}
 
@@ -117,8 +130,8 @@ void help::FFT(const std::vector<float>& input, std::vector<float>& real, std::v
 	{
 		if (index[i] > i)
 		{
-			float re = real[index[i]];
-			float im = imag[index[i]];
+			double re = real[index[i]];
+			double im = imag[index[i]];
 			real[index[i]] = real[i];
 			imag[index[i]] = imag[i];
 			real[i] = re;
@@ -128,32 +141,32 @@ void help::FFT(const std::vector<float>& input, std::vector<float>& real, std::v
 }
 
 // 逆高速フーリエ変換
-std::vector<float> help::IFFT(const std::vector<float>& real, std::vector<float>& imag, const unsigned int & outNum)
+std::vector<double> help::IFFT(const std::vector<double>& real, std::vector<double>& imag, const unsigned int & outNum)
 {
-	unsigned int stage = static_cast<unsigned int>(log2(real.size()));
-	unsigned int num = static_cast<unsigned int>(pow(2, stage));
+	unsigned int stage = static_cast<unsigned int>(std::log2(real.size()));
+	unsigned int num = static_cast<unsigned int>(std::pow(2, stage));
 
-	std::vector<float>re = real;
-	std::vector<float>im = imag;
+	std::vector<double>re = real;
+	std::vector<double>im = imag;
 	std::vector<unsigned int>index(num, 0);
 
 	for (unsigned int st = 1; st <= stage; ++st)
 	{
-		for (unsigned int i = 0; i < static_cast<unsigned int>(pow(2, st - 1)); ++i)
+		for (unsigned int i = 0; i < static_cast<unsigned int>(std::pow(2, st - 1)); ++i)
 		{
-			for (unsigned int n = 0; n < static_cast<unsigned int>(pow(2, stage - st)); ++n)
+			for (unsigned int n = 0; n < static_cast<unsigned int>(std::pow(2, stage - st)); ++n)
 			{
-				unsigned int index1 = static_cast<unsigned int>(pow(2, stage - st + 1)) * i + n;
-				unsigned int index2 = static_cast<unsigned int>(pow(2, stage - st)) + index1;
+				unsigned int index1 = static_cast<unsigned int>(std::pow(2, stage - st + 1)) * i + n;
+				unsigned int index2 = static_cast<unsigned int>(std::pow(2, stage - st)) + index1;
 
-				float p = static_cast<float>(pow(2, st - 1) * n);
+				double p = pow(2, st - 1) * n;
 
-				float re0 = re[index1];
-				float im0 = im[index1];
-				float re1 = re[index2];
-				float im1 = im[index2];
-				float re2 = cos(2.0f * PI * p / num);
-				float im2 = sin(2.0f * PI * p / num);
+				double re0 = re[index1];
+				double im0 = im[index1];
+				double re1 = re[index2];
+				double im1 = im[index2];
+				double re2 = std::cos(2.0 * PI * p / num);
+				double im2 = std::sin(2.0 * PI * p / num);
 
 				re[index1] = re0 + re1;
 				im[index1] = im0 + im1;
@@ -169,8 +182,8 @@ std::vector<float> help::IFFT(const std::vector<float>& real, std::vector<float>
 				}
 			}
 
-			unsigned int m = static_cast<unsigned int>(pow(2, st - 1) + i);
-			index[m] = index[i] + static_cast<unsigned int>(pow(2, stage - st));
+			unsigned int m = static_cast<unsigned int>(std::pow(2, st - 1) + i);
+			index[m] = index[i] + static_cast<unsigned int>(std::pow(2, stage - st));
 		}
 	}
 
@@ -178,8 +191,8 @@ std::vector<float> help::IFFT(const std::vector<float>& real, std::vector<float>
 	{
 		if (index[n] > n)
 		{
-			float r = re[index[n]];
-			float i = im[index[n]];
+			double r = re[index[n]];
+			double i = im[index[n]];
 			re[index[n]] = re[n];
 			im[index[n]] = im[n];
 			re[n] = r;
@@ -189,7 +202,7 @@ std::vector<float> help::IFFT(const std::vector<float>& real, std::vector<float>
 		im[n] /= num;
 	}
 
-	return std::vector<float>(&re[0], &re[outNum]);
+	return std::vector<double>(&re[0], &re[outNum - 1]);
 }
 
 // ユニコード文字に変換

@@ -15,19 +15,7 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 	auto winSize = help::GetDisplayResolution();
 	Application app(winSize);
 
-	const float PI = 3.14159265f;
-
-	auto haninng = [&](const unsigned int& i, const unsigned int& num)->float {
-		float tmp = 0.0f;
-
-		tmp = (num % 2 == 0) ?
-			//偶数
-			0.5f - 0.5f * cos(2.0f * PI * i / num) :
-			//奇数
-			0.5f - 0.5f * cos(2.0f * PI * (i + 0.5f) / num);
-
-		return tmp;
-	};
+	const double PI = 3.14159265;
 
 	snd::Info info{};
 	info.channel = 1;
@@ -37,24 +25,36 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 	info.data.resize(64);
 	for (unsigned int i = 0; i < 64; ++i)
 	{
-		info.data[i] = 0.25f * sin(2.0f * PI * 250.0f * i / info.sample);
 		/*info.data[i] = 2.0f * sin(4.0f * (2.0f * PI / info.data.size()) * i)
 			+ 3.0f * cos(2.0f * (2.0f * PI / info.data.size()) * i);*/
 	}
 	std::vector<float>real;
 	std::vector<float>imag;
-	help::DFT(info.data, real, imag);
-	for (unsigned int i = 0; i < real.size(); ++i)
+	std::vector<float>s(64);
+	for (unsigned int i = 0; i < s.size(); ++i)
 	{
-		float a = sqrt(real[i] * real[i] + imag[i] * imag[i]);
-		float b = atan(imag[i] / real[i]);
+		s[i] = 0.25 * sin(2.0 * PI * 250.0 * i / 8000.0);
+	}
+	DFT dft(s.size());
+	dft.Execution(s, real, imag);
+	for (unsigned int i = 0; i < info.data.size(); ++i)
+	{
+		double a = sqrt(real[i] * real[i] + imag[i] * imag[i]);
+		double b = atan(imag[i] / real[i]);
+		printf("%d：%f：%f：%f：%f\n", i, real[i], imag[i], a, b);
+	}
+	/*help::DFT(s, real, imag);
+	for (unsigned int i = 0; i < info.data.size(); ++i)
+	{
+		double a = sqrt(real[i] * real[i] + imag[i] * imag[i]);
+		double b = atan(imag[i] / real[i]);
 		printf("%d：%f：%f：%f：%f\n", i, real[i], imag[i], a, b);
 	}
 	auto tmp = help::IDFT(real, imag);
-	for (unsigned int i = 0; i < real.size(); ++i)
+	for (unsigned int i = 0; i < tmp.size(); ++i)
 	{
-		printf("%d：%f：%f\n", i, info.data[i], tmp[i]);
-	}
+		printf("%d：%f：%f\n", i, s[i], tmp[i]);
+	}*/
 
 	int n = 0;
 	app.LoadTex(n, "handle.png");
