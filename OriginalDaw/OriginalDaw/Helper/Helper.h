@@ -10,6 +10,21 @@ namespace help {
 	// ラジアン変換
 	float Radian(const float& i);
 
+	// ハニング窓
+	float Haninng(const unsigned int& i, const unsigned int& num);
+
+	// 離散フーリエ変換
+	void DFT(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag);
+
+	// 逆離散フーリエ変換
+	std::vector<float> IDFT(const std::vector<float>& real, const std::vector<float>& imag);
+
+	// 高速フーリエ変換
+	void FFT(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag);
+
+	// 逆高速フーリエ変換
+	std::vector<float> IFFT(const std::vector<float>& real, std::vector<float>& imag, const unsigned int& outNum);
+
 	// ユニコード文字に変換
 	std::wstring ChangeWString(const std::string& st);
 

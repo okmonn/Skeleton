@@ -56,20 +56,20 @@ void DFT(uint id)
 
     for (uint i = 0; i < size.x; ++i)
     {
-        float re = cos(2.0f * PI * id * i / size.x);
+        float re =  cos(2.0f * PI * id * i / size.x);
         float im = -sin(2.0f * PI * id * i / size.x);
 
         real[id] += re * input[i] * Haninng(i, size.x);
         imag[id] += im * input[i] * Haninng(i, size.x);
     }
 
-    real[id] = trunc(real[id]);
-    imag[id] = trunc(imag[id]);
+    real[id] = round(real[id]);
+    imag[id] = round(imag[id]);
 
-    real[id] = lerp(real[id], 0.0f,
-                    step(true, real[id] == -0.0f));
-    imag[id] = lerp(imag[id], 0.0f,
-                    step(true, imag[id] == -0.0f));
+    //real[id] = lerp(real[id], 0.0f,
+    //                step(true, real[id] == -0.0f));
+    //imag[id] = lerp(imag[id], 0.0f,
+    //                step(true, imag[id] == -0.0f));
 }
 
 [RootSignature(RS)]

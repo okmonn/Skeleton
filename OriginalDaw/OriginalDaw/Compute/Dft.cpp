@@ -41,8 +41,8 @@ void DFT::Init(const size_t & num)
 void DFT::Execution(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag)
 {
 	Copy("input", input);
-	Copy("real",  real);
-	Copy("imag",  imag);
+	Reset("real");
+	Reset("imag");
 
 	list->Reset();
 
