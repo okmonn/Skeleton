@@ -13,48 +13,15 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 {
 	auto& i = Input::Get();
 	auto winSize = help::GetDisplayResolution();
-	Application app(winSize);
+	Application app(200);
 
-	const double PI = 3.14159265;
-
-	snd::Info info{};
-	info.channel = 1;
-	info.sample  = 8000;
-	info.bit     = 8;
-	info.data.resize(info.sample * help::Byte(info.bit) * info.channel);
-	info.data.resize(64);
-	for (unsigned int i = 0; i < 64; ++i)
-	{
-		/*info.data[i] = 2.0f * sin(4.0f * (2.0f * PI / info.data.size()) * i)
-			+ 3.0f * cos(2.0f * (2.0f * PI / info.data.size()) * i);*/
-	}
 	std::vector<float>real;
 	std::vector<float>imag;
 	std::vector<float>s(64);
-	for (unsigned int i = 0; i < s.size(); ++i)
+	for (UINT i = 0; i < s.size(); ++i)
 	{
-		s[i] = 0.25 * sin(2.0 * PI * 250.0 * i / 8000.0);
+		s[i] = 0.25f * sin(2.0f * 3.14159265f * 250.0f * i / 8000.0f);
 	}
-	DFT dft(s.size());
-	dft.Execution(s, real, imag);
-	for (unsigned int i = 0; i < info.data.size(); ++i)
-	{
-		double a = sqrt(real[i] * real[i] + imag[i] * imag[i]);
-		double b = atan(imag[i] / real[i]);
-		printf("%d：%f：%f：%f：%f\n", i, real[i], imag[i], a, b);
-	}
-	/*help::DFT(s, real, imag);
-	for (unsigned int i = 0; i < info.data.size(); ++i)
-	{
-		double a = sqrt(real[i] * real[i] + imag[i] * imag[i]);
-		double b = atan(imag[i] / real[i]);
-		printf("%d：%f：%f：%f：%f\n", i, real[i], imag[i], a, b);
-	}
-	auto tmp = help::IDFT(real, imag);
-	for (unsigned int i = 0; i < tmp.size(); ++i)
-	{
-		printf("%d：%f：%f\n", i, s[i], tmp[i]);
-	}*/
 
 	int n = 0;
 	app.LoadTex(n, "handle.png");

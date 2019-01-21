@@ -43,12 +43,6 @@ long __stdcall Window::WindowProc(void* hWnd, unsigned int message, long wParam,
 {
 	switch (message)
 	{
-	case WM_CREATE:
-		break;
-
-	case WM_PAINT:
-		break;
-
 	case WM_DESTROY:
 		if (GetParent(reinterpret_cast<HWND>(hWnd)) != nullptr)
 		{
@@ -56,6 +50,23 @@ long __stdcall Window::WindowProc(void* hWnd, unsigned int message, long wParam,
 		}
 		PostQuitMessage(0);
 		return 0;
+	case WM_DROPFILES:
+		unsigned int fileNum = DragQueryFile(reinterpret_cast<HDROP>(wParam), -1, nullptr, 0);
+		if (fileNum > 1)
+		{
+			break;
+		}
+
+		//ファイルパス名のサイズ
+		unsigned int size = DragQueryFile(reinterpret_cast<HDROP>(wParam), 0, nullptr, 0);
+		HDROP drop = reinterpret_cast<HDROP>(wParam);
+		std::wstring name;
+		name.resize(size);
+		//ファイルパスの取得
+		DragQueryFile(drop, 0, &name[0], sizeof(name[0]) * size);
+
+		//if(name.find_last_of())
+		break;
 	}
 
 	return static_cast<long>(DefWindowProc(reinterpret_cast<HWND>(hWnd), message, wParam, lParam));
@@ -90,7 +101,7 @@ void Window::Create(void * parent)
 
 	size = { static_cast<int>(rect.right), static_cast<int>(rect.bottom) };
 
-	handle = CreateWindow(wnd.lpszClassName, _T("おかもん"), flag, CW_USEDEFAULT, CW_USEDEFAULT,
+	handle = CreateWindowEx(WS_EX_ACCEPTFILES, wnd.lpszClassName, _T("おかもん"), flag, CW_USEDEFAULT, CW_USEDEFAULT,
 		(rect.right - rect.left), (rect.bottom - rect.top), reinterpret_cast<HWND>(parent), nullptr, wnd.hInstance, nullptr);
 	if (handle == nullptr)
 	{

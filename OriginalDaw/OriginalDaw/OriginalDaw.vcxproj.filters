@@ -343,9 +343,6 @@
     <FxCompile Include="Shader\Effector.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
-    <FxCompile Include="Shader\Fourier.hlsl">
-      <Filter>リソース ファイル</Filter>
-    </FxCompile>
     <FxCompile Include="Shader\DFT.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>

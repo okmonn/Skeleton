@@ -7,7 +7,7 @@
 #include "../Queue/Queue.h"
 #include "../List/List.h"
 #include "../Fence/Fence.h"
-#include <d3d12.h>
+#include "../etc/Release.h"
 
 #define RSC_MAX 3
 
@@ -37,6 +37,12 @@ void Effector::Init(const size_t & num)
 // 実行
 void Effector::Execution(std::vector<float> & data)
 {
+	if (data.size() > D3D12_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION)
+	{
+		OutputDebugString(_T("\n最大スレッド数を超えています\n"));
+		return;
+	}
+
 	Copy("input", data);
 
 	list->Reset();

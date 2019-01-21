@@ -49,10 +49,9 @@ void help::DFT(const std::vector<double>& input, std::vector<double>& real, std:
 
 			real[i] += re * input[n];
 			imag[i] += im * input[n];
+			//real[i] += re * input[n] * Haninng(n, real.size());
+			//imag[i] += im * input[n] * Haninng(n, imag.size());
 		}
-
-		/*real[i] = std::round(real[i]);
-		imag[i] = std::round(imag[i]);*/
 	}
 }
 
@@ -72,6 +71,7 @@ std::vector<double> help::IDFT(const std::vector<double>& real, const std::vecto
 		}
 
 		output[i] /= real.size();
+		//output[i] /= real.size() * Haninng(i, output.size());
 	}
 
 	return output;
