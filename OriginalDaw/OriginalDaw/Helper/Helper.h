@@ -31,6 +31,9 @@ namespace help {
 	// ユニコード文字に変換
 	std::wstring ChangeWString(const std::string& st);
 
+	// マルチバイト文字に変換
+	std::string ChangeString(const std::wstring& st);
+
 	// 文字列の検索
 	bool CheckChar(const std::string& find, const unsigned char* data, const size_t& num);
 

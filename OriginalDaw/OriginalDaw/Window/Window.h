@@ -1,6 +1,6 @@
 #pragma once
-#include "../etc/tstring.h"
 #include "../etc/Vector2.h"
+#include "../etc/tstring.h"
 
 struct ID3D12DescriptorHeap;
 struct ID3D12Resource;
@@ -14,7 +14,7 @@ public:
 	~Window();
 
 	// タイトル名の変更
-	void ChangeTitle(const std::tstring& title);
+	void ChangeTitle(const std::string& title);
 
 	// ウィンドウハンドルの取得
 	void* Get(void) const {
@@ -24,6 +24,8 @@ public:
 	Vec2 GetSize(void) const {
 		return size;
 	}
+	//ドロップしたファイルパスの取得
+	std::string GetDropFilePath(void);
 	// ヒープの取得
 	ID3D12DescriptorHeap* GetHeap(void);
 	// リソースの取得
@@ -58,4 +60,7 @@ private:
 
 	// 定数バッファID
 	int constant;
+
+	// ドロップされたファイルパス
+	static std::tstring dropFilePath;
 };

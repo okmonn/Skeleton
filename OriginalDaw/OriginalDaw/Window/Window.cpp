@@ -1,9 +1,16 @@
 #include "Window.h"
 #include "../DescriptorMane/DescriptorMane.h"
 #include "Icon.h"
+#include "../Helper/Helper.h"
 #include "../etc/Release.h"
 #include <Windows.h>
 #include <DirectXMath.h>
+
+#ifdef _UNICODE
+std::tstring Window::dropFilePath = L"";
+#else
+std::tstring Window::dropFilePath = "";
+#endif
 
 // リソース数
 #define RSC_MAX 1
@@ -25,9 +32,13 @@ Window::~Window()
 }
 
 // タイトル名の変更
-void Window::ChangeTitle(const std::tstring & title)
+void Window::ChangeTitle(const std::string & title)
 {
+#ifdef _UNICODE
+	auto hr = SetWindowText(reinterpret_cast<HWND>(handle), help::ChangeWString(title).c_str());
+#else
 	auto hr = SetWindowText(reinterpret_cast<HWND>(handle), title.c_str());
+#endif
 	if (hr == 0)
 	{
 		OutputDebugString(_T("\nタイトル名の変更：失敗\n"));
@@ -41,6 +52,10 @@ long __stdcall Window::WindowProc(void * hWnd, unsigned int message, unsigned __
 long __stdcall Window::WindowProc(void* hWnd, unsigned int message, long wParam, long lParam)
 #endif
 {
+	unsigned int fileNum = 0;
+	unsigned int size = 0;
+	HDROP drop = nullptr;
+
 	switch (message)
 	{
 	case WM_DESTROY:
@@ -51,21 +66,20 @@ long __stdcall Window::WindowProc(void* hWnd, unsigned int message, long wParam,
 		PostQuitMessage(0);
 		return 0;
 	case WM_DROPFILES:
-		unsigned int fileNum = DragQueryFile(reinterpret_cast<HDROP>(wParam), -1, nullptr, 0);
+		fileNum = DragQueryFile(reinterpret_cast<HDROP>(wParam), -1, nullptr, 0);
 		if (fileNum > 1)
 		{
 			break;
 		}
 
 		//ファイルパス名のサイズ
-		unsigned int size = DragQueryFile(reinterpret_cast<HDROP>(wParam), 0, nullptr, 0);
-		HDROP drop = reinterpret_cast<HDROP>(wParam);
-		std::wstring name;
-		name.resize(size);
+		size = DragQueryFile(reinterpret_cast<HDROP>(wParam), 0, nullptr, 0);
+		drop = reinterpret_cast<HDROP>(wParam);
+		dropFilePath.resize(size);
 		//ファイルパスの取得
-		DragQueryFile(drop, 0, &name[0], sizeof(name[0]) * size);
-
-		//if(name.find_last_of())
+		DragQueryFile(drop, 0, &dropFilePath[0], sizeof(dropFilePath[0]) * size);
+		break;
+	default:
 		break;
 	}
 
@@ -156,6 +170,19 @@ void Window::ConstantBuffer(void)
 	memcpy(data, &winSize, sizeof(DirectX::XMFLOAT2));
 
 	DescriptorMane::Get().GetRsc(constant)->Unmap(0, nullptr);
+}
+
+//ドロップしたファイルパスの取得
+std::string Window::GetDropFilePath(void)
+{
+	std::tstring tmp = dropFilePath;
+	dropFilePath.clear();
+
+#ifdef _UNICODE
+	return help::ChangeString(tmp);
+#else
+	return tmp;
+#endif
 }
 
 // ヒープの取得

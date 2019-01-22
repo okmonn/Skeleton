@@ -1,5 +1,6 @@
 #include "Helper.h"
 #include <Windows.h>
+#include <algorithm>
 
 // 円周率
 #define PI 3.14159265
@@ -130,12 +131,8 @@ void help::FFT(const std::vector<double>& input, std::vector<double>& real, std:
 	{
 		if (index[i] > i)
 		{
-			double re = real[index[i]];
-			double im = imag[index[i]];
-			real[index[i]] = real[i];
-			imag[index[i]] = imag[i];
-			real[i] = re;
-			imag[i] = im;
+			std::swap(real[index[i]], real[i]);
+			std::swap(imag[index[i]], imag[i]);
 		}
 	}
 }
@@ -191,12 +188,8 @@ std::vector<double> help::IFFT(const std::vector<double>& real, std::vector<doub
 	{
 		if (index[n] > n)
 		{
-			double r = re[index[n]];
-			double i = im[index[n]];
-			re[index[n]] = re[n];
-			im[index[n]] = im[n];
-			re[n] = r;
-			im[n] = i;
+			std::swap(re[index[n]], re[n]);
+			std::swap(im[index[n]], im[n]);
 		}
 		re[n] /= num;
 		im[n] /= num;
@@ -218,6 +211,20 @@ std::wstring help::ChangeWString(const std::string & st)
 	byteSize = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED | MB_ERR_INVALID_CHARS, st.c_str(), -1, &wstr[0], byteSize);
 
 	return wstr;
+}
+
+// マルチバイト文字に変換
+std::string help::ChangeString(const std::wstring & st)
+{
+	//文字数の取得
+	auto byteSize = WideCharToMultiByte(CP_ACP, 0, st.c_str(), -1, nullptr, 0, nullptr, nullptr);
+	std::string str;
+	str.resize(byteSize);
+
+	//変換
+	byteSize = WideCharToMultiByte(CP_ACP, 0, st.c_str(), st.size(), &str[0], byteSize, nullptr, nullptr);
+
+	return str;
 }
 
 // 文字列の検索

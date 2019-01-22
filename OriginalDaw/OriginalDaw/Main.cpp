@@ -15,13 +15,8 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 	auto winSize = help::GetDisplayResolution();
 	Application app(200);
 
-	std::vector<float>real;
-	std::vector<float>imag;
-	std::vector<float>s(64);
-	for (UINT i = 0; i < s.size(); ++i)
-	{
-		s[i] = 0.25f * sin(2.0f * 3.14159265f * 250.0f * i / 8000.0f);
-	}
+	Sound s("mtgx.wav");
+	s.Play(false);
 
 	int n = 0;
 	app.LoadTex(n, "handle.png");
