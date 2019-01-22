@@ -32,6 +32,12 @@ int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int
 		{
 			++angle;
 		}
+		if (i.Triger(INPUT_SPACE))
+		{
+			s.Stop();
+			s.Load("test.wav");
+			s.Play(false);
+		}
 	}
 
 	return 0;

@@ -242,6 +242,18 @@ void Sound::StreamFile(void)
 		effe->Execution(data[index]);
 		filter->Execution(data[index]);
 
+		for (int i = 0; i < data[index].size(); ++i)
+		{
+			for (int loop = 1; loop <= 2; ++loop)
+			{
+				int m = i - loop * 44100 * 0.375f;
+				if (m >= 0)
+				{
+					data[index][i] += pow(0.5f, (float)loop) * SndLoader::Get().GetSnd(name).data->at(m);
+				}
+			}
+		}
+
 		XAUDIO2_BUFFER buf{};
 		buf.AudioBytes = static_cast<unsigned int>(sizeof(float) * data[index].size());
 		buf.pAudioData = (unsigned char*)(data[index].data());
