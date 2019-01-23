@@ -203,3 +203,17 @@ void Application::DeleteTex(int & addr)
 {
 	texture->Delete(addr);
 }
+
+// I—¹
+void Application::End(void)
+{
+	texture.reset();
+	primitive.reset();
+	depth.reset();
+	render.reset();
+	swap.reset();
+	fence.reset();
+	list.reset();
+	queue.reset();
+	win.reset();
+}

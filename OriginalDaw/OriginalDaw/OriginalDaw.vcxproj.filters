@@ -121,6 +121,9 @@
     <Filter Include="Main\Mixer">
       <UniqueIdentifier>{855f7ed6-c830-40b8-a39c-91aff4522334}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main\Waveform">
+      <UniqueIdentifier>{96f8efb3-aba0-4cf4-8bd6-3557edbe87ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -218,6 +221,9 @@
     </ClCompile>
     <ClCompile Include="Mixer\Mixer.cpp">
       <Filter>Main\Mixer</Filter>
+    </ClCompile>
+    <ClCompile Include="Waveform\Waveform.cpp">
+      <Filter>Main\Waveform</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -340,6 +346,9 @@
     </ClInclude>
     <ClInclude Include="Mixer\Mixer.h">
       <Filter>Main\Mixer</Filter>
+    </ClInclude>
+    <ClInclude Include="Waveform\Waveform.h">
+      <Filter>Main\Waveform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

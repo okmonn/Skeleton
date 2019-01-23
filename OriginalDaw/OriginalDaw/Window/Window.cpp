@@ -29,6 +29,7 @@ Window::~Window()
 	DescriptorMane::Get().DeleteRsc(constant);
 	DescriptorMane::Get().DeleteHeap(constant);
 	UnregisterClass(name, static_cast<HINSTANCE>(instance));
+	DestroyWindow(reinterpret_cast<HWND>(handle));
 }
 
 // タイトル名の変更

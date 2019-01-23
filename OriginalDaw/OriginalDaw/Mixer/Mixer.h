@@ -5,6 +5,7 @@
 
 class Application;
 class Sound;
+class Waveform;
 
 class Mixer
 {
@@ -27,12 +28,18 @@ private:
 	// 処理
 	void UpData(void);
 
+	// サウンドの波形周波数の描画
+	void DrawWave(void);
+
 
 	// アプリケーション
 	std::shared_ptr<Application>app;
 	
 	// サウンド
 	std::shared_ptr<Sound>sound;
+
+	// 波形
+	std::unique_ptr<Waveform>wave;
 
 	// 再生フラグ
 	bool playFlag;

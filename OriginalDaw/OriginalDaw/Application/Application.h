@@ -65,6 +65,9 @@ public:
 	// 画像の削除
 	void DeleteTex(int& addr);
 
+	// 終了
+	void End(void);
+
 private:
 	// コンストラクタ
 	Application(const Application&) = delete;

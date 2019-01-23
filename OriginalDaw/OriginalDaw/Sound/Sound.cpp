@@ -13,7 +13,7 @@
 #define BUFFER 2
 
 // オフセット
-#define OFFSET 10
+#define OFFSET 100
 
 // スピーカー設定用配列
 const unsigned long spk[] = {

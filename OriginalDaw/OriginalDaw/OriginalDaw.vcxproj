@@ -150,6 +150,7 @@
     <ClCompile Include="Texture\TexMane.cpp" />
     <ClCompile Include="Texture\Texture.cpp" />
     <ClCompile Include="Texture\WICTextureLoader12.cpp" />
+    <ClCompile Include="Waveform\Waveform.cpp" />
     <ClCompile Include="Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -191,6 +192,7 @@
     <ClInclude Include="Texture\Texture.h" />
     <ClInclude Include="Texture\TextureInfo.h" />
     <ClInclude Include="Texture\WICTextureLoader12.h" />
+    <ClInclude Include="Waveform\Waveform.h" />
     <ClInclude Include="Window\Icon.h" />
     <ClInclude Include="Window\Window.h" />
   </ItemGroup>
