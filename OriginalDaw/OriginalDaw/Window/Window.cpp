@@ -93,9 +93,9 @@ void Window::Create(void * parent)
 	wnd.cbClsExtra    = 0;
 	wnd.cbSize        = sizeof(WNDCLASSEX);
 	wnd.cbWndExtra    = 0;
-	wnd.hbrBackground = CreateSolidBrush(0x000000);
+	wnd.hbrBackground = CreateSolidBrush(COLOR_APPWORKSPACE);
 	wnd.hCursor       = LoadCursor(nullptr, IDC_ARROW);
-	wnd.hIcon         = LoadIcon(nullptr, MAKEINTRESOURCE(ICON_ID));
+	wnd.hIcon         = LoadIcon(GetModuleHandle(0), MAKEINTRESOURCE(ICON_ID));
 	wnd.hIconSm       = LoadIcon(GetModuleHandle(0), MAKEINTRESOURCE(ICON_ID));
 	wnd.hInstance     = GetModuleHandle(0);
 	wnd.lpfnWndProc   = reinterpret_cast<WNDPROC>(WindowProc);
@@ -104,16 +104,16 @@ void Window::Create(void * parent)
 	wnd.style         = CS_HREDRAW | CS_VREDRAW;
 	RegisterClassEx(&wnd);
 
-	auto flag = (parent == nullptr) ? (WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN) : (WS_OVERLAPPEDWINDOW | WS_CHILD);
+	auto flag = (parent == nullptr)
+		? (WS_OVERLAPPEDWINDOW/* | WS_CLIPCHILDREN*/)
+		: (WS_OVERLAPPEDWINDOW | WS_POPUP/*| WS_CHILD*/);
 
 	RECT rect{};
 	rect.bottom = static_cast<long>(size.y);
 	rect.left   = 0;
 	rect.right  = static_cast<long>(size.x);
 	rect.top    = 0;
-	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
-
-	size = { static_cast<int>(rect.right), static_cast<int>(rect.bottom) };
+	AdjustWindowRect(&rect, flag, false);
 
 	handle = CreateWindowEx(WS_EX_ACCEPTFILES, wnd.lpszClassName, _T("‚¨‚©‚à‚ñ"), flag, CW_USEDEFAULT, CW_USEDEFAULT,
 		(rect.right - rect.left), (rect.bottom - rect.top), reinterpret_cast<HWND>(parent), nullptr, wnd.hInstance, nullptr);

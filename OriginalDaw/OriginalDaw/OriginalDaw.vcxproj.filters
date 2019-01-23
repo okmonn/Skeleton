@@ -118,6 +118,9 @@
     <Filter Include="Library\Compute\DFT">
       <UniqueIdentifier>{a54f2f0b-fcd4-4021-ac62-634fd954a67d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main\Mixer">
+      <UniqueIdentifier>{855f7ed6-c830-40b8-a39c-91aff4522334}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -212,6 +215,9 @@
     </ClCompile>
     <ClCompile Include="Compute\Dft.cpp">
       <Filter>Library\Compute\DFT</Filter>
+    </ClCompile>
+    <ClCompile Include="Mixer\Mixer.cpp">
+      <Filter>Main\Mixer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -331,6 +337,9 @@
     </ClInclude>
     <ClInclude Include="Compute\Dft.h">
       <Filter>Library\Compute\DFT</Filter>
+    </ClInclude>
+    <ClInclude Include="Mixer\Mixer.h">
+      <Filter>Main\Mixer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

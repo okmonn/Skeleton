@@ -28,6 +28,12 @@ public:
 	// ウィンドウサイズの取得
 	Vec2 GetWinSize(void);
 
+	// マウスのクライアント座標の取得
+	Vec2 GetMousePos(void);
+
+	// ドロップされたファイルのパス取得
+	std::string GetDropFilePath(void);
+
 	// メッセージの確認
 	bool CheckMsg(void);
 
