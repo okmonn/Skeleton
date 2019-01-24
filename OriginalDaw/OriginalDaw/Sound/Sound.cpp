@@ -242,18 +242,6 @@ void Sound::StreamFile(void)
 		effe->Execution(data[index]);
 		filter->Execution(data[index]);
 
-		for (int i = 0; i < data[index].size(); ++i)
-		{
-			for (int loop = 1; loop <= 2; ++loop)
-			{
-				int m = i - loop * 44100 * 0.375f;
-				if (m >= 0)
-				{
-					data[index][i] += pow(0.5f, (float)loop) * SndLoader::Get().GetSnd(name).data->at(m);
-				}
-			}
-		}
-
 		XAUDIO2_BUFFER buf{};
 		buf.AudioBytes = static_cast<unsigned int>(sizeof(float) * data[index].size());
 		buf.pAudioData = (unsigned char*)(data[index].data());
@@ -266,7 +254,7 @@ void Sound::StreamFile(void)
 
 		index = (index + 1 >= BUFFER) ? 0 : ++index;
 		read += size;
-		if (read + 1 >= SndLoader::Get().GetSnd(name).data->size() / help::Byte(copy.bit))
+		if (read + 1 >= SndLoader::Get().GetSnd(name).data->size())
 		{
 			if (loop == false)
 			{
@@ -293,9 +281,9 @@ void Sound::StreamInfo(void)
 
 		unsigned int bps = copy.sample * help::Byte(copy.bit) * copy.channel / OFFSET;
 
-		size = (copy.data.size() - read - 1> bps) ?
-			bps : copy.data.size() - read - 1;
-		data[index].assign(&copy.data[read], &copy.data[read + size]);
+		/*size = (copy.data.size() - read - 1> bps) ?
+			bps : copy.data.size() - read - 1;*/
+		data[index].assign(&copy.data[read], &copy.data[read + bps]);
 
 		effe->Copy("param", param);
 		effe->Execution(data[index]);
