@@ -10,9 +10,11 @@ namespace prm {
 		//色
 		DirectX::XMFLOAT4 color;
 	};
+
 	// タイプ
-	enum class PrimitiveType {
-		point = 1,
+	enum class PrimitiveType
+	{
+		point, 
 		line,
 		triangle
 	};

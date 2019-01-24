@@ -6,21 +6,11 @@
 #include "../Pipe/Pipe.h"
 #include "../etc/Release.h"
 
-// トポロジー
-const D3D12_PRIMITIVE_TOPOLOGY topology[] = {
-	D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_UNDEFINED,
-	D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_POINTLIST,
-	D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_LINELIST,
-	D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST
-};
-
 // コンストラクタ
-Primitive::Primitive(std::weak_ptr<Window> win, std::weak_ptr<Root> root, std::weak_ptr<Pipe> pipe, const prm::PrimitiveType & type) : 
-	win(win), root(root), pipe(pipe), type(type), rsc(0)
+Primitive::Primitive(std::weak_ptr<Window> win, std::weak_ptr<Root> root, std::weak_ptr<Pipe> pipe, const size_t & num) : 
+	win(win), root(root), pipe(pipe), rsc(0)
 {
-	vertex.clear();
-
-	VertexBuffer();
+	VertexBuffer(num);
 }
 
 // デストラクタ
@@ -30,7 +20,7 @@ Primitive::~Primitive()
 }
 
 // 頂点バッファの生成
-void Primitive::VertexBuffer(void)
+void Primitive::VertexBuffer(const size_t & num)
 {
 	D3D12_HEAP_PROPERTIES prop{};
 	prop.CPUPageProperty      = D3D12_CPU_PAGE_PROPERTY::D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
@@ -49,13 +39,13 @@ void Primitive::VertexBuffer(void)
 	desc.Layout           = D3D12_TEXTURE_LAYOUT::D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	desc.MipLevels        = 1;
 	desc.SampleDesc       = { 1, 0 };
-	desc.Width            = sizeof(prm::Vertex) * static_cast<size_t>(type);
+	desc.Width            = sizeof(prm::Vertex) * num;
 
 	DescriptorMane::Get().CreateRsc(rsc, prop, desc, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_GENERIC_READ);
 }
 
 // マップ
-long Primitive::Map(void)
+long Primitive::Map(const std::vector<prm::Vertex> & vertex)
 {
 	void* data = nullptr;
 
@@ -74,10 +64,9 @@ long Primitive::Map(void)
 }
 
 // 描画
-void Primitive::Draw(std::weak_ptr<List> list, const prm::Vertex * vertex, const size_t & num)
+void Primitive::Draw(std::weak_ptr<List> list, const std::vector<prm::Vertex> & vertex, const D3D_PRIMITIVE_TOPOLOGY & type)
 {
-	this->vertex.assign(vertex, vertex + num);
-	Map();
+	Map(vertex);
 
 	list.lock()->SetRoot(root.lock()->Get());
 	list.lock()->SetPipe(pipe.lock()->Get());
@@ -92,7 +81,7 @@ void Primitive::Draw(std::weak_ptr<List> list, const prm::Vertex * vertex, const
 	list.lock()->SetHeap(&heap, 1);
 	list.lock()->SetRootTable(0, heap);
 
-	list.lock()->SetTopology(topology[static_cast<int>(type)]);
+	list.lock()->SetTopology(type);
 
-	list.lock()->DrawVertex(this->vertex.size());
+	list.lock()->DrawVertex(vertex.size());
 }

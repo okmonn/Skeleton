@@ -40,11 +40,20 @@ public:
 	// ポイントの描画
 	void DrawPoint(const Vec2f& pos, const Color& color);
 
+	// ポイントの複数描画
+	void DrawMultiPoint(const std::vector<Vec2f>& pos, const Color& color);
+
 	// ラインの描画
 	void DrawLine(const Vec2f& pos1, const Vec2f& pos2, const Color& color);
 
+	// ラインの複数描画
+	void DrawMultiLine(const std::vector<Vec2f>& pos1, const std::vector<Vec2f>& pos2,const Color& color);
+
 	// トライアングルの描画
 	void DrawTriangle(const Vec2f& pos1, const Vec2f& pos2, const Vec2f& pos3, const Color& color);
+
+	// トライアングルの複数描画
+	void DrawMultiTriangle(const std::vector<Vec2f>& pos1, const std::vector<Vec2f>& pos2, const std::vector<Vec2f>& pos3, const Color& color);
 
 	// ボックスの描画
 	void DrawBox(const Vec2f& pos, const Vec2f& size, const Color& color);

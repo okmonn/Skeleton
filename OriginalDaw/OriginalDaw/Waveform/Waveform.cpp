@@ -1,5 +1,6 @@
 #include "Waveform.h"
 #include "../Application/Application.h"
+#include <algorithm>
 
 // ウィンドウサイズ
 const Vec2 winSize = { 200, 200 };
@@ -20,13 +21,24 @@ void Waveform::Draw()
 {
 	app->Clear();
 	auto data = sound.lock()->GetData();
-	float large = static_cast<float>(winSize.x) / static_cast<float>(sound.lock()->GetData().size());
-	for (unsigned int i = 0; i < data.size(); ++i)
-	{
-		Vec2f pos1 = { i * large, static_cast<float>(winSize.y / 2) };
-		Vec2f pos2 = { i * large, static_cast<float>(winSize.y / 2) - data[i] * 100 };
-		app->DrawLine(pos1, pos2, { 1.0f, 0.0f, 0.0f, 1.0f });
-	}
+	const float large = static_cast<float>(winSize.x) / static_cast<float>(sound.lock()->GetData().size());
+	std::vector<Vec2f>pos1(data.size());
+	std::vector<Vec2f>pos2(data.size());
+
+	unsigned int index = 0;
+	std::for_each(pos1.begin(), pos1.end(), [&](Vec2f& pos)->void {
+		pos = { large * index, static_cast<float>(winSize.y / 2) };
+		++index;
+	});
+
+	index = 0;
+	std::for_each(pos2.begin(), pos2.end(), [&](Vec2f& pos)->void {
+		pos = { large * index, static_cast<float>(winSize.y / 2) + data[index] * 100 };
+		++index;
+	});
+
+	app->DrawMultiLine(pos1, pos2, { 1.0f, 0.0f, 0.0f, 1.0f });
+
 	app->Execution();
 }
 

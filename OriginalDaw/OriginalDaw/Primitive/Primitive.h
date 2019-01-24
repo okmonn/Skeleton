@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 
+enum D3D_PRIMITIVE_TOPOLOGY : int;
 struct ID3D12Resource;
 class Window;
 class List;
@@ -13,19 +14,19 @@ class Primitive
 {
 public:
 	// コンストラクタ
-	Primitive(std::weak_ptr<Window>win, std::weak_ptr<Root>root, std::weak_ptr<Pipe>pipe, const prm::PrimitiveType& type);
+	Primitive(std::weak_ptr<Window>win, std::weak_ptr<Root>root, std::weak_ptr<Pipe>pipe, const size_t& num);
 	// デストラクタ
 	~Primitive();
 
 	// 描画
-	void Draw(std::weak_ptr<List>list, const prm::Vertex* vertex, const size_t& num);
+	void Draw(std::weak_ptr<List>list, const std::vector<prm::Vertex>& vertex, const D3D_PRIMITIVE_TOPOLOGY& type);
 
 protected:
 	// 頂点バッファの生成
-	void VertexBuffer(void);
+	void VertexBuffer(const size_t& num);
 
 	// マップ
-	long Map(void);
+	long Map(const std::vector<prm::Vertex>& vertex);
 
 
 	// ウィンドウ
@@ -37,12 +38,6 @@ protected:
 	// パイプ
 	std::weak_ptr<Pipe>pipe;
 
-	// プリミティブタイプ
-	prm::PrimitiveType type;
-
 	// リソースID
 	int rsc;
-
-	// 頂点データ
-	std::vector<prm::Vertex>vertex;
 };

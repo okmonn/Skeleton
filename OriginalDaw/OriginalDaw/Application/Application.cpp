@@ -11,6 +11,7 @@
 #include "../Primitive/PrimitiveMane.h"
 #include "../Texture/TexMane.h"
 #include <Windows.h>
+#include <algorithm>
 #include <d3d12.h>
 #include <dxgi1_6.h>
 
@@ -118,38 +119,80 @@ bool Application::CheckMsg(void)
 // ポイントの描画
 void Application::DrawPoint(const Vec2f & pos, const Color & color)
 {
-	prm::Vertex v[] = {
-		{ { pos.x, pos.y, 0.0f }, { color.r, color.g, color.b, color.a } },
-	};
-	primitive->Draw(list, prm::PrimitiveType::point, v, _countof(v));
+	std::vector<prm::Vertex>vertex;
+	vertex.push_back({ {pos.x, pos.y, 0.0f}, {color.r, color.g, color.b, color.a} });
+	primitive->Draw(list, vertex, prm::PrimitiveType::point, D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+}
+
+// ポイントの複数描画
+void Application::DrawMultiPoint(const std::vector<Vec2f>& pos, const Color & color)
+{
+	std::vector<prm::Vertex>vertex(pos.size());
+	unsigned int index = 0;
+	std::for_each(vertex.begin(), vertex.end(), [&](prm::Vertex& vertex)->void {
+		vertex = { {pos[index].x, pos[index].y, 0.0f}, {color.r, color.g, color.b, color.a} };
+		++index;
+	});
+	primitive->Draw(list, vertex, prm::PrimitiveType::point, D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 }
 
 // ラインの描画
 void Application::DrawLine(const Vec2f & pos1, const Vec2f & pos2, const Color & color)
 {
-	prm::Vertex v[] = {
-		{ { pos1.x, pos1.y, 0.0f }, { color.r, color.g, color.b, color.a } },
-		{ { pos2.x, pos2.y, 0.0f }, { color.r, color.g, color.b, color.a } },
-	};
-	primitive->Draw(list, prm::PrimitiveType::line, v, _countof(v));
+	std::vector<prm::Vertex>vertex;
+	vertex.push_back({ {pos1.x, pos1.y, 0.0f}, {color.r, color.g, color.b, color.a} });
+	vertex.push_back({ {pos2.x, pos2.y, 0.0f}, {color.r, color.g, color.b, color.a} });
+	primitive->Draw(list, vertex, prm::PrimitiveType::line, D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+}
+
+// ラインの複数描画
+void Application::DrawMultiLine(const std::vector<Vec2f>& pos1, const std::vector<Vec2f> & pos2, const Color & color)
+{
+	std::vector<prm::Vertex>vertex(pos1.size() + pos2.size());
+	unsigned int index = 0;
+	for (unsigned int i = 0; i < vertex.size(); i += 2)
+	{
+		vertex[i]     = { {pos1[index].x, pos1[index].y, 0.0f}, {color.r, color.g, color.b, color.a} };
+		vertex[i + 1] = { {pos2[index].x, pos2[index].y, 0.0f}, {color.r, color.g, color.b, color.a} };
+		++index;
+	}
+	primitive->Draw(list, vertex, prm::PrimitiveType::line, D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 }
 
 // トライアングルの描画
 void Application::DrawTriangle(const Vec2f & pos1, const Vec2f & pos2, const Vec2f & pos3, const Color & color)
 {
-	prm::Vertex v[] = {
-		{ { pos1.x, pos1.y, 0.0f }, { color.r, color.g, color.b, color.a } },
-		{ { pos2.x, pos2.y, 0.0f }, { color.r, color.g, color.b, color.a } },
-		{ { pos3.x, pos3.y, 0.0f }, { color.r, color.g, color.b, color.a } },
-	};
-	primitive->Draw(list, prm::PrimitiveType::triangle, v, _countof(v));
+	std::vector<prm::Vertex>vertex;
+	vertex.push_back({ {pos1.x, pos1.y, 0.0f}, {color.r, color.g, color.b, color.a} });
+	vertex.push_back({ {pos2.x, pos2.y, 0.0f}, {color.r, color.g, color.b, color.a} });
+	vertex.push_back({ {pos3.x, pos3.y, 0.0f}, {color.r, color.g, color.b, color.a} });
+	primitive->Draw(list, vertex, prm::PrimitiveType::triangle, D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+// トライアングルの複数描画
+void Application::DrawMultiTriangle(const std::vector<Vec2f> & pos1, const std::vector<Vec2f> & pos2, const std::vector<Vec2f> & pos3, const Color& color)
+{
+	std::vector<prm::Vertex>vertex(pos1.size() + pos2.size() + pos3.size());
+	unsigned int index = 0;
+	for (unsigned int i = 0; i < vertex.size(); i += 3)
+	{
+		vertex[i]     = { {pos1[index].x, pos1[index].y, 0.0f}, {color.r, color.g, color.b, color.a} };
+		vertex[i + 1] = { {pos2[index].x, pos2[index].y, 0.0f}, {color.r, color.g, color.b, color.a} };
+		vertex[i + 2] = { {pos3[index].x, pos3[index].y, 0.0f}, {color.r, color.g, color.b, color.a} };
+		++index;
+	}
+	primitive->Draw(list, vertex, prm::PrimitiveType::triangle, D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 // ボックスの描画
 void Application::DrawBox(const Vec2f & pos, const Vec2f & size, const Color & color)
 {
-	DrawTriangle(pos, { pos.x + size.x, pos.y }, { pos.x, pos.y + size.y }, color);
-	DrawTriangle({ pos.x + size.x, pos.y }, pos + size, { pos.x, pos.y + size.y }, color);
+	std::vector<prm::Vertex>vertex;
+	vertex.push_back({ {pos.x, pos.y, 0.0f},                   {color.r, color.g, color.b, color.a} });
+	vertex.push_back({ {pos.x + size.x, pos.y, 0.0f},          {color.r, color.g, color.b, color.a} });
+	vertex.push_back({ {pos.x, pos.y + size.y, 0.0f},          {color.r, color.g, color.b, color.a} });
+	vertex.push_back({ {pos.x + size.x, pos.y + size.y, 0.0f}, {color.r, color.g, color.b, color.a} });
+	primitive->Draw(list, vertex, prm::PrimitiveType::triangle, D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 }
 
 // 画像の読み込み

@@ -132,6 +132,7 @@
     <ClCompile Include="List\List.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mixer\Mixer.cpp" />
+    <ClCompile Include="Phase\Phase.cpp" />
     <ClCompile Include="Pipe\Pipe.cpp" />
     <ClCompile Include="Pipe\PipeMane.cpp" />
     <ClCompile Include="Primitive\Primitive.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="List\List.h" />
     <ClInclude Include="Mixer\Mixer.h" />
+    <ClInclude Include="Phase\Phase.h" />
     <ClInclude Include="Pipe\Pipe.h" />
     <ClInclude Include="Pipe\PipeMane.h" />
     <ClInclude Include="Primitive\Primitive.h" />

@@ -4,19 +4,13 @@
 class Application;
 class Sound;
 
-class Waveform
+class Phase
 {
 public:
 	// コンストラクタ
-	Waveform(std::weak_ptr<Application>app, std::weak_ptr<Sound>sound);
+	Phase(std::weak_ptr<Application>app, std::weak_ptr<Sound>sound);
 	// デストラクタ
-	~Waveform();
-
-	// 描画
-	void Draw();
-
-	// 処理
-	void UpData(void);
+	~Phase();
 
 private:
 	// アプリケーション
