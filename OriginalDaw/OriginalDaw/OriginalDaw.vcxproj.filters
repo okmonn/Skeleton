@@ -124,8 +124,8 @@
     <Filter Include="Main\Waveform">
       <UniqueIdentifier>{96f8efb3-aba0-4cf4-8bd6-3557edbe87ca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Main\Phase">
-      <UniqueIdentifier>{719a90fd-4c71-43f7-aa7a-a178560dc22d}</UniqueIdentifier>
+    <Filter Include="Main\Characteristic">
+      <UniqueIdentifier>{4020804c-98a0-4654-8dac-653838e86bbd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -228,8 +228,8 @@
     <ClCompile Include="Waveform\Waveform.cpp">
       <Filter>Main\Waveform</Filter>
     </ClCompile>
-    <ClCompile Include="Phase\Phase.cpp">
-      <Filter>Main\Phase</Filter>
+    <ClCompile Include="Characteristic\Characteristic.cpp">
+      <Filter>Main\Characteristic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -356,8 +356,8 @@
     <ClInclude Include="Waveform\Waveform.h">
       <Filter>Main\Waveform</Filter>
     </ClInclude>
-    <ClInclude Include="Phase\Phase.h">
-      <Filter>Main\Phase</Filter>
+    <ClInclude Include="Characteristic\Characteristic.h">
+      <Filter>Main\Characteristic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -28,13 +28,13 @@ public:
 	void CopyInfo(const snd::Info& info);
 
 	// ローパスフィルタ
-	void LowPass(const float& cutoff, const float& sample, const float& q = 1.0f / std::sqrtf(2.0f));
+	void LowPass(const float& cutoff, const float& q = 1.0f / std::sqrtf(2.0f));
 
 	// ハイパスフィルタ
-	void HightPass(const float& cutoff, const float& sample, const float& q = 1.0f / std::sqrtf(2.0f));
+	void HightPass(const float& cutoff, const float& q = 1.0f / std::sqrtf(2.0f));
 
 	// バンドパスフィルタ
-	void BandPass(const float& cutoff, const float& sample, const float& bw = 1.0f);
+	void BandPass(const float& cutoff, const float& bw = 1.0f);
 
 	// 再生
 	long Play(const bool& loop);
@@ -48,6 +48,14 @@ public:
 	// ループ開始位置に移動
 	void MoveLoopPos(void);
 
+	// ボリュームのセット
+	void SetVolume(const float& i) {
+		param.volume = i;
+	}
+	// サウンド情報の取得
+	snd::Info GetInfo(void) const {
+		return copy;
+	}
 	// 現在のサウンド情報の取得
 	std::vector<float> GetData(void) const {
 		return data[index];

@@ -173,3 +173,25 @@ void DescriptorMane::DeleteRsc(int & addr)
 		rsc.erase(rsc.find(&addr));
 	}
 }
+
+// ヒープの取得
+ID3D12DescriptorHeap * DescriptorMane::GetHeap(int & addr)
+{
+	if (heap.find(&addr) == heap.end())
+	{
+		return nullptr;
+	}
+
+	return heap[&addr];
+}
+
+// リソースの取得
+ID3D12Resource * DescriptorMane::GetRsc(int & addr)
+{
+	if (rsc.find(&addr) == rsc.end())
+	{
+		return nullptr;
+	}
+
+	return rsc[&addr];
+}

@@ -31,3 +31,14 @@ void RootMane::Delete(const std::string & name)
 		root.erase(root.find(name));
 	}
 }
+
+// ƒ‹[ƒg‚Ìæ“¾
+std::shared_ptr<Root> RootMane::GetRoot(const std::string & name)
+{
+	if (root.find(name) == root.end())
+	{
+		return nullptr;
+	}
+
+	return root[name];
+}

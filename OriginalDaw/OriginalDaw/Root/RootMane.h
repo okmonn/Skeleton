@@ -24,9 +24,7 @@ public:
 	void Delete(const std::string& name);
 
 	// ルートの取得
-	std::shared_ptr<Root> GetRoot(const std::string& name) {
-		return root[name];
-	}
+	std::shared_ptr<Root> GetRoot(const std::string& name);
 
 private:
 	// コンストラクタ

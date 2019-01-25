@@ -17,14 +17,26 @@ float help::Radian(const float & i)
 	return (i * 3.14159265f) / 180.0f;
 }
 
+// 任意の桁から切り捨て
+float help::Floor(const float & i, const int & num)
+{
+	float tmp = i;
+	tmp *= std::pow(10.0f, -num - 1);
+	tmp  = std::floor(tmp);
+	tmp *= std::pow(10.0f, num + 1);
+
+	return tmp;
+}
+
 // 任意の桁から四捨五入
 float help::Round(const float & i, const int & num)
 {
 	float tmp = i;
 	tmp *= std::pow(10.0f, -num - 1);
-	float hr = std::floor(tmp + 0.5f);
-	hr *= std::pow(10.0f, num + 1);
-	return hr;
+	tmp  = std::floor(tmp + 0.5f);
+	tmp *= std::pow(10.0f, num + 1);
+
+	return tmp;
 }
 
 // ハニング窓関数

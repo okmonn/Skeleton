@@ -10,6 +10,9 @@ namespace help {
 	// ƒ‰ƒWƒAƒ“•ÏŠ·
 	float Radian(const float& i);
 
+	// ”CˆÓ‚ÌŒ…‚©‚çØ‚èÌ‚Ä
+	float Floor(const float& i, const int& num);
+
 	// ”CˆÓ‚ÌŒ…‚©‚çlÌŒÜ“ü
 	float Round(const float& i, const int& num);
 

@@ -162,21 +162,21 @@ void Sound::CopyInfo(const snd::Info & info)
 }
 
 // ローパスフィルタ
-void Sound::LowPass(const float & cutoff, const float & sample, const float & q)
+void Sound::LowPass(const float & cutoff, const float & q)
 {
-	filter->LowPass(cutoff, sample, q);
+	filter->LowPass(cutoff, static_cast<float>(copy.sample), q);
 }
 
 // ハイパスフィルタ
-void Sound::HightPass(const float & cutoff, const float & sample, const float & q)
+void Sound::HightPass(const float & cutoff, const float & q)
 {
-	filter->HighPass(cutoff, sample, q);
+	filter->HighPass(cutoff, static_cast<float>(copy.sample), q);
 }
 
 // バンドパスフィルタ
-void Sound::BandPass(const float & cutoff, const float & sample, const float & bw)
+void Sound::BandPass(const float & cutoff, const float & bw)
 {
-	filter->BandPass(cutoff, sample, bw);
+	filter->BandPass(cutoff, static_cast<float>(copy.sample), bw);
 }
 
 // 再生
@@ -235,12 +235,13 @@ void Sound::StreamFile(void)
 		unsigned int bps = copy.sample * help::Byte(copy.bit) * copy.channel / OFFSET;
 
 		size = (SndLoader::Get().GetSnd(name).data->size() - read > bps) ? 
-			bps : SndLoader::Get().GetSnd(name).data->size() - read;
-		data[index].assign(&SndLoader::Get().GetSnd(name).data->at(read), &SndLoader::Get().GetSnd(name).data->at(read + size));
+			bps : SndLoader::Get().GetSnd(name).data->size() - read - 1;
+		std::vector<float>tmp(&SndLoader::Get().GetSnd(name).data->at(read), &SndLoader::Get().GetSnd(name).data->at(read + size));
 
 		effe->Copy("param", param);
-		effe->Execution(data[index]);
-		filter->Execution(data[index]);
+		effe->Execution(tmp);
+		filter->Execution(tmp);
+		data[index] = tmp;
 
 		XAUDIO2_BUFFER buf{};
 		buf.AudioBytes = static_cast<unsigned int>(sizeof(float) * data[index].size());
@@ -260,6 +261,10 @@ void Sound::StreamFile(void)
 			{
 				Stop();
 				index = 0;
+				for (auto& i : data)
+				{
+					memset(i.data(), 0, sizeof(float) * i.size());
+				}
 			}
 
 			read = 0;

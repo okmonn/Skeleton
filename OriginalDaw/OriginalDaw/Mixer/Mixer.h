@@ -6,6 +6,7 @@
 class Application;
 class Sound;
 class Waveform;
+class Characteristic;
 
 class Mixer
 {
@@ -31,6 +32,9 @@ private:
 	// サウンドの波形周波数の描画
 	void DrawWave(void);
 
+	// 周波数特性の描画
+	void DrawChara(void);
+
 
 	// アプリケーション
 	std::shared_ptr<Application>app;
@@ -40,6 +44,9 @@ private:
 
 	// 波形
 	std::unique_ptr<Waveform>wave;
+
+	// 周波数特性
+	std::unique_ptr<Characteristic>chara;
 
 	// 再生フラグ
 	bool playFlag;

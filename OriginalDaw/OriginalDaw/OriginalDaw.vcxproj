@@ -120,6 +120,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
+    <ClCompile Include="Characteristic\Characteristic.cpp" />
     <ClCompile Include="Compute\Compute.cpp" />
     <ClCompile Include="Compute\Dft.cpp" />
     <ClCompile Include="Compute\Effector.cpp" />
@@ -132,7 +133,6 @@
     <ClCompile Include="List\List.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mixer\Mixer.cpp" />
-    <ClCompile Include="Phase\Phase.cpp" />
     <ClCompile Include="Pipe\Pipe.cpp" />
     <ClCompile Include="Pipe\PipeMane.cpp" />
     <ClCompile Include="Primitive\Primitive.cpp" />
@@ -156,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
+    <ClInclude Include="Characteristic\Characteristic.h" />
     <ClInclude Include="Compute\Compute.h" />
     <ClInclude Include="Compute\Dft.h" />
     <ClInclude Include="Compute\Effector.h" />
@@ -172,7 +173,6 @@
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="List\List.h" />
     <ClInclude Include="Mixer\Mixer.h" />
-    <ClInclude Include="Phase\Phase.h" />
     <ClInclude Include="Pipe\Pipe.h" />
     <ClInclude Include="Pipe\PipeMane.h" />
     <ClInclude Include="Primitive\Primitive.h" />

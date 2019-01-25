@@ -27,9 +27,7 @@ public:
 	void Delete(const std::string& name);
 
 	// パイプの取得
-	std::shared_ptr<Pipe> GetPipe(const std::string& name) {
-		return pipe[name];
-	}
+	std::shared_ptr<Pipe> GetPipe(const std::string& name);
 
 private:
 	// コンストラクタ

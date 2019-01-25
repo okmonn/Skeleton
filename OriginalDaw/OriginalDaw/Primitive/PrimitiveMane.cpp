@@ -3,22 +3,6 @@
 #include "../Pipe/PipeMane.h"
 #include "../etc/Release.h"
 
-// トポロジータイプ
-const D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType[] = {
-	D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_UNDEFINED,
-	D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT,
-	D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE,
-	D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
-};
-
-// タイプ
-const std::string pipeName[] = {
-	"",
-	"point",
-	"line",
-	"triangle"
-};
-
 // コンストラクタ
 PrimitiveMane::PrimitiveMane(std::weak_ptr<Window> win, std::weak_ptr<Root> root) : win(win), root(root)
 {

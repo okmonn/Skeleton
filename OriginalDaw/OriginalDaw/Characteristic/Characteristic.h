@@ -4,13 +4,19 @@
 class Application;
 class Sound;
 
-class Phase
+class Characteristic
 {
 public:
 	// コンストラクタ
-	Phase(std::weak_ptr<Application>app, std::weak_ptr<Sound>sound);
+	Characteristic(std::weak_ptr<Application>app, std::weak_ptr<Sound>sound);
 	// デストラクタ
-	~Phase();
+	Characteristic();
+
+	// 描画
+	void Draw(void);
+
+	// 処理
+	void UpData(void);
 
 private:
 	// アプリケーション

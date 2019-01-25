@@ -2,6 +2,7 @@
 #include "../Input/Input.h"
 #include "../Application/Application.h"
 #include "../Waveform/Waveform.h"
+#include "../Characteristic/Characteristic.h"
 
 // ÉXÉåÉbÉhêî
 #define THREAD_MAX 2
@@ -60,8 +61,28 @@ void Mixer::UpData(void)
 		}
 		sound.reset(new Sound(drop));
 		wave.reset(new Waveform(app, sound));
+		chara.reset(new Characteristic(app, sound));
 		threadFlag = true;
 		th[0] = std::thread(&Mixer::DrawWave, this);
+		th[1] = std::thread(&Mixer::DrawChara, this);
+	}
+
+	static float v = 1.0f;
+	if (Input::Get().InputKey(INPUT_DOWN))
+	{
+		v -= 0.1f;
+		if (v < 0.0f)
+		{
+			v = 0.0f;
+		}
+	}
+	else if (Input::Get().InputKey(INPUT_UP))
+	{
+		v += 0.1f;
+	}
+	if (sound != nullptr)
+	{
+		sound->SetVolume(v);
 	}
 
 	if (Input::Get().Triger(INPUT_SPACE))
@@ -86,6 +107,16 @@ void Mixer::DrawWave(void)
 	{
 		wave->Draw();
 		wave->UpData();
+	}
+}
+
+// é¸îgêîì¡ê´ÇÃï`âÊ
+void Mixer::DrawChara(void)
+{
+	while (threadFlag)
+	{
+		chara->Draw();
+		chara->UpData();
 	}
 }
 

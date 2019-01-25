@@ -70,3 +70,14 @@ void PipeMane::Delete(const std::string & name)
 		pipe.erase(pipe.find(name));
 	}
 }
+
+// ƒpƒCƒv‚Ìæ“¾
+std::shared_ptr<Pipe> PipeMane::GetPipe(const std::string & name)
+{
+	if (pipe.find(name) == pipe.end())
+	{
+		return nullptr;
+	}
+
+	return pipe[name];
+}

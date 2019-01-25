@@ -1,5 +1,4 @@
-#include "Waveform.h"
-#include "../Input/Input.h"
+#include "Characteristic.h"
 #include "../Application/Application.h"
 #include <algorithm>
 
@@ -7,18 +6,18 @@
 const Vec2 winSize = { 200, 200 };
 
 // コンストラクタ
-Waveform::Waveform(std::weak_ptr<Application> app, std::weak_ptr<Sound> sound) :sound(sound)
+Characteristic::Characteristic(std::weak_ptr<Application> app, std::weak_ptr<Sound> sound) : sound(sound)
 {
 	this->app = std::make_unique<Application>(app, winSize);
 }
 
 // デストラクタ
-Waveform::~Waveform()
+Characteristic::Characteristic()
 {
 }
 
 // 描画
-void Waveform::Draw()
+void Characteristic::Draw(void)
 {
 	app->Clear();
 
@@ -45,6 +44,6 @@ void Waveform::Draw()
 }
 
 // 処理
-void Waveform::UpData(void)
+void Characteristic::UpData(void)
 {
 }
