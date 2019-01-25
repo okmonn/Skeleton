@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="etc">
+      <UniqueIdentifier>{6ff13b8d-731b-471c-873b-799f948791cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device">
+      <UniqueIdentifier>{7b6dd39d-0d22-470d-8271-cec18744e11e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Command">
+      <UniqueIdentifier>{a2893306-9601-41fe-bb6f-4dae3350f206}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Command\Queue">
+      <UniqueIdentifier>{75937594-9fb9-4ef1-abb6-4699fb24b46e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Command\List">
+      <UniqueIdentifier>{9080c67c-6d4c-45f7-94e0-3745e12de8b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application">
+      <UniqueIdentifier>{9202baa4-0603-4f3b-8328-7d141cd39f36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{338d2da0-9b4b-4cba-8592-ef100e8e089e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window\Icon">
+      <UniqueIdentifier>{ecd13290-76b4-493c-94ed-25868b47bb71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="etc\Useful">
+      <UniqueIdentifier>{8ec37922-8925-4fca-9e2f-81e5cc11be94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fence">
+      <UniqueIdentifier>{40a0e5d3-5dda-42f6-805d-f4bd9d8a9303}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Swap">
+      <UniqueIdentifier>{8f8f296c-a297-4e23-bad1-326859879f99}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Useful\Useful.cpp">
+      <Filter>etc\Useful</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\Window.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Device\Device.cpp">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Queue\Queue.cpp">
+      <Filter>Command\Queue</Filter>
+    </ClCompile>
+    <ClCompile Include="List\List.cpp">
+      <Filter>Command\List</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Application.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Fence\Fence.cpp">
+      <Filter>Fence</Filter>
+    </ClCompile>
+    <ClCompile Include="Swap\Swap.cpp">
+      <Filter>Swap</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Window\Icon.h">
+      <Filter>Window\Icon</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\Window.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Useful\Useful.h">
+      <Filter>etc\Useful</Filter>
+    </ClInclude>
+    <ClInclude Include="Release.h">
+      <Filter>etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\Device.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Queue\Queue.h">
+      <Filter>Command\Queue</Filter>
+    </ClInclude>
+    <ClInclude Include="List\List.h">
+      <Filter>Command\List</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Application.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2.h">
+      <Filter>etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Fence\Fence.h">
+      <Filter>Fence</Filter>
+    </ClInclude>
+    <ClInclude Include="Swap\Swap.h">
+      <Filter>Swap</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Window\Icon.rc">
+      <Filter>Window\Icon</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
