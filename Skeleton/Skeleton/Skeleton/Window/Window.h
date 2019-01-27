@@ -44,8 +44,8 @@ private:
 	// ウィンドウの生成
 	int CreateWnd(void* parent);
 
-	// ヒープの生成
-	long CreateHeap(void);
+	// 定数用ヒープの生成
+	long CreateCHeap(void);
 
 	// 定数リソースの生成
 	long CreateCRsc(void);

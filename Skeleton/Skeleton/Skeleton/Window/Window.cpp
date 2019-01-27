@@ -109,8 +109,8 @@ int Window::CreateWnd(void * parent)
 	return 0;
 }
 
-// ヒープの生成
-long Window::CreateHeap(void)
+// 定数用ヒープの生成
+long Window::CreateCHeap(void)
 {
 	D3D12_DESCRIPTOR_HEAP_DESC desc{};
 	desc.Flags          = D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
@@ -120,7 +120,7 @@ long Window::CreateHeap(void)
 	auto hr = Dev->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&cHeap));
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nウィンドウ用ヒープの生成：失敗\n"));
+		OutputDebugString(_T("\nウィンドウ用定数ヒープの生成：失敗\n"));
 	}
 
 	return hr;
@@ -188,7 +188,7 @@ long Window::Map(void)
 // 初期化
 void Window::Init(void)
 {
-	CreateHeap();
+	CreateCHeap();
 	CreateCRsc();
 	CBV();
 	Map();

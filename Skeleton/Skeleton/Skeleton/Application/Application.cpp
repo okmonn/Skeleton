@@ -4,6 +4,8 @@
 #include "../List/List.h"
 #include "../Fence/Fence.h"
 #include "../Swap/Swap.h"
+#include "../Render/Render.h"
+#include "../Depth/Depth.h"
 #include "../Release.h"
 
 #pragma comment(lib, "d3d12.lib")
@@ -47,11 +49,13 @@ void Application::ChangeTitle(const std::string & title) const
 // クラスのインスタンス
 void Application::Instance(const Vec2 & size, void * parent)
 {
-	win   = std::make_shared<Window>(size, parent);
-	queue = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
-	list  = std::make_shared<List>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
-	fence = std::make_unique<Fence>(queue);
-	swap  = std::make_shared<Swap>(win, queue);
+	win    = std::make_shared<Window>(size, parent);
+	queue  = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
+	list   = std::make_shared<List>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
+	fence  = std::make_unique<Fence>(queue);
+	swap   = std::make_shared<Swap>(win, queue);
+	render = std::make_unique<Render>(swap);
+	depth  = std::make_shared<Depth>(win);
 }
 
 // ウィンドウサイズの取得
@@ -100,11 +104,19 @@ void Application::Clear(void) const
 
 	list->Viewport(win->GetSize());
 	list->Scissor(win->GetSize());
+
+	list->Barrier(D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_RENDER_TARGET, render->GetRsc());
+
+	render->Clear(list, depth);
+	depth->Clear(list);
 }
 
 // 実行
 void Application::Execution(void) const
 {
+	list->Barrier(D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PRESENT, render->GetRsc());
+
+
 	list->Close();
 
 	ID3D12CommandList* com[] = {

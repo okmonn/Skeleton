@@ -46,6 +46,27 @@
     <Filter Include="Swap">
       <UniqueIdentifier>{8f8f296c-a297-4e23-bad1-326859879f99}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{038196bc-0036-4774-993d-295f76e21754}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Depth">
+      <UniqueIdentifier>{2e13793e-2ec4-459b-b298-37d9b14f26bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Root">
+      <UniqueIdentifier>{ef9d8fa6-1675-474c-8d36-5715e07f212a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Root\Mane">
+      <UniqueIdentifier>{6f2f17a1-789b-49ad-9907-1d2e18c3cfe1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pipe">
+      <UniqueIdentifier>{5e4b1a8d-38a0-43ae-8e07-ca0c64faac03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pipe\Mane">
+      <UniqueIdentifier>{be957277-1384-408d-988a-de47a57e7e7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Primitive">
+      <UniqueIdentifier>{160dc62a-c4bc-40e4-a9b6-f05470c2d9ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Useful\Useful.cpp">
@@ -74,6 +95,27 @@
     </ClCompile>
     <ClCompile Include="Swap\Swap.cpp">
       <Filter>Swap</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Render.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Depth\Depth.cpp">
+      <Filter>Depth</Filter>
+    </ClCompile>
+    <ClCompile Include="Root\Root.cpp">
+      <Filter>Root</Filter>
+    </ClCompile>
+    <ClCompile Include="Root\RootMane.cpp">
+      <Filter>Root\Mane</Filter>
+    </ClCompile>
+    <ClCompile Include="Pipe\Pipe.cpp">
+      <Filter>Pipe</Filter>
+    </ClCompile>
+    <ClCompile Include="Pipe\PipeMane.cpp">
+      <Filter>Pipe\Mane</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitive\Primitive.cpp">
+      <Filter>Primitive</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -110,10 +152,42 @@
     <ClInclude Include="Swap\Swap.h">
       <Filter>Swap</Filter>
     </ClInclude>
+    <ClInclude Include="Render\Render.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Depth\Depth.h">
+      <Filter>Depth</Filter>
+    </ClInclude>
+    <ClInclude Include="Root\Root.h">
+      <Filter>Root</Filter>
+    </ClInclude>
+    <ClInclude Include="Root\RootMane.h">
+      <Filter>Root\Mane</Filter>
+    </ClInclude>
+    <ClInclude Include="Pipe\Pipe.h">
+      <Filter>Pipe</Filter>
+    </ClInclude>
+    <ClInclude Include="Pipe\PipeMane.h">
+      <Filter>Pipe\Mane</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitive\Primitive.h">
+      <Filter>Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitive\PrimitiveInfo.h">
+      <Filter>Primitive</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Window\Icon.rc">
       <Filter>Window\Icon</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader\Primitive.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\Texture.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

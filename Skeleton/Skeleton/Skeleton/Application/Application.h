@@ -7,6 +7,8 @@ class Queue;
 class List;
 class Fence;
 class Swap;
+class Depth;
+class Render;
 
 class Application
 {
@@ -57,4 +59,10 @@ private:
 
 	// スワップ
 	std::shared_ptr<Swap>swap;
+
+	// レンダー
+	std::unique_ptr<Render>render;
+
+	// デプス
+	std::shared_ptr<Depth>depth;
 };
