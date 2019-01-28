@@ -52,6 +52,12 @@ namespace snd
 		int bit;
 	};
 
+	// ƒpƒ‰ƒ[ƒ^
+	struct Param {
+		//‰¹—Ê
+		float volume;
+	};
+
 	// RIFF‚Ì“Ç‚İ‚İ
 	int LoadRIFF(RIFF& riff, FILE* file);
 

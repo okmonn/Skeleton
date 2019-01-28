@@ -135,6 +135,7 @@
     <ClCompile Include="Render\Render.cpp" />
     <ClCompile Include="Root\Root.cpp" />
     <ClCompile Include="Root\RootMane.cpp" />
+    <ClCompile Include="Sound\Filter.cpp" />
     <ClCompile Include="Sound\SndFunc.cpp" />
     <ClCompile Include="Sound\SndLoader.cpp" />
     <ClCompile Include="Sound\Sound.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="Render\Render.h" />
     <ClInclude Include="Root\Root.h" />
     <ClInclude Include="Root\RootMane.h" />
+    <ClInclude Include="Sound\Filter.h" />
     <ClInclude Include="Sound\SndFunc.h" />
     <ClInclude Include="Sound\SndLoader.h" />
     <ClInclude Include="Sound\Sound.h" />
@@ -186,6 +188,28 @@
     <ResourceCompile Include="Window\Icon.rc" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Shader\Effector.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.1</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.1</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Shader\Primitive.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

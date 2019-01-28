@@ -2,6 +2,10 @@
 #include "../Queue/Queue.h"
 #include "../List/List.h"
 #include "../Fence/Fence.h"
+#include "../Root/Root.h"
+#include "../Root/RootMane.h"
+#include "../Pipe/Pipe.h"
+#include "../Pipe/PipeMane.h"
 #include "../Release.h"
 
 // コンストラクタ
@@ -21,6 +25,13 @@ Compute::~Compute()
 {
 }
 
+// ルート・パイプの生成
+void Compute::Load(const std::string & name, const std::string & fileName)
+{
+	RootMane::Get().Create(name, fileName);
+	PipeMane::Get().Create(name, RootMane::Get().GetRoot(name));
+}
+
 // ヒープの生成
 long Compute::CreateHeap(const unsigned int & num)
 {
@@ -33,6 +44,24 @@ long Compute::CreateHeap(const unsigned int & num)
 	if (FAILED(hr))
 	{
 		OutputDebugString(_T("\nコンピュート用ヒープの生成：失敗\n"));
+	}
+
+	return hr;
+}
+
+// マップ
+long Compute::Map(const std::string & name)
+{
+	if (rsc.find(name) == rsc.end())
+	{
+		return S_FALSE;
+	}
+
+	D3D12_RANGE range{ 0, 1 };
+	auto hr = rsc[name]->Map(0, &range, &data[name]);
+	if (FAILED(hr))
+	{
+		OutputDebugString(_T("\nコンピュート用リソースのマップ：失敗\n"));
 	}
 
 	return hr;
@@ -88,6 +117,8 @@ void Compute::CBV(const std::string & name, const size_t & size)
 	auto handle = heap->GetCPUDescriptorHandleForHeapStart();
 	handle.ptr += Dev->GetDescriptorHandleIncrementSize(heap->GetDesc().Type) * index++;
 	Dev->CreateConstantBufferView(&desc, handle);
+
+	Map(name);
 }
 
 // 非順序リソースの生成
@@ -142,24 +173,8 @@ void Compute::UAV(const std::string & name, const size_t & stride, const size_t 
 	auto handle = heap->GetCPUDescriptorHandleForHeapStart();
 	handle.ptr += Dev->GetDescriptorHandleIncrementSize(heap->GetDesc().Type) * index++;
 	Dev->CreateUnorderedAccessView(rsc[name], nullptr, &desc, handle);
-}
 
-// マップ
-long Compute::Map(const std::string & name)
-{
-	if (rsc.find(name) == rsc.end())
-	{
-		return S_FALSE;
-	}
-
-	D3D12_RANGE range{ 0, 1 };
-	auto hr = rsc[name]->Map(0, &range, &data[name]);
-	if (FAILED(hr))
-	{
-		OutputDebugString(_T("\nコンピュート用リソースのマップ：失敗\n"));
-	}
-
-	return hr;
+	Map(name);
 }
 
 // アンマップ

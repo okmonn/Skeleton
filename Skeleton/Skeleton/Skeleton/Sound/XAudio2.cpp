@@ -14,13 +14,13 @@ XAudio2::XAudio2() :
 // デストラクタ
 XAudio2::~XAudio2()
 {
-	if (audio != nullptr)
-	{
-		audio->Release();
-	}
 	if (mastering != nullptr)
 	{
 		mastering->DestroyVoice();
+	}
+	if (audio != nullptr)
+	{
+		audio->Release();
 	}
 	CoUninitialize();
 }

@@ -24,7 +24,13 @@ private:
 	// 非順序リソースの生成
 	long CreateURsc(const std::string& name, const size_t& stride, const size_t& num);
 
+	// マップ
+	long Map(const std::string& name);
+
 protected:
+	// ルート・パイプの生成
+	void Load(const std::string& name, const std::string& fileName);
+
 	// ヒープの生成
 	long CreateHeap(const unsigned int& num);
 
@@ -33,9 +39,6 @@ protected:
 
 	// UAVの生成
 	void UAV(const std::string& name, const size_t& stride, const size_t& num);
-
-	// マップ
-	long Map(const std::string& name);
 
 	// アンマップ
 	void Unmap(const std::string& name);

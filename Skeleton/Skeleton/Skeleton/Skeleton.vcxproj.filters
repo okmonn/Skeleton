@@ -100,6 +100,9 @@
     <Filter Include="Sound\Func">
       <UniqueIdentifier>{9652f182-f823-4db0-8463-ca34eda2a2c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sound\Filter">
+      <UniqueIdentifier>{71b0523d-9245-4c8e-9f8c-ff4b687c0e2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Useful\Useful.cpp">
@@ -182,6 +185,9 @@
     </ClCompile>
     <ClCompile Include="Sound\SndFunc.cpp">
       <Filter>Sound\Func</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\Filter.cpp">
+      <Filter>Sound\Filter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -284,6 +290,9 @@
     <ClInclude Include="Sound\VoiceCallback.h">
       <Filter>Sound\XAudio2</Filter>
     </ClInclude>
+    <ClInclude Include="Sound\Filter.h">
+      <Filter>Sound\Filter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Window\Icon.rc">
@@ -295,6 +304,9 @@
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="Shader\Texture.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\Effector.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>
