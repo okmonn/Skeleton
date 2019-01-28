@@ -31,6 +31,32 @@ std::string use::ChangeCode(const std::wstring & code)
 	return str;
 }
 
+// 文字の確認
+bool use::CheckChar(const std::string & find, const unsigned char * data, const size_t & num)
+{
+	unsigned int index = 0;
+	for (size_t i = 0; i < num; ++i)
+	{
+		if (data[i] == find[index])
+		{
+			if (index + 1 >= find.size())
+			{
+				return true;
+			}
+
+			++index;
+		}
+	}
+
+	return false;
+}
+
+// バイト変換
+int use::Byte(const int & bit)
+{
+	return bit / 8;
+}
+
 // キーの入力の確認
 int use::CheckKey(const unsigned int & key)
 {

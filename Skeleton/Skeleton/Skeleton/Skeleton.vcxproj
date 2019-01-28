@@ -120,6 +120,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
+    <ClCompile Include="Compute\Compute.cpp" />
+    <ClCompile Include="Compute\Effector.cpp" />
     <ClCompile Include="Depth\Depth.cpp" />
     <ClCompile Include="Device\Device.cpp" />
     <ClCompile Include="Fence\Fence.cpp" />
@@ -128,16 +130,28 @@
     <ClCompile Include="Pipe\Pipe.cpp" />
     <ClCompile Include="Pipe\PipeMane.cpp" />
     <ClCompile Include="Primitive\Primitive.cpp" />
+    <ClCompile Include="Primitive\PrimitiveMane.cpp" />
     <ClCompile Include="Queue\Queue.cpp" />
     <ClCompile Include="Render\Render.cpp" />
     <ClCompile Include="Root\Root.cpp" />
     <ClCompile Include="Root\RootMane.cpp" />
+    <ClCompile Include="Sound\SndFunc.cpp" />
+    <ClCompile Include="Sound\SndLoader.cpp" />
+    <ClCompile Include="Sound\Sound.cpp" />
+    <ClCompile Include="Sound\XAudio2.cpp" />
     <ClCompile Include="Swap\Swap.cpp" />
+    <ClCompile Include="Texture\TexLoader.cpp" />
+    <ClCompile Include="Texture\TexMane.cpp" />
+    <ClCompile Include="Texture\Texture.cpp" />
+    <ClCompile Include="Texture\WICTextureLoader12.cpp" />
     <ClCompile Include="Useful\Useful.cpp" />
     <ClCompile Include="Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
+    <ClInclude Include="Color.h" />
+    <ClInclude Include="Compute\Compute.h" />
+    <ClInclude Include="Compute\Effector.h" />
     <ClInclude Include="Depth\Depth.h" />
     <ClInclude Include="Device\Device.h" />
     <ClInclude Include="Fence\Fence.h" />
@@ -146,12 +160,23 @@
     <ClInclude Include="Pipe\PipeMane.h" />
     <ClInclude Include="Primitive\Primitive.h" />
     <ClInclude Include="Primitive\PrimitiveInfo.h" />
+    <ClInclude Include="Primitive\PrimitiveMane.h" />
     <ClInclude Include="Queue\Queue.h" />
     <ClInclude Include="Release.h" />
     <ClInclude Include="Render\Render.h" />
     <ClInclude Include="Root\Root.h" />
     <ClInclude Include="Root\RootMane.h" />
+    <ClInclude Include="Sound\SndFunc.h" />
+    <ClInclude Include="Sound\SndLoader.h" />
+    <ClInclude Include="Sound\Sound.h" />
+    <ClInclude Include="Sound\VoiceCallback.h" />
+    <ClInclude Include="Sound\XAudio2.h" />
     <ClInclude Include="Swap\Swap.h" />
+    <ClInclude Include="Texture\TexInfo.h" />
+    <ClInclude Include="Texture\TexLoader.h" />
+    <ClInclude Include="Texture\TexMane.h" />
+    <ClInclude Include="Texture\Texture.h" />
+    <ClInclude Include="Texture\WICTextureLoader12.h" />
     <ClInclude Include="Useful\Useful.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Window\Icon.h" />

@@ -67,6 +67,39 @@
     <Filter Include="Primitive">
       <UniqueIdentifier>{160dc62a-c4bc-40e4-a9b6-f05470c2d9ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Primitive\Mane">
+      <UniqueIdentifier>{1242f6b6-d8ad-4219-a634-1c64f69132c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{45c65854-f441-4ebf-ae7e-1525b5bea942}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture\Loader">
+      <UniqueIdentifier>{122dfef5-50e6-432c-9c88-e627497577dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture\WIC">
+      <UniqueIdentifier>{d2445965-837a-4205-8c8e-d17b3d2e5f5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture\Mane">
+      <UniqueIdentifier>{d9cc1cb1-4b31-4e76-be6c-263d0f45e253}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compute">
+      <UniqueIdentifier>{a56c7f43-8e4f-4d67-af8e-6661def61ea8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compute\Effector">
+      <UniqueIdentifier>{ce0639b6-3a4b-42d1-9bc6-0400b1ecfb00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound">
+      <UniqueIdentifier>{4056a175-6b03-4377-a707-66b7bcb6931a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound\XAudio2">
+      <UniqueIdentifier>{afef7e36-8e85-4d72-984d-96a48746821f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound\Loader">
+      <UniqueIdentifier>{f008417c-db63-4883-83bd-7ce61686bd57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound\Func">
+      <UniqueIdentifier>{9652f182-f823-4db0-8463-ca34eda2a2c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Useful\Useful.cpp">
@@ -116,6 +149,39 @@
     </ClCompile>
     <ClCompile Include="Primitive\Primitive.cpp">
       <Filter>Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitive\PrimitiveMane.cpp">
+      <Filter>Primitive\Mane</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture\Texture.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture\TexLoader.cpp">
+      <Filter>Texture\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture\WICTextureLoader12.cpp">
+      <Filter>Texture\WIC</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture\TexMane.cpp">
+      <Filter>Texture\Mane</Filter>
+    </ClCompile>
+    <ClCompile Include="Compute\Compute.cpp">
+      <Filter>Compute</Filter>
+    </ClCompile>
+    <ClCompile Include="Compute\Effector.cpp">
+      <Filter>Compute\Effector</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\Sound.cpp">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\XAudio2.cpp">
+      <Filter>Sound\XAudio2</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\SndLoader.cpp">
+      <Filter>Sound\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\SndFunc.cpp">
+      <Filter>Sound\Func</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +241,48 @@
     </ClInclude>
     <ClInclude Include="Primitive\PrimitiveInfo.h">
       <Filter>Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitive\PrimitiveMane.h">
+      <Filter>Primitive\Mane</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\Texture.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\TexLoader.h">
+      <Filter>Texture\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\TexInfo.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\WICTextureLoader12.h">
+      <Filter>Texture\WIC</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\TexMane.h">
+      <Filter>Texture\Mane</Filter>
+    </ClInclude>
+    <ClInclude Include="Compute\Compute.h">
+      <Filter>Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="Compute\Effector.h">
+      <Filter>Compute\Effector</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\Sound.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\XAudio2.h">
+      <Filter>Sound\XAudio2</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\SndLoader.h">
+      <Filter>Sound\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\SndFunc.h">
+      <Filter>Sound\Func</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\VoiceCallback.h">
+      <Filter>Sound\XAudio2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

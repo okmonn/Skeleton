@@ -10,6 +10,12 @@ namespace use
 	// マルチバイトに変換
 	std::string ChangeCode(const std::wstring& code);
 
+	// 文字の確認
+	bool CheckChar(const std::string& find, const unsigned char* data, const size_t& num);
+
+	// バイト変換
+	int Byte(const int& bit);
+
 	// キーの入力の確認
 	int CheckKey(const unsigned int& key);
 

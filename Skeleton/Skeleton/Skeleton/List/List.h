@@ -46,10 +46,10 @@ public:
 	void Heap(ID3D12DescriptorHeap** heap, const size_t& num) const;
 
 	// ヒープと描画ルートとの関連付け
-	void RootTable(const unsigned int& id, ID3D12DescriptorHeap* heap, const unsigned int& index) const;
+	void RootTable(const unsigned int& id, ID3D12DescriptorHeap* heap, const unsigned int& index = 0) const;
 
 	// ヒープと計算用ルートの関連付け
-	void ComputeRootTable(const unsigned int& id, ID3D12DescriptorHeap* heap, const unsigned int& index) const;
+	void ComputeRootTable(const unsigned int& id, ID3D12DescriptorHeap* heap, const unsigned int& index = 0) const;
 
 	// 頂点バッファビューのセット
 	void VertexView(const D3D12_VERTEX_BUFFER_VIEW& view) const;
