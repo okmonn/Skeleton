@@ -3,6 +3,7 @@
 #include "VoiceCallback.h"
 #include "SndLoader.h"
 #include "../Compute/Effector.h"
+#include "Shifter.h"
 #include "Filter.h"
 #include "../Useful/Useful.h"
 #include <ks.h>
@@ -35,10 +36,11 @@ Sound::Sound() :
 	param = { 1.0f };
 	data.resize(BUFFER);
 
-	back   = std::make_unique<VoiceCallback>();
-	effe   = std::make_unique<Effector>("Shader/Effector.hlsl");
-	filter = std::make_unique<Filter>();
-	st     = std::make_unique<XAUDIO2_VOICE_STATE>();
+	back    = std::make_unique<VoiceCallback>();
+	effe    = std::make_unique<Effector>("Shader/Effector.hlsl");
+	shifter = std::make_unique<Shifter>();
+	filter  = std::make_unique<Filter>();
+	st      = std::make_unique<XAUDIO2_VOICE_STATE>();
 }
 
 // デストラクタ
@@ -166,6 +168,7 @@ void Sound::Stream(void)
 		std::vector<float>tmp(&SndLoader::Get().GetData(name)->at(read), &SndLoader::Get().GetData(name)->at(read + size));
 		effe->Copy(param);
 		tmp = effe->Execution(tmp);
+		tmp = shifter->FastForward(tmp, 1.5f, info.sample / OFFSET);
 		filter->Execution(tmp);
 		data[index] = tmp;
 
@@ -174,7 +177,7 @@ void Sound::Stream(void)
 		auto hr = voice->SubmitSourceBuffer(&buf);
 		if (FAILED(hr))
 		{
-			OutputDebugString(_T("\nサウンドデータの追加\n"));
+			OutputDebugString(_T("\nサウンドデータの追加：失敗\n"));
 			continue;
 		}
 

@@ -136,6 +136,7 @@
     <ClCompile Include="Root\Root.cpp" />
     <ClCompile Include="Root\RootMane.cpp" />
     <ClCompile Include="Sound\Filter.cpp" />
+    <ClCompile Include="Sound\Shifter.cpp" />
     <ClCompile Include="Sound\SndFunc.cpp" />
     <ClCompile Include="Sound\SndLoader.cpp" />
     <ClCompile Include="Sound\Sound.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="Root\Root.h" />
     <ClInclude Include="Root\RootMane.h" />
     <ClInclude Include="Sound\Filter.h" />
+    <ClInclude Include="Sound\Shifter.h" />
     <ClInclude Include="Sound\SndFunc.h" />
     <ClInclude Include="Sound\SndLoader.h" />
     <ClInclude Include="Sound\Sound.h" />

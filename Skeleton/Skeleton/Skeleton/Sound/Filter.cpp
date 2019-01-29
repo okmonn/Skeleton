@@ -21,7 +21,7 @@ Filter::~Filter()
 }
 
 // ローパスフィルタ
-void Filter::LowPass(const float & cutoff, const float & q, const float & sample)
+void Filter::LowPass(const float & cutoff, const float & q, const int & sample)
 {
 	float omega = 2.0f * PI * cutoff / sample;
 	float alpha = std::sinf(omega) / (2.0f * q);
@@ -36,7 +36,7 @@ void Filter::LowPass(const float & cutoff, const float & q, const float & sample
 }
 
 // ハイパスフィルタ
-void Filter::HighPass(const float & cutoff, const float & q, const float & sample)
+void Filter::HighPass(const float & cutoff, const float & q, const int & sample)
 {
 	float omega = 2.0f * PI * cutoff / sample;
 	float alpha = std::sinf(omega) / (2.0f * q);
@@ -51,7 +51,7 @@ void Filter::HighPass(const float & cutoff, const float & q, const float & sampl
 }
 
 // バンドパスフィルタ
-void Filter::BandPass(const float & cutoff, const float & bw, const float & sample)
+void Filter::BandPass(const float & cutoff, const float & bw, const int & sample)
 {
 	float omega = 2.0f * PI * cutoff / sample;
 	float alpha = std::sinf(omega) * std::sinhf(logf(2.0f) / 2.0f * bw * omega / std::sinf(omega));
