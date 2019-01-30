@@ -21,9 +21,9 @@ Filter::~Filter()
 }
 
 // ローパスフィルタ
-void Filter::LowPass(const float & cutoff, const float & q, const int & sample)
+void Filter::LowPass(const float & cutoff, const float & q, const snd::Info & info)
 {
-	float omega = 2.0f * PI * cutoff / sample;
+	float omega = 2.0f * PI * cutoff / info.sample;
 	float alpha = std::sinf(omega) / (2.0f * q);
 
 	a[0] =  1.0f + alpha;
@@ -36,9 +36,9 @@ void Filter::LowPass(const float & cutoff, const float & q, const int & sample)
 }
 
 // ハイパスフィルタ
-void Filter::HighPass(const float & cutoff, const float & q, const int & sample)
+void Filter::HighPass(const float & cutoff, const float & q, const snd::Info & info)
 {
-	float omega = 2.0f * PI * cutoff / sample;
+	float omega = 2.0f * PI * cutoff / info.sample;
 	float alpha = std::sinf(omega) / (2.0f * q);
 
 	a[0] =  1.0f + alpha;
@@ -51,9 +51,9 @@ void Filter::HighPass(const float & cutoff, const float & q, const int & sample)
 }
 
 // バンドパスフィルタ
-void Filter::BandPass(const float & cutoff, const float & bw, const int & sample)
+void Filter::BandPass(const float & cutoff, const float & bw, const snd::Info & info)
 {
-	float omega = 2.0f * PI * cutoff / sample;
+	float omega = 2.0f * PI * cutoff / info.sample;
 	float alpha = std::sinf(omega) * std::sinhf(logf(2.0f) / 2.0f * bw * omega / std::sinf(omega));
 
 	a[0] =  1.0f + alpha;
@@ -66,17 +66,20 @@ void Filter::BandPass(const float & cutoff, const float & bw, const int & sample
 }
 
 // 実行
-void Filter::Execution(std::vector<float>& data)
+std::vector<float> Filter::Execution(const std::vector<float>& input)
 {
-	std::for_each(data.begin(), data.end(), [&](float& i)->void {
+	std::vector<float>output = input;
+	std::for_each(output.begin(), output.end(), [&](float& i)->void {
 		float tmp = i;
 		i = b[0] / a[0] * tmp + b[1] / a[0] * input[0] + b[2] / a[0] * input[1]
 			- a[1] / a[0] * out[0] - a[2] / a[0] * out[1];
 
-		input[1] = input[0];
-		input[0] = tmp;
+		output[1] = output[0];
+		output[0] = tmp;
 
 		out[1] = out[0];
 		out[0] = i;
 	});
+
+	return output;
 }

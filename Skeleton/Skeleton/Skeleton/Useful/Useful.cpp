@@ -58,7 +58,7 @@ int use::Byte(const int & bit)
 }
 
 // キーの入力の確認
-int use::CheckKey(const unsigned int & key)
+unsigned int use::CheckKey(const unsigned int & key)
 {
 	return (GetKeyState(key) & 0x80);
 }
@@ -75,4 +75,10 @@ Vec2 use::GetMousePos(void)
 	POINT point;
 	GetCursorPos(&point);
 	return { static_cast<int>(point.x), static_cast<int>(point.y) };
+}
+
+// シンク窓関数
+float use::Sinc(const float & i)
+{
+	return (i == 0.0f) ? 1.0f : std::sin(i) / i;
 }

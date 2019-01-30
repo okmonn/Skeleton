@@ -168,8 +168,8 @@ void Sound::Stream(void)
 		std::vector<float>tmp(&SndLoader::Get().GetData(name)->at(read), &SndLoader::Get().GetData(name)->at(read + size));
 		effe->Copy(param);
 		tmp = effe->Execution(tmp);
-		tmp = shifter->FastForward(tmp, 1.5f, info.sample / OFFSET);
-		filter->Execution(tmp);
+		tmp = shifter->PitchShift(tmp, 2.0f);
+		tmp = filter->Execution(tmp);
 		data[index] = tmp;
 
 		buf.AudioBytes = static_cast<unsigned int>(sizeof(float) * data[index].size());

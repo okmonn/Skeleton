@@ -125,6 +125,7 @@
     <ClCompile Include="Depth\Depth.cpp" />
     <ClCompile Include="Device\Device.cpp" />
     <ClCompile Include="Fence\Fence.cpp" />
+    <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="List\List.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Pipe\Pipe.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="Depth\Depth.h" />
     <ClInclude Include="Device\Device.h" />
     <ClInclude Include="Fence\Fence.h" />
+    <ClInclude Include="Input\Input.h" />
     <ClInclude Include="List\List.h" />
     <ClInclude Include="Pipe\Pipe.h" />
     <ClInclude Include="Pipe\PipeMane.h" />

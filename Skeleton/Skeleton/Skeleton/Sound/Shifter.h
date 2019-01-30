@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+#include "SndFunc.h"
 
 class Shifter
 {
@@ -9,8 +9,11 @@ public:
 	// デストラクタ
 	~Shifter();
 
-	// 早送り
-	std::vector<float> FastForward(const std::vector<float>& input, const float& rate, const int& sample);
+	// 再生速度調節
+	std::vector<float> TimeShift(const std::vector<float>& input, const float& rate);
+
+	// ピッチ調節
+	std::vector<float> PitchShift(const std::vector<float>& input, const float& pitch);
 
 private:
 

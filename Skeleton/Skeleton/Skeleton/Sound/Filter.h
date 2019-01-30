@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+#include "SndFunc.h"
 
 class Filter
 {
@@ -11,18 +11,18 @@ public:
 
 	// ローパスフィルタ
 	// cutoffより低い周波数を通す
-	void LowPass(const float& cutoff, const float& q, const int& sample);
+	void LowPass(const float& cutoff, const float& q, const snd::Info& info);
 
 	// ハイパスフィルタ
 	// cutoffより高い周波数を通す
-	void HighPass(const float& cutoff, const float& q, const int& sample);
+	void HighPass(const float& cutoff, const float& q, const snd::Info& info);
 
 	// バンドパスフィルタ
 	// cutoffを中心にwb分の周波数を通す
-	void BandPass(const float& cutoff, const float& bw, const int& sample);
+	void BandPass(const float& cutoff, const float& bw, const snd::Info& info);
 
 	// 実行
-	void Execution(std::vector<float>& data);
+	std::vector<float> Execution(const std::vector<float>& input);
 
 private:
 	// 入力値の保持

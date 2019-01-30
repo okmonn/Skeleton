@@ -1,9 +1,8 @@
 #pragma once
+#include "../Input/Input.h"
 #include "../Sound/Sound.h"
 #include "../Useful/Useful.h"
 #include "../Color.h"
-#include <vector>
-#include <memory>
 
 class Window;
 class Queue;

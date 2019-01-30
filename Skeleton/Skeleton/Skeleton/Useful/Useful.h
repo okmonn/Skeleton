@@ -17,11 +17,14 @@ namespace use
 	int Byte(const int& bit);
 
 	// キーの入力の確認
-	int CheckKey(const unsigned int& key);
+	unsigned int CheckKey(const unsigned int& key);
 
 	// メインディスプレイの解像度の取得
 	Vec2 GetDisplayResolution(void);
 
 	// 画面上のマウス座標の取得
 	Vec2 GetMousePos(void);
+
+	// シンク窓関数
+	float Sinc(const float& i);
 }
