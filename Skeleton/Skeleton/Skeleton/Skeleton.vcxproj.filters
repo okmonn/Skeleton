@@ -103,9 +103,6 @@
     <Filter Include="Sound\Filter">
       <UniqueIdentifier>{71b0523d-9245-4c8e-9f8c-ff4b687c0e2a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sound\Shifter">
-      <UniqueIdentifier>{3747c1b5-7cca-4639-b66d-a4ff955a010f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="etc\Input">
       <UniqueIdentifier>{7524ef7f-bfac-4614-bcd1-6b946f9c2d71}</UniqueIdentifier>
     </Filter>
@@ -194,9 +191,6 @@
     </ClCompile>
     <ClCompile Include="Sound\Filter.cpp">
       <Filter>Sound\Filter</Filter>
-    </ClCompile>
-    <ClCompile Include="Sound\Shifter.cpp">
-      <Filter>Sound\Shifter</Filter>
     </ClCompile>
     <ClCompile Include="Input\Input.cpp">
       <Filter>etc\Input</Filter>
@@ -304,9 +298,6 @@
     </ClInclude>
     <ClInclude Include="Sound\Filter.h">
       <Filter>Sound\Filter</Filter>
-    </ClInclude>
-    <ClInclude Include="Sound\Shifter.h">
-      <Filter>Sound\Shifter</Filter>
     </ClInclude>
     <ClInclude Include="Input\Input.h">
       <Filter>etc\Input</Filter>

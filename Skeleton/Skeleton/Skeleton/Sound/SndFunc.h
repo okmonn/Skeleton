@@ -72,4 +72,7 @@ namespace snd
 
 	// 16ビット波形の読み込み
 	int LoadWave16(std::vector<float>& data, FILE* file);
+
+	// タイムストレッチ
+	std::vector<float> TimeStrutch(const std::vector<float>& input, const snd::Info& info, const float& rate);
 }

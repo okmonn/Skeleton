@@ -3,7 +3,6 @@
 #include "VoiceCallback.h"
 #include "SndLoader.h"
 #include "../Compute/Effector.h"
-#include "Shifter.h"
 #include "Filter.h"
 #include "../Useful/Useful.h"
 #include <ks.h>
@@ -38,7 +37,6 @@ Sound::Sound() :
 
 	back    = std::make_unique<VoiceCallback>();
 	effe    = std::make_unique<Effector>("Shader/Effector.hlsl");
-	shifter = std::make_unique<Shifter>();
 	filter  = std::make_unique<Filter>();
 	st      = std::make_unique<XAUDIO2_VOICE_STATE>();
 }
@@ -168,7 +166,7 @@ void Sound::Stream(void)
 		std::vector<float>tmp(&SndLoader::Get().GetData(name)->at(read), &SndLoader::Get().GetData(name)->at(read + size));
 		effe->Copy(param);
 		tmp = effe->Execution(tmp);
-		tmp = shifter->PitchShift(tmp, 2.0f);
+		tmp = snd::TimeStrutch(tmp, info, 1.5f);
 		tmp = filter->Execution(tmp);
 		data[index] = tmp;
 

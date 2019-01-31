@@ -7,7 +7,6 @@ struct IXAudio2SourceVoice;
 struct XAUDIO2_VOICE_STATE;
 class VoiceCallback;
 class Effector;
-class Shifter;
 class Filter;
 
 class Sound
@@ -46,9 +45,6 @@ private:
 
 	// エフェクター
 	std::unique_ptr<Effector>effe;
-
-	// シフター
-	std::unique_ptr<Shifter>shifter;
 
 	// フィルター
 	std::unique_ptr<Filter>filter;
