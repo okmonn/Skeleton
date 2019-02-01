@@ -1,8 +1,11 @@
 #pragma once
+#include <vector>
 #include <memory>
+#include <thread>
 
 class Application;
 class Sound;
+class Wave;
 
 class Mixer
 {
@@ -19,8 +22,14 @@ private:
 	// 描画
 	void Draw(void);
 
+	// 再生管理
+	void Play(void);
+
 	// 処理
 	void UpData(void);
+
+	// 波形の描画
+	void DrawWave(void);
 
 
 	// アプリケーション
@@ -28,4 +37,16 @@ private:
 
 	//サウンド
 	std::shared_ptr<Sound>sound;
+
+	// 波形
+	std::unique_ptr<Wave>wave;
+
+	// 再生フラグ
+	bool play;
+
+	// スレッドフラグ
+	bool threadFlag;
+
+	// スレッド
+	std::thread th;
 };

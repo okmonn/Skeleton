@@ -1,11 +1,13 @@
 #include "Mixer.h"
 #include "../Application/Application.h"
+#include "../Wave/Wave.h"
 
 // ウィンドウサイズ
 const Vec2 WinSize = { 400, 400 };
 
 // コンストラクタ
-Mixer::Mixer()
+Mixer::Mixer() : 
+	play(false), threadFlag(true)
 {
 	app = std::make_shared<Application>(WinSize);
 }
@@ -13,6 +15,11 @@ Mixer::Mixer()
 // デストラクタ
 Mixer::~Mixer()
 {
+	threadFlag = false;
+	if (th.joinable() == true)
+	{
+		th.join();
+	}
 }
 
 // 描画
@@ -22,50 +29,57 @@ void Mixer::Draw(void)
 	app->Execution();
 }
 
-// 処理
-void Mixer::UpData(void)
+// 再生管理
+void Mixer::Play(void)
 {
-	static bool play = false;
-	auto pass = app->GetDropFilePass();
-	if (pass.find_last_of(".wav") != std::string::npos)
+	if (sound == nullptr)
 	{
-		sound.reset(new Sound(pass));
-		play = false;
 		return;
 	}
 
-	if (sound != nullptr)
+	if (Input::Get().CheckTrigger(INPUT_SPACE))
 	{
-		if (Input::Get().CheckTrigger(INPUT_SPACE) && play == false)
+		if (play == false)
 		{
-			sound->Play(false);
+			sound->Play(true);
 			play = true;
 		}
-		else if (Input::Get().CheckTrigger(INPUT_SPACE) && play == true)
+		else
 		{
 			sound->Stop();
 			play = false;
 		}
+	}
+}
 
-		static float cut = 22000.0f;
-		if (Input::Get().CheckKey(INPUT_DOWN))
+// 処理
+void Mixer::UpData(void)
+{
+	auto pass = app->GetDropFilePass();
+	if (pass.find_last_of(".wav") != std::string::npos)
+	{
+		sound.reset(new Sound(pass));
+		wave.reset(new Wave(app, sound));
+		threadFlag = false;
+		if (th.joinable() == true)
 		{
-			cut -= 100.0f;
-			if (cut < 0.0f)
-			{
-				cut = 0.0f;
-			}
-			sound->LowPass(cut);
+			th.join();
 		}
-		else if (Input::Get().CheckKey(INPUT_UP))
-		{
-			cut += 100.0f;
-			if (cut > 22000.0f)
-			{
-				cut = 22000.0f;
-			}
-			sound->LowPass(cut);
-		}
+		threadFlag = true;
+		th = std::thread(&Mixer::DrawWave, this);
+		play = false;
+		return;
+	}
+
+	Play();
+}
+
+// 波形の描画
+void Mixer::DrawWave(void)
+{
+	while (threadFlag)
+	{
+		wave->Draw();
 	}
 }
 

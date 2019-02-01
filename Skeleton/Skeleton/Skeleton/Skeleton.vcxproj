@@ -148,6 +148,7 @@
     <ClCompile Include="Texture\Texture.cpp" />
     <ClCompile Include="Texture\WICTextureLoader12.cpp" />
     <ClCompile Include="Useful\Useful.cpp" />
+    <ClCompile Include="Wave\Wave.cpp" />
     <ClCompile Include="Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +187,7 @@
     <ClInclude Include="tstring.h" />
     <ClInclude Include="Useful\Useful.h" />
     <ClInclude Include="Vector2.h" />
+    <ClInclude Include="Wave\Wave.h" />
     <ClInclude Include="Window\Icon.h" />
     <ClInclude Include="Window\Window.h" />
   </ItemGroup>

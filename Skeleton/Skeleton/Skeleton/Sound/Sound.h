@@ -36,6 +36,15 @@ public:
 	// ローパス
 	void LowPass(const float& cut, const float& q = 1.0f / std::sqrt(2.0f));
 
+	// サウンド情報の取得
+	snd::Info Getinfo(void) const {
+		return info;
+	}
+	// 現在波形の取得
+	std::vector<float> GetData(void) const {
+		return data[index];
+	}
+
 private:
 	// ソースボイスの生成
 	long CreateVoice(void);

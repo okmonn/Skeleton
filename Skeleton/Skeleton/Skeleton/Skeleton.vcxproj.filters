@@ -115,6 +115,9 @@
     <Filter Include="Main\Mixer">
       <UniqueIdentifier>{f3d33b57-6ce6-4052-bf2a-af0562ba9844}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main\Wave">
+      <UniqueIdentifier>{c28caa9a-ba04-4b39-9829-2015bf9dd29b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Useful\Useful.cpp">
@@ -206,6 +209,9 @@
     </ClCompile>
     <ClCompile Include="Mixer\Mixer.cpp">
       <Filter>Main\Mixer</Filter>
+    </ClCompile>
+    <ClCompile Include="Wave\Wave.cpp">
+      <Filter>Main\Wave</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -319,6 +325,9 @@
     </ClInclude>
     <ClInclude Include="tstring.h">
       <Filter>Library\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Wave\Wave.h">
+      <Filter>Main\Wave</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

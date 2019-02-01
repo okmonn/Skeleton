@@ -68,21 +68,23 @@ void Filter::BandPass(const float & cutoff, const float & bw, const snd::Info & 
 // Às
 std::vector<float> Filter::Execution(const std::vector<float>& input)
 {
-	std::vector<float>adap = input;
-	for (unsigned int i = 0; i < adap.size(); ++i)
-	{
-		adap[i] = b[0] / a[0] * input[i]
-				+ b[1] / a[0] * this->input[0]
-				+ b[2] / a[0] * this->input[1]
-				- a[1] / a[0] * out[0]
-				- a[2] / a[0] * out[1];
+	std::vector<float>adap(input.size());
+	unsigned int index = 0;
+	std::for_each(adap.begin(), adap.end(), [&](float& i)->void {
+		i = b[0] / a[0] * input[index]
+		  + b[1] / a[0] * this->input[0]
+		  + b[2] / a[0] * this->input[1]
+		  - a[1] / a[0] * out[0]
+		  - a[2] / a[0] * out[1];
 
 		this->input[1] = this->input[0];
-		this->input[0] = input[i];
+		this->input[0] = input[index];
 
 		out[1] = out[0];
-		out[0] = adap[i];
-	}
+		out[0] = adap[index];
+
+		++index;
+	});
 
 	return adap;
 }
