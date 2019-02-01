@@ -49,6 +49,12 @@ void Application::ChangeTitle(const std::string & title) const
 	SetWindowTextA(reinterpret_cast<HWND>(win->Get()), title.c_str());
 }
 
+// ドロップされたファイルパスの取得
+std::string Application::GetDropFilePass(void)
+{
+	return win->GetDropPass();
+}
+
 // クラスのインスタンス
 void Application::Instance(const Vec2 & size, void * parent)
 {

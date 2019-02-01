@@ -1,6 +1,6 @@
 #pragma once
 #include "../Vector2.h"
-#include "../Useful/Useful.h"
+#include "../tstring.h"
 
 struct ID3D12DescriptorHeap;
 struct ID3D12Resource;
@@ -73,7 +73,7 @@ private:
 	const wchar_t* name;
 
 	// ドロップされたファイルパス
-	static std::string dropFilePass;
+	static std::tstring dropFilePass;
 
 	// 定数用ヒープ
 	ID3D12DescriptorHeap* cHeap;

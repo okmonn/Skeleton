@@ -24,15 +24,15 @@ Filter::~Filter()
 void Filter::LowPass(const float & cutoff, const float & q, const snd::Info & info)
 {
 	float omega = 2.0f * PI * cutoff / info.sample;
-	float alpha = std::sinf(omega) / (2.0f * q);
+	float alpha = std::sin(omega) / (2.0f * q);
 
 	a[0] =  1.0f + alpha;
-	a[1] = -2.0f * std::cosf(omega);
+	a[1] = -2.0f * std::cos(omega);
 	a[2] =  1.0f - alpha;
 
-	b[0] = (1.0f - std::cosf(omega)) / 2.0f;
-	b[1] =  1.0f - std::cosf(omega);
-	b[2] = (1.0f - std::cosf(omega)) / 2.0f;
+	b[0] = (1.0f - std::cos(omega)) / 2.0f;
+	b[1] =  1.0f - std::cos(omega);
+	b[2] = (1.0f - std::cos(omega)) / 2.0f;
 }
 
 // ハイパスフィルタ
@@ -68,18 +68,21 @@ void Filter::BandPass(const float & cutoff, const float & bw, const snd::Info & 
 // 実行
 std::vector<float> Filter::Execution(const std::vector<float>& input)
 {
-	std::vector<float>output = input;
-	std::for_each(output.begin(), output.end(), [&](float& i)->void {
-		float tmp = i;
-		i = b[0] / a[0] * tmp + b[1] / a[0] * input[0] + b[2] / a[0] * input[1]
-			- a[1] / a[0] * out[0] - a[2] / a[0] * out[1];
+	std::vector<float>adap = input;
+	for (unsigned int i = 0; i < adap.size(); ++i)
+	{
+		adap[i] = b[0] / a[0] * input[i]
+				+ b[1] / a[0] * this->input[0]
+				+ b[2] / a[0] * this->input[1]
+				- a[1] / a[0] * out[0]
+				- a[2] / a[0] * out[1];
 
-		output[1] = output[0];
-		output[0] = tmp;
+		this->input[1] = this->input[0];
+		this->input[0] = input[i];
 
 		out[1] = out[0];
-		out[0] = i;
-	});
+		out[0] = adap[i];
+	}
 
-	return output;
+	return adap;
 }

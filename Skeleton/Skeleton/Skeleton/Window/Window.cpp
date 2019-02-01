@@ -1,9 +1,10 @@
 #include "Window.h"
 #include "Icon.h"
+#include "../Useful/Useful.h"
 #include "../Release.h"
 #include <Windows.h>
 
-std::string Window::dropFilePass = "";
+std::tstring Window::dropFilePass;
 
 // リソース数
 #define RSC_NUM 1
@@ -57,7 +58,7 @@ long __stdcall Window::WindowProc(void* hWnd, unsigned int message, long wParam,
 		drop = reinterpret_cast<HDROP>(wParam);
 		dropFilePass.resize(size);
 		//ファイルパスの取得
-		DragQueryFileA(drop, 0, &dropFilePass[0], sizeof(dropFilePass[0]) * size);
+		DragQueryFile(drop, 0, &dropFilePass[0], sizeof(dropFilePass[0]) * size);
 		break;
 	default:
 		break;
@@ -199,5 +200,10 @@ std::string Window::GetDropPass(void)
 {
 	auto tmp = dropFilePass;
 	dropFilePass.clear();
+
+#ifdef UNICODE
+	return use::ChangeCode(tmp);
+#else
 	return tmp;
+#endif
 }

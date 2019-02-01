@@ -1,4 +1,4 @@
-#include "Application/Application.h"
+#include "Mixer/Mixer.h"
 
 // エントリーポイント
 #ifdef _DEBUG
@@ -7,15 +7,8 @@ int main()
 int __stdcall WinMain(void* hInstance, void* hPrevInstance, char* lpCmdLine, int nShowCmd)
 #endif
 {
-	Application app(400);
-	Sound sound;
-	sound.Load("mtgx.wav");
-	sound.Play();
-	while (app.CheckMag())
-	{
-		app.Clear();
-		app.Execution();
-	}
+	Mixer mix;
+	mix.Execution();
 
 	return 0;
 }

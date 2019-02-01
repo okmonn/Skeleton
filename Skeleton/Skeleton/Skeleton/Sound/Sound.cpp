@@ -41,6 +41,22 @@ Sound::Sound() :
 	st      = std::make_unique<XAUDIO2_VOICE_STATE>();
 }
 
+// コンストラクタ
+Sound::Sound(const std::string & fileName) :
+	voice(nullptr), index(0), read(0), loopPos(0), loop(false), threadFlag(true)
+{
+	info = {};
+	param = { 1.0f };
+	data.resize(BUFFER);
+
+	back   = std::make_unique<VoiceCallback>();
+	effe   = std::make_unique<Effector>("Shader/Effector.hlsl");
+	filter = std::make_unique<Filter>();
+	st     = std::make_unique<XAUDIO2_VOICE_STATE>();
+
+	Load(fileName);
+}
+
 // デストラクタ
 Sound::~Sound()
 {
@@ -145,6 +161,12 @@ void Sound::MoveLoopPos(void)
 	read = loopPos;
 }
 
+// ローパス
+void Sound::LowPass(const float & cut, const float & q)
+{
+	filter->LowPass(cut, q, info);
+}
+
 // 非同期処理
 void Sound::Stream(void)
 {
@@ -166,7 +188,6 @@ void Sound::Stream(void)
 		std::vector<float>tmp(&SndLoader::Get().GetData(name)->at(read), &SndLoader::Get().GetData(name)->at(read + size));
 		effe->Copy(param);
 		tmp = effe->Execution(tmp);
-		tmp = snd::TimeStrutch(tmp, info, 1.5f);
 		tmp = filter->Execution(tmp);
 		data[index] = tmp;
 

@@ -13,299 +13,317 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="etc">
-      <UniqueIdentifier>{6ff13b8d-731b-471c-873b-799f948791cb}</UniqueIdentifier>
+    <Filter Include="Library">
+      <UniqueIdentifier>{5cd3dc4d-6d56-4893-b788-f10587569ff0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Device">
-      <UniqueIdentifier>{7b6dd39d-0d22-470d-8271-cec18744e11e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Command">
-      <UniqueIdentifier>{a2893306-9601-41fe-bb6f-4dae3350f206}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Command\Queue">
-      <UniqueIdentifier>{75937594-9fb9-4ef1-abb6-4699fb24b46e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Command\List">
-      <UniqueIdentifier>{9080c67c-6d4c-45f7-94e0-3745e12de8b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Application">
+    <Filter Include="Library\Application">
       <UniqueIdentifier>{9202baa4-0603-4f3b-8328-7d141cd39f36}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Window">
-      <UniqueIdentifier>{338d2da0-9b4b-4cba-8592-ef100e8e089e}</UniqueIdentifier>
+    <Filter Include="Library\Command">
+      <UniqueIdentifier>{a2893306-9601-41fe-bb6f-4dae3350f206}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Window\Icon">
-      <UniqueIdentifier>{ecd13290-76b4-493c-94ed-25868b47bb71}</UniqueIdentifier>
+    <Filter Include="Library\Command\Queue">
+      <UniqueIdentifier>{75937594-9fb9-4ef1-abb6-4699fb24b46e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="etc\Useful">
-      <UniqueIdentifier>{8ec37922-8925-4fca-9e2f-81e5cc11be94}</UniqueIdentifier>
+    <Filter Include="Library\Command\List">
+      <UniqueIdentifier>{9080c67c-6d4c-45f7-94e0-3745e12de8b1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fence">
-      <UniqueIdentifier>{40a0e5d3-5dda-42f6-805d-f4bd9d8a9303}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Swap">
-      <UniqueIdentifier>{8f8f296c-a297-4e23-bad1-326859879f99}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Render">
-      <UniqueIdentifier>{038196bc-0036-4774-993d-295f76e21754}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Depth">
-      <UniqueIdentifier>{2e13793e-2ec4-459b-b298-37d9b14f26bc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Root">
-      <UniqueIdentifier>{ef9d8fa6-1675-474c-8d36-5715e07f212a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Root\Mane">
-      <UniqueIdentifier>{6f2f17a1-789b-49ad-9907-1d2e18c3cfe1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Pipe">
-      <UniqueIdentifier>{5e4b1a8d-38a0-43ae-8e07-ca0c64faac03}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Pipe\Mane">
-      <UniqueIdentifier>{be957277-1384-408d-988a-de47a57e7e7a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Primitive">
-      <UniqueIdentifier>{160dc62a-c4bc-40e4-a9b6-f05470c2d9ad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Primitive\Mane">
-      <UniqueIdentifier>{1242f6b6-d8ad-4219-a634-1c64f69132c8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Texture">
-      <UniqueIdentifier>{45c65854-f441-4ebf-ae7e-1525b5bea942}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Texture\Loader">
-      <UniqueIdentifier>{122dfef5-50e6-432c-9c88-e627497577dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Texture\WIC">
-      <UniqueIdentifier>{d2445965-837a-4205-8c8e-d17b3d2e5f5d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Texture\Mane">
-      <UniqueIdentifier>{d9cc1cb1-4b31-4e76-be6c-263d0f45e253}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Compute">
+    <Filter Include="Library\Compute">
       <UniqueIdentifier>{a56c7f43-8e4f-4d67-af8e-6661def61ea8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Compute\Effector">
+    <Filter Include="Library\Compute\Effector">
       <UniqueIdentifier>{ce0639b6-3a4b-42d1-9bc6-0400b1ecfb00}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sound">
+    <Filter Include="Library\Depth">
+      <UniqueIdentifier>{2e13793e-2ec4-459b-b298-37d9b14f26bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Device">
+      <UniqueIdentifier>{7b6dd39d-0d22-470d-8271-cec18744e11e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\etc">
+      <UniqueIdentifier>{6ff13b8d-731b-471c-873b-799f948791cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\etc\Useful">
+      <UniqueIdentifier>{8ec37922-8925-4fca-9e2f-81e5cc11be94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\etc\Input">
+      <UniqueIdentifier>{7524ef7f-bfac-4614-bcd1-6b946f9c2d71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Fence">
+      <UniqueIdentifier>{40a0e5d3-5dda-42f6-805d-f4bd9d8a9303}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Pipe">
+      <UniqueIdentifier>{5e4b1a8d-38a0-43ae-8e07-ca0c64faac03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Pipe\Mane">
+      <UniqueIdentifier>{be957277-1384-408d-988a-de47a57e7e7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Primitive">
+      <UniqueIdentifier>{160dc62a-c4bc-40e4-a9b6-f05470c2d9ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Primitive\Mane">
+      <UniqueIdentifier>{1242f6b6-d8ad-4219-a634-1c64f69132c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Render">
+      <UniqueIdentifier>{038196bc-0036-4774-993d-295f76e21754}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Root">
+      <UniqueIdentifier>{ef9d8fa6-1675-474c-8d36-5715e07f212a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Root\Mane">
+      <UniqueIdentifier>{6f2f17a1-789b-49ad-9907-1d2e18c3cfe1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Sound">
       <UniqueIdentifier>{4056a175-6b03-4377-a707-66b7bcb6931a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sound\XAudio2">
+    <Filter Include="Library\Sound\XAudio2">
       <UniqueIdentifier>{afef7e36-8e85-4d72-984d-96a48746821f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sound\Loader">
+    <Filter Include="Library\Sound\Loader">
       <UniqueIdentifier>{f008417c-db63-4883-83bd-7ce61686bd57}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sound\Func">
+    <Filter Include="Library\Sound\Func">
       <UniqueIdentifier>{9652f182-f823-4db0-8463-ca34eda2a2c3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sound\Filter">
+    <Filter Include="Library\Sound\Filter">
       <UniqueIdentifier>{71b0523d-9245-4c8e-9f8c-ff4b687c0e2a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="etc\Input">
-      <UniqueIdentifier>{7524ef7f-bfac-4614-bcd1-6b946f9c2d71}</UniqueIdentifier>
+    <Filter Include="Library\Swap">
+      <UniqueIdentifier>{8f8f296c-a297-4e23-bad1-326859879f99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Texture">
+      <UniqueIdentifier>{45c65854-f441-4ebf-ae7e-1525b5bea942}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Texture\Loader">
+      <UniqueIdentifier>{122dfef5-50e6-432c-9c88-e627497577dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Texture\WIC">
+      <UniqueIdentifier>{d2445965-837a-4205-8c8e-d17b3d2e5f5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Texture\Mane">
+      <UniqueIdentifier>{d9cc1cb1-4b31-4e76-be6c-263d0f45e253}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Window">
+      <UniqueIdentifier>{338d2da0-9b4b-4cba-8592-ef100e8e089e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Window\Icon">
+      <UniqueIdentifier>{ecd13290-76b4-493c-94ed-25868b47bb71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{11edb769-9ccf-469a-ae97-f1a9f000efc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Mixer">
+      <UniqueIdentifier>{f3d33b57-6ce6-4052-bf2a-af0562ba9844}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Useful\Useful.cpp">
-      <Filter>etc\Useful</Filter>
+      <Filter>Library\etc\Useful</Filter>
     </ClCompile>
     <ClCompile Include="Window\Window.cpp">
-      <Filter>Window</Filter>
+      <Filter>Library\Window</Filter>
     </ClCompile>
     <ClCompile Include="Device\Device.cpp">
-      <Filter>Device</Filter>
+      <Filter>Library\Device</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Queue\Queue.cpp">
-      <Filter>Command\Queue</Filter>
+      <Filter>Library\Command\Queue</Filter>
     </ClCompile>
     <ClCompile Include="List\List.cpp">
-      <Filter>Command\List</Filter>
+      <Filter>Library\Command\List</Filter>
     </ClCompile>
     <ClCompile Include="Application\Application.cpp">
-      <Filter>Application</Filter>
+      <Filter>Library\Application</Filter>
     </ClCompile>
     <ClCompile Include="Fence\Fence.cpp">
-      <Filter>Fence</Filter>
+      <Filter>Library\Fence</Filter>
     </ClCompile>
     <ClCompile Include="Swap\Swap.cpp">
-      <Filter>Swap</Filter>
+      <Filter>Library\Swap</Filter>
     </ClCompile>
     <ClCompile Include="Render\Render.cpp">
-      <Filter>Render</Filter>
+      <Filter>Library\Render</Filter>
     </ClCompile>
     <ClCompile Include="Depth\Depth.cpp">
-      <Filter>Depth</Filter>
+      <Filter>Library\Depth</Filter>
     </ClCompile>
     <ClCompile Include="Root\Root.cpp">
-      <Filter>Root</Filter>
+      <Filter>Library\Root</Filter>
     </ClCompile>
     <ClCompile Include="Root\RootMane.cpp">
-      <Filter>Root\Mane</Filter>
+      <Filter>Library\Root\Mane</Filter>
     </ClCompile>
     <ClCompile Include="Pipe\Pipe.cpp">
-      <Filter>Pipe</Filter>
+      <Filter>Library\Pipe</Filter>
     </ClCompile>
     <ClCompile Include="Pipe\PipeMane.cpp">
-      <Filter>Pipe\Mane</Filter>
+      <Filter>Library\Pipe\Mane</Filter>
     </ClCompile>
     <ClCompile Include="Primitive\Primitive.cpp">
-      <Filter>Primitive</Filter>
+      <Filter>Library\Primitive</Filter>
     </ClCompile>
     <ClCompile Include="Primitive\PrimitiveMane.cpp">
-      <Filter>Primitive\Mane</Filter>
+      <Filter>Library\Primitive\Mane</Filter>
     </ClCompile>
     <ClCompile Include="Texture\Texture.cpp">
-      <Filter>Texture</Filter>
+      <Filter>Library\Texture</Filter>
     </ClCompile>
     <ClCompile Include="Texture\TexLoader.cpp">
-      <Filter>Texture\Loader</Filter>
+      <Filter>Library\Texture\Loader</Filter>
     </ClCompile>
     <ClCompile Include="Texture\WICTextureLoader12.cpp">
-      <Filter>Texture\WIC</Filter>
+      <Filter>Library\Texture\WIC</Filter>
     </ClCompile>
     <ClCompile Include="Texture\TexMane.cpp">
-      <Filter>Texture\Mane</Filter>
+      <Filter>Library\Texture\Mane</Filter>
     </ClCompile>
     <ClCompile Include="Compute\Compute.cpp">
-      <Filter>Compute</Filter>
+      <Filter>Library\Compute</Filter>
     </ClCompile>
     <ClCompile Include="Compute\Effector.cpp">
-      <Filter>Compute\Effector</Filter>
+      <Filter>Library\Compute\Effector</Filter>
     </ClCompile>
     <ClCompile Include="Sound\Sound.cpp">
-      <Filter>Sound</Filter>
+      <Filter>Library\Sound</Filter>
     </ClCompile>
     <ClCompile Include="Sound\XAudio2.cpp">
-      <Filter>Sound\XAudio2</Filter>
+      <Filter>Library\Sound\XAudio2</Filter>
     </ClCompile>
     <ClCompile Include="Sound\SndLoader.cpp">
-      <Filter>Sound\Loader</Filter>
+      <Filter>Library\Sound\Loader</Filter>
     </ClCompile>
     <ClCompile Include="Sound\SndFunc.cpp">
-      <Filter>Sound\Func</Filter>
+      <Filter>Library\Sound\Func</Filter>
     </ClCompile>
     <ClCompile Include="Sound\Filter.cpp">
-      <Filter>Sound\Filter</Filter>
+      <Filter>Library\Sound\Filter</Filter>
     </ClCompile>
     <ClCompile Include="Input\Input.cpp">
-      <Filter>etc\Input</Filter>
+      <Filter>Library\etc\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Mixer\Mixer.cpp">
+      <Filter>Main\Mixer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window\Icon.h">
-      <Filter>Window\Icon</Filter>
+      <Filter>Library\Window\Icon</Filter>
     </ClInclude>
     <ClInclude Include="Window\Window.h">
-      <Filter>Window</Filter>
+      <Filter>Library\Window</Filter>
     </ClInclude>
     <ClInclude Include="Useful\Useful.h">
-      <Filter>etc\Useful</Filter>
+      <Filter>Library\etc\Useful</Filter>
     </ClInclude>
     <ClInclude Include="Release.h">
-      <Filter>etc</Filter>
+      <Filter>Library\etc</Filter>
     </ClInclude>
     <ClInclude Include="Device\Device.h">
-      <Filter>Device</Filter>
+      <Filter>Library\Device</Filter>
     </ClInclude>
     <ClInclude Include="Queue\Queue.h">
-      <Filter>Command\Queue</Filter>
+      <Filter>Library\Command\Queue</Filter>
     </ClInclude>
     <ClInclude Include="List\List.h">
-      <Filter>Command\List</Filter>
+      <Filter>Library\Command\List</Filter>
     </ClInclude>
     <ClInclude Include="Application\Application.h">
-      <Filter>Application</Filter>
+      <Filter>Library\Application</Filter>
     </ClInclude>
     <ClInclude Include="Vector2.h">
-      <Filter>etc</Filter>
+      <Filter>Library\etc</Filter>
     </ClInclude>
     <ClInclude Include="Fence\Fence.h">
-      <Filter>Fence</Filter>
+      <Filter>Library\Fence</Filter>
     </ClInclude>
     <ClInclude Include="Swap\Swap.h">
-      <Filter>Swap</Filter>
+      <Filter>Library\Swap</Filter>
     </ClInclude>
     <ClInclude Include="Render\Render.h">
-      <Filter>Render</Filter>
+      <Filter>Library\Render</Filter>
     </ClInclude>
     <ClInclude Include="Depth\Depth.h">
-      <Filter>Depth</Filter>
+      <Filter>Library\Depth</Filter>
     </ClInclude>
     <ClInclude Include="Root\Root.h">
-      <Filter>Root</Filter>
+      <Filter>Library\Root</Filter>
     </ClInclude>
     <ClInclude Include="Root\RootMane.h">
-      <Filter>Root\Mane</Filter>
+      <Filter>Library\Root\Mane</Filter>
     </ClInclude>
     <ClInclude Include="Pipe\Pipe.h">
-      <Filter>Pipe</Filter>
+      <Filter>Library\Pipe</Filter>
     </ClInclude>
     <ClInclude Include="Pipe\PipeMane.h">
-      <Filter>Pipe\Mane</Filter>
+      <Filter>Library\Pipe\Mane</Filter>
     </ClInclude>
     <ClInclude Include="Primitive\Primitive.h">
-      <Filter>Primitive</Filter>
+      <Filter>Library\Primitive</Filter>
     </ClInclude>
     <ClInclude Include="Primitive\PrimitiveInfo.h">
-      <Filter>Primitive</Filter>
+      <Filter>Library\Primitive</Filter>
     </ClInclude>
     <ClInclude Include="Primitive\PrimitiveMane.h">
-      <Filter>Primitive\Mane</Filter>
+      <Filter>Library\Primitive\Mane</Filter>
     </ClInclude>
     <ClInclude Include="Color.h">
-      <Filter>etc</Filter>
+      <Filter>Library\etc</Filter>
     </ClInclude>
     <ClInclude Include="Texture\Texture.h">
-      <Filter>Texture</Filter>
+      <Filter>Library\Texture</Filter>
     </ClInclude>
     <ClInclude Include="Texture\TexLoader.h">
-      <Filter>Texture\Loader</Filter>
+      <Filter>Library\Texture\Loader</Filter>
     </ClInclude>
     <ClInclude Include="Texture\TexInfo.h">
-      <Filter>Texture</Filter>
+      <Filter>Library\Texture</Filter>
     </ClInclude>
     <ClInclude Include="Texture\WICTextureLoader12.h">
-      <Filter>Texture\WIC</Filter>
+      <Filter>Library\Texture\WIC</Filter>
     </ClInclude>
     <ClInclude Include="Texture\TexMane.h">
-      <Filter>Texture\Mane</Filter>
+      <Filter>Library\Texture\Mane</Filter>
     </ClInclude>
     <ClInclude Include="Compute\Compute.h">
-      <Filter>Compute</Filter>
+      <Filter>Library\Compute</Filter>
     </ClInclude>
     <ClInclude Include="Compute\Effector.h">
-      <Filter>Compute\Effector</Filter>
+      <Filter>Library\Compute\Effector</Filter>
     </ClInclude>
     <ClInclude Include="Sound\Sound.h">
-      <Filter>Sound</Filter>
+      <Filter>Library\Sound</Filter>
     </ClInclude>
     <ClInclude Include="Sound\XAudio2.h">
-      <Filter>Sound\XAudio2</Filter>
+      <Filter>Library\Sound\XAudio2</Filter>
     </ClInclude>
     <ClInclude Include="Sound\SndLoader.h">
-      <Filter>Sound\Loader</Filter>
+      <Filter>Library\Sound\Loader</Filter>
     </ClInclude>
     <ClInclude Include="Sound\SndFunc.h">
-      <Filter>Sound\Func</Filter>
+      <Filter>Library\Sound\Func</Filter>
     </ClInclude>
     <ClInclude Include="Sound\VoiceCallback.h">
-      <Filter>Sound\XAudio2</Filter>
+      <Filter>Library\Sound\XAudio2</Filter>
     </ClInclude>
     <ClInclude Include="Sound\Filter.h">
-      <Filter>Sound\Filter</Filter>
+      <Filter>Library\Sound\Filter</Filter>
     </ClInclude>
     <ClInclude Include="Input\Input.h">
-      <Filter>etc\Input</Filter>
+      <Filter>Library\etc\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Mixer\Mixer.h">
+      <Filter>Main\Mixer</Filter>
+    </ClInclude>
+    <ClInclude Include="tstring.h">
+      <Filter>Library\etc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Window\Icon.rc">
-      <Filter>Window\Icon</Filter>
+      <Filter>Library\Window\Icon</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>

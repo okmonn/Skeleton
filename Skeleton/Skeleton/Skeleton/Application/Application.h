@@ -27,6 +27,9 @@ public:
 	// タイトルの変更
 	void ChangeTitle(const std::string& title) const;
 
+	// ドロップされたファイルパスの取得
+	std::string GetDropFilePass(void);
+
 	// ウィンドウサイズの取得
 	Vec2 GetWinSize(void) const;
 

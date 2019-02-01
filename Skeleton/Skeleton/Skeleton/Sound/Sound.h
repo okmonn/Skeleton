@@ -14,6 +14,7 @@ class Sound
 public:
 	// コンストラクタ
 	Sound();
+	Sound(const std::string& fileName);
 	// デストラクタ
 	~Sound();
 
@@ -31,6 +32,9 @@ public:
 
 	// ループ位置に移動
 	void MoveLoopPos(void);
+
+	// ローパス
+	void LowPass(const float& cut, const float& q = 1.0f / std::sqrt(2.0f));
 
 private:
 	// ソースボイスの生成
