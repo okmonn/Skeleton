@@ -3,6 +3,7 @@
 #include "VoiceCallback.h"
 #include "SndLoader.h"
 #include "../Compute/Effector.h"
+#include "Delay.h"
 #include "Filter.h"
 #include "../Useful/Useful.h"
 #include <ks.h>
@@ -32,11 +33,11 @@ Sound::Sound() :
 	voice(nullptr), index(0), read(0), loopPos(0), loop(false), threadFlag(true)
 {
 	info = {};
-	param = { 1.0f };
 	data.resize(BUFFER);
 
 	back    = std::make_unique<VoiceCallback>();
 	effe    = std::make_unique<Effector>("Shader/Effector.hlsl");
+	delay   = std::make_unique<Delay>();
 	filter  = std::make_unique<Filter>();
 	st      = std::make_unique<XAUDIO2_VOICE_STATE>();
 }
@@ -46,11 +47,11 @@ Sound::Sound(const std::string & fileName) :
 	voice(nullptr), index(0), read(0), loopPos(0), loop(false), threadFlag(true)
 {
 	info = {};
-	param = { 1.0f };
 	data.resize(BUFFER);
 
 	back   = std::make_unique<VoiceCallback>();
 	effe   = std::make_unique<Effector>("Shader/Effector.hlsl");
+	delay  = std::make_unique<Delay>();
 	filter = std::make_unique<Filter>();
 	st     = std::make_unique<XAUDIO2_VOICE_STATE>();
 
@@ -161,10 +162,34 @@ void Sound::MoveLoopPos(void)
 	read = loopPos;
 }
 
+// パラメータの調節
+void Sound::SetParam(const snd::Param & param)
+{
+	effe->Copy(param);
+}
+
+// ディレイ調節
+void Sound::SetDelay(const snd::DelayParam & param)
+{
+	delay->SetParam(param);
+}
+
 // ローパス
 void Sound::LowPass(const float & cut, const float & q)
 {
 	filter->LowPass(cut, q, info);
+}
+
+// ハイパス
+void Sound::HighPass(const float & cut, const float & q)
+{
+	filter->HighPass(cut, q, info);
+}
+
+// バンドパス
+void Sound::BandPass(const float & cut, const float & bw)
+{
+	filter->BandPass(cut, bw, info);
 }
 
 // 非同期処理
@@ -186,8 +211,8 @@ void Sound::Stream(void)
 			: SndLoader::Get().GetData(name)->size() - read - 1;
 
 		std::vector<float>tmp(&SndLoader::Get().GetData(name)->at(read), &SndLoader::Get().GetData(name)->at(read + size));
-		effe->Copy(param);
 		tmp = effe->Execution(tmp);
+		tmp = delay->Execution(tmp, info, read);
 		tmp = filter->Execution(tmp);
 		data[index] = tmp;
 
@@ -214,6 +239,7 @@ void Sound::Stream(void)
 				}
 			}
 			read = 0;
+			delay->Clear();
 		}
 	}
 }

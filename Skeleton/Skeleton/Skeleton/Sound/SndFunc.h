@@ -56,6 +56,24 @@ namespace snd
 	struct Param {
 		//音量
 		float volume;
+		//増幅率
+		float amp;
+		//音量レベル
+		float level;
+		//閾値
+		float threshold;
+		//圧縮比率
+		float ratio;
+	};
+
+	// ディレイパラメータ
+	struct DelayParam {
+		//音量減衰率
+		float attenuation;
+		//遅延時間
+		float delayTime;
+		//ループ回数
+		unsigned int loop;
 	};
 
 	// RIFFの読み込み

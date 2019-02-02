@@ -139,6 +139,11 @@ void Application::DrawPoint(const Vec2f & pos, const Color & color)
 // ì_ÇÃï°êîï`âÊ
 void Application::DrawMultiPoint(const std::vector<Vec2f>& pos, const Color & color)
 {
+	if (pos.size() == 0)
+	{
+		return;
+	}
+
 	std::vector<prm::Vertex>vertex(pos.size());
 	unsigned int index = 0;
 	std::for_each(vertex.begin(), vertex.end(), [&](prm::Vertex& vertex)->void {
@@ -160,6 +165,11 @@ void Application::DrawLine(const Vec2f & pos1, const Vec2f & pos2, const Color &
 // ê¸ÇÃï°êîï`âÊ
 void Application::DrawMultiLine(const std::vector<Vec2f>& pos1, const std::vector<Vec2f>& pos2, const Color & color)
 {
+	if (pos1.size() == 0 || pos2.size() == 0)
+	{
+		return;
+	}
+
 	std::vector<prm::Vertex>vertex(pos1.size() + pos2.size());
 	unsigned int index = 0;
 	for (unsigned int i = 0; i < vertex.size(); i += 2)
@@ -184,6 +194,11 @@ void Application::DrawTriangle(const Vec2f & pos1, const Vec2f & pos2, const Vec
 // éOäpå`ÇÃï°êîï`âÊ
 void Application::DrawMultiTriangle(const std::vector<Vec2f>& pos1, const std::vector<Vec2f>& pos2, const std::vector<Vec2f>& pos3, const Color & color)
 {
+	if (pos1.size() == 0 || pos2.size() == 0 || pos3.size() == 0)
+	{
+		return;
+	}
+
 	std::vector<prm::Vertex>vertex(pos1.size() + pos2.size() + pos3.size());
 	unsigned int index = 0;
 	for (unsigned int i = 0; i < vertex.size(); i += 3)

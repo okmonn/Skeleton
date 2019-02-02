@@ -1,25 +1,34 @@
 #include "Mixer.h"
 #include "../Application/Application.h"
 #include "../Wave/Wave.h"
+#include "../Characteristic/Characteristic.h"
+#include <algorithm>
 
 // ウィンドウサイズ
 const Vec2 WinSize = { 400, 400 };
+
+// スレッド数
+#define THREAD_NUM 2
 
 // コンストラクタ
 Mixer::Mixer() : 
 	play(false), threadFlag(true)
 {
 	app = std::make_shared<Application>(WinSize);
+
+	th.resize(THREAD_NUM);
 }
 
 // デストラクタ
 Mixer::~Mixer()
 {
 	threadFlag = false;
-	if (th.joinable() == true)
-	{
-		th.join();
-	}
+	std::for_each(th.begin(), th.end(), [&](std::thread& th)->void {
+		if (th.joinable() == true)
+		{
+			th.join();
+		}
+	});
 }
 
 // 描画
@@ -58,16 +67,27 @@ void Mixer::UpData(void)
 	auto pass = app->GetDropFilePass();
 	if (pass.find_last_of(".wav") != std::string::npos)
 	{
+		if (sound != nullptr)
+		{
+			sound->Stop();
+		}
+
+		threadFlag = false;
+		std::for_each(th.begin(), th.end(), [&](std::thread& th)->void {
+			if (th.joinable() == true)
+			{
+				th.join();
+			}
+		});
+		threadFlag = true;
+
 		sound.reset(new Sound(pass));
 		wave.reset(new Wave(app, sound));
-		threadFlag = false;
-		if (th.joinable() == true)
-		{
-			th.join();
-		}
-		threadFlag = true;
-		th = std::thread(&Mixer::DrawWave, this);
-		play = false;
+		chara.reset(new Characteristic(app, sound));
+		
+		th[0] = std::thread(&Mixer::DrawWave, this);
+		th[1] = std::thread(&Mixer::DrawChara, this);
+		play  = false;
 		return;
 	}
 
@@ -80,6 +100,15 @@ void Mixer::DrawWave(void)
 	while (threadFlag)
 	{
 		wave->Draw();
+	}
+}
+
+// 特性の描画
+void Mixer::DrawChara(void)
+{
+	while (threadFlag)
+	{
+		chara->Draw();
 	}
 }
 

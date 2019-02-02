@@ -7,6 +7,7 @@ struct IXAudio2SourceVoice;
 struct XAUDIO2_VOICE_STATE;
 class VoiceCallback;
 class Effector;
+class Delay;
 class Filter;
 
 class Sound
@@ -33,8 +34,20 @@ public:
 	// ループ位置に移動
 	void MoveLoopPos(void);
 
+	// パラメータの調節
+	void SetParam(const snd::Param& param);
+
+	// ディレイ調節
+	void SetDelay(const snd::DelayParam& param);
+
 	// ローパス
 	void LowPass(const float& cut, const float& q = 1.0f / std::sqrt(2.0f));
+
+	// ハイパス
+	void HighPass(const float& cut, const float& q = 1.0f / std::sqrt(2.0f));
+
+	// バンドパス
+	void BandPass(const float& cut, const float& bw = 1.0f);
 
 	// サウンド情報の取得
 	snd::Info Getinfo(void) const {
@@ -58,6 +71,9 @@ private:
 
 	// エフェクター
 	std::unique_ptr<Effector>effe;
+
+	// ディレイ
+	std::unique_ptr<Delay>delay;
 
 	// フィルター
 	std::unique_ptr<Filter>filter;
@@ -88,9 +104,6 @@ private:
 
 	// サウンド情報
 	snd::Info info;
-
-	// パラメータ
-	snd::Param param;
 
 	// サウンドバッファ
 	std::vector<std::vector<float>>data;

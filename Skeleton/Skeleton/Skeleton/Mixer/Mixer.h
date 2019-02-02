@@ -6,6 +6,7 @@
 class Application;
 class Sound;
 class Wave;
+class Characteristic;
 
 class Mixer
 {
@@ -31,6 +32,9 @@ private:
 	// 波形の描画
 	void DrawWave(void);
 
+	// 特性の描画
+	void DrawChara(void);
+
 
 	// アプリケーション
 	std::shared_ptr<Application>app;
@@ -40,6 +44,9 @@ private:
 
 	// 波形
 	std::unique_ptr<Wave>wave;
+	
+	// 特性
+	std::unique_ptr<Characteristic>chara;
 
 	// 再生フラグ
 	bool play;
@@ -48,5 +55,5 @@ private:
 	bool threadFlag;
 
 	// スレッド
-	std::thread th;
+	std::vector<std::thread>th;
 };

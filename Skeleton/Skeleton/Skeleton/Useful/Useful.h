@@ -39,7 +39,7 @@ namespace use
 	float Sinc(const float& i);
 
 	// ハニング窓関数
-	float Haninng(const unsigned int& i, const size_t& num);
+	double Haninng(const unsigned int& i, const size_t& num);
 
 	// 離散フーリエ変換
 	void DFT(const std::vector<double>& input, std::vector<double>& real, std::vector<double>& imag);

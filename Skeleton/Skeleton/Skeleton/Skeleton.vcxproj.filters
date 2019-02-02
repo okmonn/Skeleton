@@ -118,6 +118,12 @@
     <Filter Include="Main\Wave">
       <UniqueIdentifier>{c28caa9a-ba04-4b39-9829-2015bf9dd29b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Library\Sound\Delay">
+      <UniqueIdentifier>{e1840d16-dd2a-43c7-935b-4536937884af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Characteristic">
+      <UniqueIdentifier>{24fb07b4-3c9c-4dfc-9411-039549e9edc9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Useful\Useful.cpp">
@@ -212,6 +218,12 @@
     </ClCompile>
     <ClCompile Include="Wave\Wave.cpp">
       <Filter>Main\Wave</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\Delay.cpp">
+      <Filter>Library\Sound\Delay</Filter>
+    </ClCompile>
+    <ClCompile Include="Characteristic\Characteristic.cpp">
+      <Filter>Main\Characteristic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -328,6 +340,12 @@
     </ClInclude>
     <ClInclude Include="Wave\Wave.h">
       <Filter>Main\Wave</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\Delay.h">
+      <Filter>Library\Sound\Delay</Filter>
+    </ClInclude>
+    <ClInclude Include="Characteristic\Characteristic.h">
+      <Filter>Main\Characteristic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

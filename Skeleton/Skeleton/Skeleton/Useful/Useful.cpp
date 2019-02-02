@@ -1,5 +1,6 @@
 #include "Useful.h"
 #include <Windows.h>
+#include <algorithm>
 
 // 円周率
 #define PI 3.14159265f
@@ -103,7 +104,7 @@ Vec2 use::GetDisplayResolution(void)
 // 画面上のマウス座標の取得
 Vec2 use::GetMousePos(void)
 {
-	POINT point;
+	POINT point{};
 	GetCursorPos(&point);
 	return { static_cast<int>(point.x), static_cast<int>(point.y) };
 }
@@ -115,7 +116,7 @@ float use::Sinc(const float & i)
 }
 
 // ハニング窓関数
-float use::Haninng(const unsigned int & i, const size_t & num)
+double use::Haninng(const unsigned int & i, const size_t & num)
 {
 	return (num % 2 == 0)
 		? 0.5 - 0.5 * std::cos(2.0 * PI * i / num)
@@ -288,7 +289,7 @@ void use::FFT(const std::vector<float>& input, std::vector<float>& real, std::ve
 				unsigned int index1 = static_cast<unsigned int>(std::pow(2, stage - st + 1)) * i + n;
 				unsigned int index2 = static_cast<unsigned int>(std::pow(2, stage - st)) + index1;
 
-				float p = std::pow(2.0f, st - 1) * n;
+				float p = std::pow(2.0f, static_cast<float>(st - 1)) * n;
 
 				float re0 = real[index1];
 				float im0 = imag[index1];
@@ -406,7 +407,7 @@ std::vector<float> use::IFFT(const std::vector<float>& real, const std::vector<f
 				unsigned int index1 = static_cast<unsigned int>(std::pow(2, stage - st + 1)) * i + n;
 				unsigned int index2 = static_cast<unsigned int>(std::pow(2, stage - st)) + index1;
 
-				float p = pow(2.0f, st - 1) * n;
+				float p = pow(2.0f, static_cast<float>(st - 1)) * n;
 
 				float re0 = re[index1];
 				float im0 = im[index1];

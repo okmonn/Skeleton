@@ -1,4 +1,4 @@
-#include "Wave.h"
+#include "Characteristic.h"
 #include "../Application/Application.h"
 #include <algorithm>
 
@@ -6,18 +6,18 @@
 const Vec2 winSize = { 400, 400 };
 
 // コンストラクタ
-Wave::Wave(std::weak_ptr<Application> app, std::weak_ptr<Sound> sound) : sound(sound)
+Characteristic::Characteristic(std::weak_ptr<Application> app, std::weak_ptr<Sound> sound) : sound(sound)
 {
 	this->app = std::make_unique<Application>(app, winSize);
 }
 
 // デストラクタ
-Wave::~Wave()
+Characteristic::~Characteristic()
 {
 }
 
 // 描画
-void Wave::Draw(void)
+void Characteristic::Draw(void)
 {
 	if (sound.expired())
 	{

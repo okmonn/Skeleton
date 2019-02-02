@@ -14,7 +14,7 @@
 // コンストラクタ
 Effector::Effector(const std::string & fileName)
 {
-	param = {};
+	param = { 1.0f, 1.0f, 1.0f, 1.0f, (1.0f / 10.0f) };
 
 	Load("effector", fileName);
 }

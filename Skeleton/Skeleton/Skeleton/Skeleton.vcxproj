@@ -120,6 +120,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
+    <ClCompile Include="Characteristic\Characteristic.cpp" />
     <ClCompile Include="Compute\Compute.cpp" />
     <ClCompile Include="Compute\Effector.cpp" />
     <ClCompile Include="Depth\Depth.cpp" />
@@ -137,6 +138,7 @@
     <ClCompile Include="Render\Render.cpp" />
     <ClCompile Include="Root\Root.cpp" />
     <ClCompile Include="Root\RootMane.cpp" />
+    <ClCompile Include="Sound\Delay.cpp" />
     <ClCompile Include="Sound\Filter.cpp" />
     <ClCompile Include="Sound\SndFunc.cpp" />
     <ClCompile Include="Sound\SndLoader.cpp" />
@@ -153,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
+    <ClInclude Include="Characteristic\Characteristic.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Compute\Compute.h" />
     <ClInclude Include="Compute\Effector.h" />
@@ -172,6 +175,7 @@
     <ClInclude Include="Render\Render.h" />
     <ClInclude Include="Root\Root.h" />
     <ClInclude Include="Root\RootMane.h" />
+    <ClInclude Include="Sound\Delay.h" />
     <ClInclude Include="Sound\Filter.h" />
     <ClInclude Include="Sound\SndFunc.h" />
     <ClInclude Include="Sound\SndLoader.h" />
