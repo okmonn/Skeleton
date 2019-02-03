@@ -212,6 +212,7 @@ void Sound::Stream(void)
 
 		std::vector<float>tmp(&SndLoader::Get().GetData(name)->at(read), &SndLoader::Get().GetData(name)->at(read + size));
 		tmp = effe->Execution(tmp);
+		tmp = snd::Test(tmp);
 		tmp = delay->Execution(tmp, info, read);
 		tmp = filter->Execution(tmp);
 		data[index] = tmp;

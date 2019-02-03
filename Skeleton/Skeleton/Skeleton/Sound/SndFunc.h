@@ -90,4 +90,6 @@ namespace snd
 
 	// 16ビット波形の読み込み
 	int LoadWave16(std::vector<float>& data, FILE* file);
+
+	std::vector<float>Test(const std::vector<float>& input);
 }

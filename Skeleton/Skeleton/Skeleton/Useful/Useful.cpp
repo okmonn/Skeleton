@@ -2,9 +2,6 @@
 #include <Windows.h>
 #include <algorithm>
 
-// 円周率
-#define PI 3.14159265f
-
 // ユニコード変換
 std::wstring use::ChangeCode(const std::string & code)
 {
@@ -38,7 +35,7 @@ std::string use::ChangeCode(const std::wstring & code)
 // ラジアン変換
 float use::Rad(const float & i)
 {
-	return (i * PI) / 180.0f;
+	return (i * PIF) / 180.0f;
 }
 
 // バイト変換
@@ -126,87 +123,103 @@ double use::Haninng(const unsigned int & i, const size_t & num)
 // 離散フーリエ変換
 void use::DFT(const std::vector<double>& input, std::vector<double>& real, std::vector<double>& imag)
 {
-	real.resize(input.size());
-	imag.resize(input.size());
+	unsigned int index = 0;
 
-	for (unsigned int i = 0; i < input.size(); ++i)
-	{
+	//実部
+	real.assign(input.size(), 0.0);
+	std::for_each(real.begin(), real.end(), [&](double& i)->void {
 		for (unsigned int n = 0; n < input.size(); ++n)
 		{
-			double re =  std::cos(2.0 * static_cast<double>(PI) * i * n / real.size());
-			double im = -std::sin(2.0 * static_cast<double>(PI) * i * n / imag.size());
-
-			real[i] += re * input[n];
-			imag[i] += im * input[n];
-			//real[i] += re * input[n] * Haninng(n, real.size());
-			//imag[i] += im * input[n] * Haninng(n, imag.size());
+			auto re = std::cos(2.0 * PI * index * n / input.size());
+			i += re * input[n];
 		}
-	}
+		++index;
+	});
+
+	index = 0;
+
+	//虚部
+	imag.assign(input.size(), 0.0);
+	std::for_each(imag.begin(), imag.end(), [&](double& i)->void {
+		for (unsigned int n = 0; n < input.size(); ++n)
+		{
+			auto im = -std::sin(2.0 * PI * index * n / input.size());
+			i += im * input[n];
+		}
+		++index;
+	});
 }
 
-//離散フーリエ変換・精度低下
+//離散フーリエ変換
 void use::DFT(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag)
 {
-	real.resize(input.size());
-	imag.resize(input.size());
+	unsigned int index = 0;
 
-	for (unsigned int i = 0; i < input.size(); ++i)
-	{
+	//実部
+	real.assign(input.size(), 0.0);
+	std::for_each(real.begin(), real.end(), [&](float& i)->void {
 		for (unsigned int n = 0; n < input.size(); ++n)
 		{
-			float re =  std::cos(2.0f * PI * i * n / real.size());
-			float im = -std::sin(2.0f * PI * i * n / imag.size());
-
-			real[i] += re * input[n];
-			imag[i] += im * input[n];
-			//real[i] += re * input[n] * Haninng(n, real.size());
-			//imag[i] += im * input[n] * Haninng(n, imag.size());
+			auto re = std::cos(2.0f * PIF * index * n / input.size());
+			i += re * input[n];
 		}
-	}
+		++index;
+	});
+
+	index = 0;
+
+	//虚部
+	imag.assign(input.size(), 0.0);
+	std::for_each(imag.begin(), imag.end(), [&](float& i)->void {
+		for (unsigned int n = 0; n < input.size(); ++n)
+		{
+			auto im = -std::sin(2.0f * PIF * index * n / input.size());
+			i += im * input[n];
+		}
+		++index;
+	});
 }
 
 // 逆離散フーリエ変換
 std::vector<double> use::IDFT(const std::vector<double>& real, const std::vector<double>& imag)
 {
-	std::vector<double>output(real.size());
+	unsigned int index = 0;
 
-	for (unsigned int i = 0; i < output.size(); ++i)
-	{
-		for (unsigned int n = 0; n < output.size(); ++n)
+	std::vector<double>adap(real.size(), 0.0);
+	std::for_each(adap.begin(), adap.end(), [&](double& i)->void {
+		for (unsigned int n = 0; n < real.size(); ++n)
 		{
-			double re = std::cos(2.0 * static_cast<double>(PI) * i * n / real.size());
-			double im = std::sin(2.0 * static_cast<double>(PI) * i * n / imag.size());
+			auto re = std::cos(2.0 * PI * index * n / real.size());
+			auto im = std::sin(2.0 * PI * index*  n / imag.size());
 
-			output[i] += re * real[n] - im * imag[n];
+			i += re * real[n] - im * imag[n];
 		}
+		i /= real.size();
+		++index;
+	});
 
-		output[i] /= real.size();
-		//output[i] /= real.size() * Haninng(i, output.size());
-	}
-
-	return output;
+	return adap;
 }
 
-// 逆離散フーリエ変換・精度低下
+// 逆離散フーリエ変換
 std::vector<float> use::IDFT(const std::vector<float>& real, const std::vector<float>& imag)
 {
-	std::vector<float>output(real.size());
+	unsigned int index = 0;
 
-	for (unsigned int i = 0; i < output.size(); ++i)
-	{
-		for (unsigned int n = 0; n < output.size(); ++n)
+	std::vector<float>adap(real.size(), 0.0);
+	std::for_each(adap.begin(), adap.end(), [&](float& i)->void {
+		for (unsigned int n = 0; n < real.size(); ++n)
 		{
-			float re = std::cos(2.0f * PI * i * n / real.size());
-			float im = std::sin(2.0f * PI * i * n / imag.size());
+			auto re = std::cos(2.0f * PIF * index * n / real.size());
+			auto im = std::sin(2.0f * PIF * index*  n / imag.size());
 
-			output[i] += re * real[n] - im * imag[n];
+			i += re * real[n] - im * imag[n];
 		}
+		i /= real.size();
+		++index;
+	});
 
-		output[i] /= real.size();
-		//output[i] /= real.size() * Haninng(i, output.size());
-	}
-
-	return output;
+	return adap;
 }
 
 // 高速フーリエ変換
@@ -216,10 +229,10 @@ void use::FFT(const std::vector<double>& input, std::vector<double>& real, std::
 	unsigned int num   = static_cast<unsigned int>(std::pow(2, stage));
 
 	real = input;
-	real.resize(num);
-	imag.resize(num);
+	real.resize(num, 0.0);
+	imag.resize(num, 0.0);
 
-	std::vector<unsigned int>index(num);
+	std::vector<unsigned int>index(num, 0);
 
 	for (unsigned int st = 1; st <= stage; ++st)
 	{
@@ -230,14 +243,14 @@ void use::FFT(const std::vector<double>& input, std::vector<double>& real, std::
 				unsigned int index1 = static_cast<unsigned int>(std::pow(2, stage - st + 1)) * i + n;
 				unsigned int index2 = static_cast<unsigned int>(std::pow(2, stage - st)) + index1;
 
-				double p = std::pow(2, st - 1) * n;
-
-				double re0 = real[index1];
-				double im0 = imag[index1];
-				double re1 = real[index2];
-				double im1 = imag[index2];
-				double re2 =  std::cos(2.0 * static_cast<double>(PI) * p / num);
-				double im2 = -std::sin(2.0 * static_cast<double>(PI) * p / num);
+				auto p = std::pow(2, st - 1) * n;
+				 
+				auto re0 =  real[index1];
+				auto im0 =  imag[index1];
+				auto re1 =  real[index2];
+				auto im1 =  imag[index2];
+				auto re2 =  std::cos(2.0 * PI * p / num);
+				auto im2 = -std::sin(2.0 * PI * p / num);
 
 				real[index1] = re0 + re1;
 				imag[index1] = im0 + im1;
@@ -268,17 +281,17 @@ void use::FFT(const std::vector<double>& input, std::vector<double>& real, std::
 	}
 }
 
-// 高速フーリエ変換・精度低下
+// 高速フーリエ変換
 void use::FFT(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag)
 {
 	unsigned int stage = static_cast<unsigned int>(std::ceil(log2(input.size())));
 	unsigned int num   = static_cast<unsigned int>(std::pow(2, stage));
 
 	real = input;
-	real.resize(num);
-	imag.resize(num);
+	real.resize(num, 0.0f);
+	imag.resize(num, 0.0f);
 
-	std::vector<unsigned int>index(num);
+	std::vector<unsigned int>index(num, 0);
 
 	for (unsigned int st = 1; st <= stage; ++st)
 	{
@@ -289,14 +302,14 @@ void use::FFT(const std::vector<float>& input, std::vector<float>& real, std::ve
 				unsigned int index1 = static_cast<unsigned int>(std::pow(2, stage - st + 1)) * i + n;
 				unsigned int index2 = static_cast<unsigned int>(std::pow(2, stage - st)) + index1;
 
-				float p = std::pow(2.0f, static_cast<float>(st - 1)) * n;
+				auto p = std::pow(2.0f, static_cast<float>(st - 1)) * n;
 
-				float re0 = real[index1];
-				float im0 = imag[index1];
-				float re1 = real[index2];
-				float im1 = imag[index2];
-				float re2 =  std::cos(2.0f * PI * p / num);
-				float im2 = -std::sin(2.0f * PI * p / num);
+				auto re0 =  real[index1];
+				auto im0 =  imag[index1];
+				auto re1 =  real[index2];
+				auto im1 =  imag[index2];
+				auto re2 =  std::cos(2.0f * PIF * p / num);
+				auto im2 = -std::sin(2.0f * PIF * p / num);
 
 				real[index1] = re0 + re1;
 				imag[index1] = im0 + im1;
@@ -335,7 +348,7 @@ std::vector<double> use::IFFT(const std::vector<double>& real, const std::vector
 
 	std::vector<double>re = real;
 	std::vector<double>im = imag;
-	std::vector<unsigned int>index(num);
+	std::vector<unsigned int>index(num, 0);
 
 	for (unsigned int st = 1; st <= stage; ++st)
 	{
@@ -346,14 +359,14 @@ std::vector<double> use::IFFT(const std::vector<double>& real, const std::vector
 				unsigned int index1 = static_cast<unsigned int>(std::pow(2, stage - st + 1)) * i + n;
 				unsigned int index2 = static_cast<unsigned int>(std::pow(2, stage - st)) + index1;
 
-				double p = pow(2, st - 1) * n;
+				auto p = pow(2, st - 1) * n;
 
-				double re0 = re[index1];
-				double im0 = im[index1];
-				double re1 = re[index2];
-				double im1 = im[index2];
-				double re2 = std::cos(2.0 * static_cast<double>(PI) * p / num);
-				double im2 = std::sin(2.0 * static_cast<double>(PI) * p / num);
+				auto re0 = re[index1];
+				auto im0 = im[index1];
+				auto re1 = re[index2];
+				auto im1 = im[index2];
+				auto re2 = std::cos(2.0 * PI * p / num);
+				auto im2 = std::sin(2.0 * PI * p / num);
 
 				re[index1] = re0 + re1;
 				im[index1] = im0 + im1;
@@ -385,18 +398,18 @@ std::vector<double> use::IFFT(const std::vector<double>& real, const std::vector
 		im[n] /= num;
 	}
 
-	return std::vector<double>(&re[0], &re[outNum - 1]);
+	return std::vector<double>(&re[0], &re[outNum]);
 }
 
-// 逆高速フーリエ変換・精度低下
+// 逆高速フーリエ変換
 std::vector<float> use::IFFT(const std::vector<float>& real, const std::vector<float>& imag, const unsigned int & outNum)
 {
 	unsigned int stage = static_cast<unsigned int>(std::log2(real.size()));
-	unsigned int num = static_cast<unsigned int>(std::pow(2, stage));
+	unsigned int num   = static_cast<unsigned int>(std::pow(2, stage));
 
 	std::vector<float>re = real;
 	std::vector<float>im = imag;
-	std::vector<unsigned int>index(num);
+	std::vector<unsigned int>index(num, 0);
 
 	for (unsigned int st = 1; st <= stage; ++st)
 	{
@@ -407,14 +420,14 @@ std::vector<float> use::IFFT(const std::vector<float>& real, const std::vector<f
 				unsigned int index1 = static_cast<unsigned int>(std::pow(2, stage - st + 1)) * i + n;
 				unsigned int index2 = static_cast<unsigned int>(std::pow(2, stage - st)) + index1;
 
-				float p = pow(2.0f, static_cast<float>(st - 1)) * n;
+				auto p = pow(2.0f, static_cast<float>(st - 1)) * n;
 
-				float re0 = re[index1];
-				float im0 = im[index1];
-				float re1 = re[index2];
-				float im1 = im[index2];
-				float re2 = std::cos(2.0f * PI * p / num);
-				float im2 = std::sin(2.0f * PI * p / num);
+				auto re0 = re[index1];
+				auto im0 = im[index1];
+				auto re1 = re[index2];
+				auto im1 = im[index2];
+				auto re2 = std::cos(2.0f * PIF * p / num);
+				auto im2 = std::sin(2.0f * PIF * p / num);
 
 				re[index1] = re0 + re1;
 				im[index1] = im0 + im1;
@@ -446,5 +459,62 @@ std::vector<float> use::IFFT(const std::vector<float>& real, const std::vector<f
 		im[n] /= num;
 	}
 
-	return std::vector<float>(&re[0], &re[outNum - 1]);
+	return std::vector<float>(&re[0], &re[outNum]);
+}
+
+// 振幅の取得
+std::vector<double> use::Amplitude(const std::vector<double>& real, const std::vector<double>& imag)
+{
+	unsigned int index = 0;
+
+	std::vector<double>adap(real.size());
+	std::for_each(adap.begin(), adap.end(), [&](double& i)->void {
+		i = std::sqrt(real[index] * real[index] + imag[index] * imag[index]);
+		++index;
+	});
+
+	return adap;
+}
+
+// 振幅の取得
+std::vector<float> use::Amplitude(const std::vector<float>& real, const std::vector<float>& imag)
+{
+	unsigned int index = 0;
+
+	std::vector<float>adap(real.size());
+	std::for_each(adap.begin(), adap.end(), [&](float& i)->void {
+		i = std::sqrt(real[index] * real[index] + imag[index] * imag[index]);
+		i = Round(i, -1);
+		++index;
+	});
+
+	return adap;
+}
+
+// 位相の取得
+std::vector<double> use::Phase(const std::vector<double>& real, const std::vector<double>& imag)
+{
+	unsigned int index = 0;
+
+	std::vector<double>adap(real.size());
+	std::for_each(adap.begin(), adap.end(), [&](double& i)->void {
+		i = std::atan2(static_cast<int>(imag[index]), static_cast<int>(real[index]));
+		++index;
+	});
+
+	return adap;
+}
+
+// 位相の取得
+std::vector<float> use::Phase(const std::vector<float>& real, const std::vector<float>& imag)
+{
+	unsigned int index = 0;
+
+	std::vector<float>adap(real.size());
+	std::for_each(adap.begin(), adap.end(), [&](float& i)->void {
+		i = static_cast<float>(std::atan2(static_cast<int>(imag[index]), static_cast<int>(real[index])));
+		++index;
+	});
+
+	return adap;
 }

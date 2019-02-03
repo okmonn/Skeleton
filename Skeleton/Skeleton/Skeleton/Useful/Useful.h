@@ -3,6 +3,11 @@
 #include <string>
 #include <vector>
 
+// 円周率(double)
+#define PI 3.141592653589979323846
+// 円周率(float)
+#define PIF 3.141592653589979323846f
+
 namespace use
 {
 	// ユニコード変換
@@ -43,21 +48,25 @@ namespace use
 
 	// 離散フーリエ変換
 	void DFT(const std::vector<double>& input, std::vector<double>& real, std::vector<double>& imag);
-	//離散フーリエ変換・精度低下
 	void DFT(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag);
 
 	// 逆離散フーリエ変換
 	std::vector<double> IDFT(const std::vector<double>& real, const std::vector<double>& imag);
-	// 逆離散フーリエ変換・精度低下
 	std::vector<float> IDFT(const std::vector<float>& real, const std::vector<float>& imag);
 
 	// 高速フーリエ変換
 	void FFT(const std::vector<double>& input, std::vector<double>& real, std::vector<double>& imag);
-	// 高速フーリエ変換・精度低下
 	void FFT(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag);
 
 	// 逆高速フーリエ変換
 	std::vector<double> IFFT(const std::vector<double>& real, const std::vector<double>& imag, const unsigned int& outNum);
-	// 逆高速フーリエ変換・精度低下
 	std::vector<float> IFFT(const std::vector<float>& real, const std::vector<float>& imag, const unsigned int& outNum);
+
+	// 振幅の取得
+	std::vector<double> Amplitude(const std::vector<double>& real, const std::vector<double>& imag);
+	std::vector<float> Amplitude(const std::vector<float>& real, const std::vector<float>& imag);
+
+	// 位相の取得
+	std::vector<double> Phase(const std::vector<double>& real, const std::vector<double>& imag);
+	std::vector<float> Phase(const std::vector<float>& real, const std::vector<float>& imag);
 }
