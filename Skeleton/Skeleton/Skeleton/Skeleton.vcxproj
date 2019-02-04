@@ -129,7 +129,11 @@
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="List\List.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Manager\DistortionMane.cpp" />
+    <ClCompile Include="Manager\FilterMane.cpp" />
+    <ClCompile Include="Manager\Manager.cpp" />
     <ClCompile Include="Mixer\Mixer.cpp" />
+    <ClCompile Include="Mouse\Mouse.cpp" />
     <ClCompile Include="Pipe\Pipe.cpp" />
     <ClCompile Include="Pipe\PipeMane.cpp" />
     <ClCompile Include="Primitive\Primitive.cpp" />
@@ -164,7 +168,11 @@
     <ClInclude Include="Fence\Fence.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="List\List.h" />
+    <ClInclude Include="Manager\DistortionMane.h" />
+    <ClInclude Include="Manager\FilterMane.h" />
+    <ClInclude Include="Manager\Manager.h" />
     <ClInclude Include="Mixer\Mixer.h" />
+    <ClInclude Include="Mouse\Mouse.h" />
     <ClInclude Include="Pipe\Pipe.h" />
     <ClInclude Include="Pipe\PipeMane.h" />
     <ClInclude Include="Primitive\Primitive.h" />

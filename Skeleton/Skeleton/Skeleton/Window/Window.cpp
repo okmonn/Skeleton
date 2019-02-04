@@ -94,7 +94,10 @@ int Window::CreateWnd(void * parent)
 	rect.top    = 0;
 	AdjustWindowRect(&rect, flag, false);
 
-	handle = CreateWindowEx(WS_EX_ACCEPTFILES, wnd.lpszClassName, _T("‚¨‚©‚à‚ñ"), flag, CW_USEDEFAULT, CW_USEDEFAULT,
+	auto disSize = use::GetDisplayResolution();
+	Vec2 pos = { use::GetRand(0, disSize.x - size.x), use::GetRand(0, disSize.y - size.y) };
+
+	handle = CreateWindowEx(WS_EX_ACCEPTFILES, wnd.lpszClassName, _T("‚¨‚©‚à‚ñ"), flag, pos.x, pos.y,
 		(rect.right - rect.left), (rect.bottom - rect.top), reinterpret_cast<HWND>(parent), nullptr, wnd.hInstance, nullptr);
 	if (handle == nullptr)
 	{

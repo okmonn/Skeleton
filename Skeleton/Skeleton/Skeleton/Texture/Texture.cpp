@@ -208,7 +208,7 @@ void Texture::SetDraw(const DirectX::XMFLOAT2 & pos, const DirectX::XMFLOAT2 & s
 	DirectX::XMStoreFloat4x4(&info->matrix,
 		DirectX::XMMatrixAffineTransformation2D(
 			DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(size.x / static_cast<float>(win.lock()->GetSize().x), size.y / static_cast<float>(win.lock()->GetSize().y))),
-			DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(pos.x + size.x / 2.0f, pos.y + size.x / 2.0f)),
+			DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(size.x / 2.0f, size.y / 2.0f)),
 			angle,
 			DirectX::XMLoadFloat2(&pos)
 		));

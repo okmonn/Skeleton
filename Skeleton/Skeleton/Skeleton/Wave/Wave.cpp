@@ -9,6 +9,7 @@ const Vec2 winSize = { 400, 400 };
 Wave::Wave(std::weak_ptr<Application> app, std::weak_ptr<Sound> sound) : sound(sound)
 {
 	this->app = std::make_unique<Application>(app, winSize);
+	this->app->ChangeTitle("音声波形");
 }
 
 // デストラクタ
@@ -53,7 +54,7 @@ void Wave::Draw(void)
 	index = 0;
 	std::vector<Vec2f>pos2(data.size());
 	std::for_each(pos2.begin(), pos2.end(), [&](Vec2f& pos)->void {
-		pos = { x * index, static_cast<float>(winSize.y / 2) + static_cast<float>(winSize.y / 2) * data[index] };
+		pos = { x * index, static_cast<float>(winSize.y / 2) - data[index] * 100 };
 		++index;
 	});
 

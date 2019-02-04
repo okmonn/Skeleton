@@ -41,6 +41,8 @@ cbuffer Param : register(b0)
     float threshold;
     //圧縮比率
     float ratio;
+    //ノイズゲート用閾値
+    float noiseThd;
 };
 
 // ディストーション(ハードクリッピング)
@@ -63,6 +65,15 @@ void Distortion(uint id)
     //{
     //    output[id] = atan(output[id]) / PI / 2.0f * 0.1f;
     //}
+}
+
+// ノイズゲート
+void NoiseGate(uint id)
+{
+    if(output[id] <= noiseThd && output[id] >= -noiseThd)
+    {
+        output[id] = 0.0f;
+    }
 }
 
 // リミッタ
@@ -126,6 +137,7 @@ void CS(uint3 gID : SV_GroupID, uint3 gtID : SV_GroupThreadID, uint3 disID : SV_
     output[gID.x] = input[gID.x];
 
     Distortion(gID.x);
+    NoiseGate(gID.x);
     Compressor(gID.x);
     Volume(gID.x);
 

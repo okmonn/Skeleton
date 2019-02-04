@@ -17,6 +17,10 @@ public:
 	// 実行
 	std::vector<float> Execution(const std::vector<float>& input);
 
+	// パラメータの取得
+	snd::Param GetParam(void) const {
+		return param;
+	}
 	// パラメータのコピー
 	void Copy(const snd::Param& param) {
 		this->param = param;

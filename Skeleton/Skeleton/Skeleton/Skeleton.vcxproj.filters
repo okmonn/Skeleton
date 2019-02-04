@@ -124,6 +124,18 @@
     <Filter Include="Main\Characteristic">
       <UniqueIdentifier>{24fb07b4-3c9c-4dfc-9411-039549e9edc9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main\Mouse">
+      <UniqueIdentifier>{d15dd268-f557-443e-b52c-138892762e74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Manager">
+      <UniqueIdentifier>{4c5ac5b4-4caa-4c3b-afad-9a03dc63d7b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Manager\FilterMane">
+      <UniqueIdentifier>{03d2260f-9d45-4e6b-8e14-9c9a2822c6dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Manager\DistortionMane">
+      <UniqueIdentifier>{dfba32d7-395b-4c4c-85f7-711cfbec0ffa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Useful\Useful.cpp">
@@ -224,6 +236,18 @@
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Mouse\Mouse.cpp">
+      <Filter>Main\Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\Manager.cpp">
+      <Filter>Main\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\FilterMane.cpp">
+      <Filter>Main\Manager\FilterMane</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\DistortionMane.cpp">
+      <Filter>Main\Manager\DistortionMane</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -346,6 +370,18 @@
     </ClInclude>
     <ClInclude Include="Characteristic\Characteristic.h">
       <Filter>Main\Characteristic</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse\Mouse.h">
+      <Filter>Main\Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\Manager.h">
+      <Filter>Main\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\FilterMane.h">
+      <Filter>Main\Manager\FilterMane</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\DistortionMane.h">
+      <Filter>Main\Manager\DistortionMane</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

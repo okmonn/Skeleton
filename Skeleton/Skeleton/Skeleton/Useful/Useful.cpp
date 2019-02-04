@@ -1,5 +1,6 @@
 #include "Useful.h"
 #include <Windows.h>
+#include <random>
 #include <algorithm>
 
 // ユニコード変換
@@ -64,6 +65,36 @@ float use::Round(const float & i, const int & num)
 	tmp *= std::pow(10.0f, num + 1);
 
 	return tmp;
+}
+
+// ランダム値の取得
+int use::GetRand(const int & min, const int & max)
+{
+	std::random_device dev;
+#ifdef _WIN64
+	std::mt19937_64 mt(dev());
+#else
+	std::mt19937 mt(dev());
+#endif
+
+	std::uniform_int_distribution<> rand(min, max);
+
+	return rand(mt);
+}
+
+// ランダム値の取得
+float use::GetRand(const float & min, const float & max)
+{
+	std::random_device dev;
+#ifdef _WIN64
+	std::mt19937_64 mt(dev());
+#else
+	std::mt19937 mt(dev());
+#endif
+
+	std::uniform_real_distribution<float> rand(min, max);
+
+	return rand(mt);
 }
 
 // 文字の確認

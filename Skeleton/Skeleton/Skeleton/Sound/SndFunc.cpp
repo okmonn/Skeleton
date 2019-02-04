@@ -100,7 +100,7 @@ int snd::LoadWave8(std::vector<float>& data, FILE * file)
 	fread(tmp.data(), sizeof(unsigned char) * tmp.size(), 1, file);
 	data.assign(tmp.begin(), tmp.end());
 	std::for_each(data.begin(), data.end(), [&](float& i)->void {
-		i /= OVERFLLOW_CHAR;
+		i /= OVERFLLOW_CHAR - 0.5f;
 	});
 
 	return 0;
@@ -121,44 +121,4 @@ int snd::LoadWave16(std::vector<float>& data, FILE * file)
 	});
 
 	return 0;
-}
-
-std::vector<float> snd::Test(const std::vector<float>& input)
-{
-	//臒l
-	const float thd = 0.5f;
-	std::vector<float>real, imag;
-	use::FFT(input, real, imag);
-
-	unsigned int index = 0;
-	std::vector<float>a(real.size());
-	std::for_each(a.begin(), a.end(), [&](float& i)->void {
-		i = sqrt(real[index] * real[index] + imag[index] * imag[index]);
-		++index;
-	});
-	index = 0;
-	std::vector<float>b(imag.size());
-	std::for_each(b.begin(), b.end(), [&](float& i)->void {
-		i = (float)atan2(static_cast<int>(imag[index]), static_cast<int>(real[index]));
-		++index;
-	});
-
-	index = 0;
-	std::for_each(real.begin(), real.end(), [&](float& i)->void {
-		a[index] -= thd;
-		if (a[index] < 0.0f)
-		{
-			a[index] = 0.0f;
-		}
-		i = a[index] * cos(b[index]);
-		++index;
-	});
-
-	index = 0;
-	std::for_each(imag.begin(), imag.end(), [&](float& i)->void {
-		i = a[index] * sin(b[index]);
-		++index;
-	});
-
-	return use::IFFT(real, imag, input.size());
 }

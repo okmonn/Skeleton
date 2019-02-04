@@ -9,6 +9,7 @@ const Vec2 winSize = { 400, 400 };
 Characteristic::Characteristic(std::weak_ptr<Application> app, std::weak_ptr<Sound> sound) : sound(sound)
 {
 	this->app = std::make_unique<Application>(app, winSize);
+	this->app->ChangeTitle("振幅スペクトル");
 }
 
 // デストラクタ
@@ -27,6 +28,8 @@ void Characteristic::Draw(void)
 	app->Clear();
 
 	std::vector<float>tmp = sound.lock()->GetData();
+	std::vector<float>real, imag;
+	use::FFT(tmp, real, imag);
 
 	const int channel = sound.lock()->Getinfo().channel;
 
@@ -35,7 +38,8 @@ void Characteristic::Draw(void)
 	std::for_each(data.begin(), data.end(), [&](float& i)->void {
 		for (int n = 0; n < channel; ++n)
 		{
-			i += tmp[index + n];
+			i += std::sqrt(real[index + n] * real[index + n] + imag[index + n] * imag[index + n]);
+			//i += tmp[index + n];
 		}
 		index += channel;
 	});
@@ -53,7 +57,7 @@ void Characteristic::Draw(void)
 	index = 0;
 	std::vector<Vec2f>pos2(data.size());
 	std::for_each(pos2.begin(), pos2.end(), [&](Vec2f& pos)->void {
-		pos = { x * index, static_cast<float>(winSize.y / 2) + static_cast<float>(winSize.y / 2) * data[index] };
+		pos = { x * index, static_cast<float>(winSize.y / 2) - data[index] };
 		++index;
 	});
 

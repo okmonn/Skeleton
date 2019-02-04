@@ -64,6 +64,8 @@ namespace snd
 		float threshold;
 		//圧縮比率
 		float ratio;
+		//ノイズゲート用閾値
+		float noiseThd;
 	};
 
 	// ディレイパラメータ
@@ -90,6 +92,4 @@ namespace snd
 
 	// 16ビット波形の読み込み
 	int LoadWave16(std::vector<float>& data, FILE* file);
-
-	std::vector<float>Test(const std::vector<float>& input);
 }

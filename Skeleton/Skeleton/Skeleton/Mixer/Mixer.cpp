@@ -1,5 +1,8 @@
 #include "Mixer.h"
 #include "../Application/Application.h"
+#include "../Mouse/Mouse.h"
+#include "../Manager/DistortionMane.h"
+#include "../Manager/FilterMane.h"
 #include "../Wave/Wave.h"
 #include "../Characteristic/Characteristic.h"
 #include <algorithm>
@@ -15,6 +18,8 @@ Mixer::Mixer() :
 	play(false), threadFlag(true)
 {
 	app = std::make_shared<Application>(WinSize);
+	app->ChangeTitle("ミキサー");
+	mouse = std::make_shared<Mouse>(app);
 
 	th.resize(THREAD_NUM);
 }
@@ -35,6 +40,11 @@ Mixer::~Mixer()
 void Mixer::Draw(void)
 {
 	app->Clear();
+	if (sound != nullptr)
+	{
+		distortion->Draw();
+		filter->Draw();
+	}
 	app->Execution();
 }
 
@@ -64,7 +74,10 @@ void Mixer::Play(void)
 // 処理
 void Mixer::UpData(void)
 {
+	mouse->UpData();
+
 	auto pass = app->GetDropFilePass();
+	static snd::DelayParam delay = { 0.5f, 0.0f, 0 };
 	if (pass.find_last_of(".wav") != std::string::npos)
 	{
 		if (sound != nullptr)
@@ -82,6 +95,8 @@ void Mixer::UpData(void)
 		threadFlag = true;
 
 		sound.reset(new Sound(pass));
+		distortion.reset(new DistortionMane(app, sound, mouse));
+		filter.reset(new FilterMane(app, sound, mouse));
 		wave.reset(new Wave(app, sound));
 		chara.reset(new Characteristic(app, sound));
 		
@@ -92,6 +107,46 @@ void Mixer::UpData(void)
 	}
 
 	Play();
+
+	if (sound == nullptr)
+	{
+		return;
+	}
+	if (Input::Get().CheckKey(INPUT_RIGHT))
+	{
+		delay.delayTime += 0.05f;
+		if (delay.delayTime > 1.0f)
+		{
+			delay.delayTime = 1.0f;
+		}
+		sound->SetDelay(delay);
+	}
+	else if (Input::Get().CheckKey(INPUT_LEFT))
+	{
+		delay.delayTime -= 0.05f;
+		if (delay.delayTime < 0.0f)
+		{
+			delay.delayTime = 0.0f;
+		}
+		sound->SetDelay(delay);
+	}
+	else if (Input::Get().CheckKey(INPUT_W))
+	{
+		delay.loop += 1;
+		if (delay.loop > 10)
+		{
+			delay.loop = 10;
+		}
+		sound->SetDelay(delay);
+	}
+	else if (Input::Get().CheckKey(INPUT_S))
+	{
+		delay.loop = ((int)delay.loop - 1 < 0) ? 0 : delay.loop - 1;
+		sound->SetDelay(delay);
+	}
+
+	distortion->UpData();
+	filter->UpData();
 }
 
 // 波形の描画

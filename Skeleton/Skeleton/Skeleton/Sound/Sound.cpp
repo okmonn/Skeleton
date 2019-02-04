@@ -32,7 +32,7 @@ const unsigned long spk[] = {
 Sound::Sound() : 
 	voice(nullptr), index(0), read(0), loopPos(0), loop(false), threadFlag(true)
 {
-	info = {};
+	info  = {};
 	data.resize(BUFFER);
 
 	back    = std::make_unique<VoiceCallback>();
@@ -162,6 +162,12 @@ void Sound::MoveLoopPos(void)
 	read = loopPos;
 }
 
+// パラメータの取得
+snd::Param Sound::GetParam(void) const
+{
+	return effe->GetParam();
+}
+
 // パラメータの調節
 void Sound::SetParam(const snd::Param & param)
 {
@@ -212,7 +218,6 @@ void Sound::Stream(void)
 
 		std::vector<float>tmp(&SndLoader::Get().GetData(name)->at(read), &SndLoader::Get().GetData(name)->at(read + size));
 		tmp = effe->Execution(tmp);
-		tmp = snd::Test(tmp);
 		tmp = delay->Execution(tmp, info, read);
 		tmp = filter->Execution(tmp);
 		data[index] = tmp;

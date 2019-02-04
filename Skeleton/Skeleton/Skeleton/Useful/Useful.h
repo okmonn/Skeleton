@@ -28,6 +28,10 @@ namespace use
 	// 任意の桁から四捨五入
 	float Round(const float& i, const int& num);
 
+	// ランダム値の取得
+	int GetRand(const int& min, const int& max);
+	float GetRand(const float& min, const float& max);
+
 	// 文字の確認
 	bool CheckChar(const std::string& find, const unsigned char* data, const size_t& num);
 

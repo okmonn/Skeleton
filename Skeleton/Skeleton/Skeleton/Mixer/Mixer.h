@@ -1,10 +1,16 @@
 #pragma once
+#include "../Vector2.h"
+#include <string>
 #include <vector>
 #include <memory>
 #include <thread>
+#include <unordered_map>
 
 class Application;
 class Sound;
+class Mouse;
+class DistortionMane;
+class FilterMane;
 class Wave;
 class Characteristic;
 
@@ -41,6 +47,15 @@ private:
 
 	//サウンド
 	std::shared_ptr<Sound>sound;
+
+	// マウス
+	std::shared_ptr<Mouse>mouse;
+
+	// ディストーション
+	std::unique_ptr<DistortionMane>distortion;
+
+	// デジタルフィルタ
+	std::unique_ptr<FilterMane>filter;
 
 	// 波形
 	std::unique_ptr<Wave>wave;
