@@ -9,7 +9,7 @@ class Window
 {
 public:
 	// コンストラクタ
-	Window(const Vec2& size, void* parent);
+	Window(const Vec2& pos, const Vec2& size, void* parent);
 	// デストラクタ
 	~Window();
 
@@ -62,6 +62,9 @@ private:
 
 	// ウィンドウハンドル
 	void* handle;
+
+	// ウィンドウ初期座標
+	Vec2 pos;
 
 	// ウィンドウサイズ
 	Vec2 size;

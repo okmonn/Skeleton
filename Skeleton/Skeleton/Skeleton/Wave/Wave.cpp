@@ -8,7 +8,7 @@ const Vec2 winSize = { 400, 400 };
 // コンストラクタ
 Wave::Wave(std::weak_ptr<Application> app, std::weak_ptr<Sound> sound) : sound(sound)
 {
-	this->app = std::make_unique<Application>(app, winSize);
+	this->app = std::make_unique<Application>(app, winSize, Vec2(app.lock()->GetWinPos().x - winSize.x, app.lock()->GetWinPos().y));
 	this->app->ChangeTitle("音声波形");
 }
 

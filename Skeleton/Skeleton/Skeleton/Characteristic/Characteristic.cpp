@@ -8,7 +8,7 @@ const Vec2 winSize = { 400, 400 };
 // コンストラクタ
 Characteristic::Characteristic(std::weak_ptr<Application> app, std::weak_ptr<Sound> sound) : sound(sound)
 {
-	this->app = std::make_unique<Application>(app, winSize);
+	this->app = std::make_unique<Application>(app, winSize, Vec2(app.lock()->GetWinPos().x + app.lock()->GetWinSize().x, app.lock()->GetWinPos().y));
 	this->app->ChangeTitle("振幅スペクトル");
 }
 

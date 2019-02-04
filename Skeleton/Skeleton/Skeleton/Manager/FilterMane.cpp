@@ -36,16 +36,17 @@ void FilterMane::Draw(void)
 // èàóù
 void FilterMane::UpData(void)
 {
-	if (mouse.lock()->GetClick() == -1 || mouse.lock()->GetPos() == 1)
-	{
-		oldCut = cut;
-		return;
-	}
-
 	//ç≈ëÂíl
 	const float max = use::Floor(static_cast<float>(sound.lock()->Getinfo().sample / 2), 2);
 	//ç≈è¨íl
 	const float min = OFFSET;
+
+	if (mouse.lock()->GetClick() == -1 || mouse.lock()->GetPos() == 1)
+	{
+		oldCut = cut;
+		UpDataAngle("en", cut, max);
+		return;
+	}
 
 	if (CheckMouse(pos, size))
 	{

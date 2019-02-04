@@ -3,7 +3,7 @@
 #include "../Mouse/Mouse.h"
 
 // 最大増幅率
-#define AMP_MAX 10.0f
+#define AMP_MAX 20.0f
 // 最小増幅率
 #define AMP_MIN 1.0f
 
@@ -18,7 +18,6 @@ DistortionMane::DistortionMane(std::weak_ptr<Application> app, std::weak_ptr<Sou
 	SetPos({ 64.0f, 0.0f });
 	SetSize(64.0f);
 	Load("en", "maru.png", 64.0f);
-	Load("en1", "maru.png", 64.0f);
 }
 
 // デストラクタ
@@ -31,7 +30,6 @@ DistortionMane::~DistortionMane()
 void DistortionMane::Draw(void)
 {
 	DrawImg("en", pos, size);
-	DrawImg("en1", pos + Vec2f(64.0f, 0.0f), size);
 }
 
 // 処理
@@ -40,6 +38,7 @@ void DistortionMane::UpData(void)
 	if (mouse.lock()->GetClick() == -1 || mouse.lock()->GetPos() == 1)
 	{
 		oldAmp = amplification;
+		UpDataAngle("en", amplification, AMP_MAX);
 		return;
 	}
 

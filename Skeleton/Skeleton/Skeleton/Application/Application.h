@@ -18,9 +18,9 @@ class Application
 {
 public:
 	// コンストラクタ
-	Application(const Vec2& size);
-	Application(const Application& app, const Vec2& size);
-	Application(std::weak_ptr<Application>app, const Vec2& size);
+	Application(const Vec2& size, const Vec2& pos = static_cast<int>(0x80000000));
+	Application(const Application& app, const Vec2& size, const Vec2& pos = static_cast<int>(0x80000000));
+	Application(std::weak_ptr<Application>app, const Vec2& size, const Vec2& pos = static_cast<int>(0x80000000));
 	// デストラクタ
 	~Application();
 
@@ -29,6 +29,9 @@ public:
 
 	// ドロップされたファイルパスの取得
 	std::string GetDropFilePass(void);
+
+	// ウィンドウ座標の取得
+	Vec2 GetWinPos(void);
 
 	// ウィンドウサイズの取得
 	Vec2 GetWinSize(void) const;
@@ -80,7 +83,7 @@ private:
 	void operator=(const Application&) = delete;
 
 	// クラスのインスタンス
-	void Instance(const Vec2& size, void* parent = nullptr);
+	void Instance(const Vec2& pos, const Vec2& size, void* parent = nullptr);
 
 
 	// ウィンドウ

@@ -15,7 +15,7 @@
 #pragma comment(lib, "dxgi.lib")
 
 // コンストラクタ
-Application::Application(const Vec2 & size)
+Application::Application(const Vec2 & size, const Vec2 & pos)
 {
 #ifdef _DEBUG
 	ID3D12Debug* debug = nullptr;
@@ -23,24 +23,38 @@ Application::Application(const Vec2 & size)
 	debug->EnableDebugLayer();
 #endif
 
-	Instance(size);
+	Instance(pos, size);
 }
 
 // コンストラクタ
-Application::Application(const Application & app, const Vec2 & size)
+Application::Application(const Application & app, const Vec2 & size, const Vec2 & pos)
 {
-	Instance(size, app.win->Get());
+	Instance(pos, size, app.win->Get());
 }
 
 // コンストラクタ
-Application::Application(std::weak_ptr<Application> app, const Vec2 & size)
+Application::Application(std::weak_ptr<Application> app, const Vec2 & size, const Vec2 & pos)
 {
-	Instance(size, app.lock()->win->Get());
+	Instance(pos, size, app.lock()->win->Get());
 }
 
 // デストラクタ
 Application::~Application()
 {
+}
+
+// クラスのインスタンス
+void Application::Instance(const Vec2 & pos, const Vec2 & size, void * parent)
+{
+	win       = std::make_shared<Window>(pos, size, parent);
+	queue     = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
+	list      = std::make_shared<List>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
+	fence     = std::make_unique<Fence>(queue);
+	swap      = std::make_shared<Swap>(win, queue);
+	render    = std::make_unique<Render>(swap);
+	depth     = std::make_shared<Depth>(win);
+	primitive = std::make_unique<PrimitiveMane>(win);
+	texture   = std::make_unique<TexMane>(win);
 }
 
 // タイトルの変更
@@ -55,18 +69,12 @@ std::string Application::GetDropFilePass(void)
 	return win->GetDropPass();
 }
 
-// クラスのインスタンス
-void Application::Instance(const Vec2 & size, void * parent)
+// ウィンドウ座標の取得
+Vec2 Application::GetWinPos(void)
 {
-	win       = std::make_shared<Window>(size, parent);
-	queue     = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
-	list      = std::make_shared<List>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
-	fence     = std::make_unique<Fence>(queue);
-	swap      = std::make_shared<Swap>(win, queue);
-	render    = std::make_unique<Render>(swap);
-	depth     = std::make_shared<Depth>(win);
-	primitive = std::make_unique<PrimitiveMane>(win);
-	texture   = std::make_unique<TexMane>(win);
+	RECT rect{};
+	GetWindowRect(reinterpret_cast<HWND>(win->Get()), &rect);
+	return Vec2(static_cast<int>(rect.left), static_cast<int>(rect.top));
 }
 
 // ウィンドウサイズの取得

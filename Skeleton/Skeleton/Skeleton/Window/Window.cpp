@@ -10,7 +10,7 @@ std::tstring Window::dropFilePass;
 #define RSC_NUM 1
 
 // コンストラクタ
-Window::Window(const Vec2 & size, void * parent) : size(size), 
+Window::Window(const Vec2 & pos, const Vec2 & size, void * parent) : pos(pos), size(size), 
 	handle(nullptr), instance(nullptr), name(nullptr), cHeap(nullptr), cRsc(nullptr)
 {
 	CreateWnd(parent);
@@ -93,9 +93,6 @@ int Window::CreateWnd(void * parent)
 	rect.right  = static_cast<long>(size.x);
 	rect.top    = 0;
 	AdjustWindowRect(&rect, flag, false);
-
-	auto disSize = use::GetDisplayResolution();
-	Vec2 pos = { use::GetRand(0, disSize.x - size.x), use::GetRand(0, disSize.y - size.y) };
 
 	handle = CreateWindowEx(WS_EX_ACCEPTFILES, wnd.lpszClassName, _T("おかもん"), flag, pos.x, pos.y,
 		(rect.right - rect.left), (rect.bottom - rect.top), reinterpret_cast<HWND>(parent), nullptr, wnd.hInstance, nullptr);

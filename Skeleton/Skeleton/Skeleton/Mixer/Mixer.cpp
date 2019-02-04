@@ -17,7 +17,7 @@ const Vec2 WinSize = { 400, 400 };
 Mixer::Mixer() : 
 	play(false), threadFlag(true)
 {
-	app = std::make_shared<Application>(WinSize);
+	app = std::make_shared<Application>(WinSize,Vec2(use::GetDisplayResolution().x / 2 - WinSize.x / 2, use::GetDisplayResolution().y / 2 - WinSize.y / 2));
 	app->ChangeTitle("ミキサー");
 	mouse = std::make_shared<Mouse>(app);
 
