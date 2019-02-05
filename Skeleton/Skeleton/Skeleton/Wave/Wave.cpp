@@ -54,7 +54,7 @@ void Wave::Draw(void)
 	index = 0;
 	std::vector<Vec2f>pos2(data.size());
 	std::for_each(pos2.begin(), pos2.end(), [&](Vec2f& pos)->void {
-		pos = { x * index, static_cast<float>(winSize.y / 2) - data[index] * 100 };
+		pos = { x * index, static_cast<float>(winSize.y / 2) - data[index] * 10 };
 		++index;
 	});
 

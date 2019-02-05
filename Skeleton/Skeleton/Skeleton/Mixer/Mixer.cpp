@@ -2,6 +2,10 @@
 #include "../Application/Application.h"
 #include "../Mouse/Mouse.h"
 #include "../Manager/DistortionMane.h"
+#include "../Manager/NoiseMane.h"
+#include "../Manager/CompMane.h"
+#include "../Manager/VolumeMane.h"
+#include "../Manager/DelayMane.h"
 #include "../Manager/FilterMane.h"
 #include "../Wave/Wave.h"
 #include "../Characteristic/Characteristic.h"
@@ -43,6 +47,10 @@ void Mixer::Draw(void)
 	if (sound != nullptr)
 	{
 		distortion->Draw();
+		noise->Draw();
+		comp->Draw();
+		vol->Draw();
+		delay->Draw();
 		filter->Draw();
 	}
 	app->Execution();
@@ -51,11 +59,6 @@ void Mixer::Draw(void)
 // Ä¶ŠÇ—
 void Mixer::Play(void)
 {
-	if (sound == nullptr)
-	{
-		return;
-	}
-
 	if (Input::Get().CheckTrigger(INPUT_SPACE))
 	{
 		if (play == false)
@@ -77,7 +80,6 @@ void Mixer::UpData(void)
 	mouse->UpData();
 
 	auto pass = app->GetDropFilePass();
-	static snd::DelayParam delay = { 0.5f, 0.0f, 0 };
 	if (pass.find_last_of(".wav") != std::string::npos)
 	{
 		if (sound != nullptr)
@@ -96,6 +98,10 @@ void Mixer::UpData(void)
 
 		sound.reset(new Sound(pass));
 		distortion.reset(new DistortionMane(app, sound, mouse));
+		noise.reset(new NoiseMane(app, sound, mouse));
+		comp.reset(new CompMane(app, sound, mouse));
+		vol.reset(new VolumeMane(app, sound, mouse));
+		delay.reset(new DelayMane(app, sound, mouse));
 		filter.reset(new FilterMane(app, sound, mouse));
 		wave.reset(new Wave(app, sound));
 		chara.reset(new Characteristic(app, sound));
@@ -106,46 +112,18 @@ void Mixer::UpData(void)
 		return;
 	}
 
-	Play();
-
 	if (sound == nullptr)
 	{
 		return;
 	}
-	if (Input::Get().CheckKey(INPUT_RIGHT))
-	{
-		delay.delayTime += 0.05f;
-		if (delay.delayTime > 1.0f)
-		{
-			delay.delayTime = 1.0f;
-		}
-		sound->SetDelay(delay);
-	}
-	else if (Input::Get().CheckKey(INPUT_LEFT))
-	{
-		delay.delayTime -= 0.05f;
-		if (delay.delayTime < 0.0f)
-		{
-			delay.delayTime = 0.0f;
-		}
-		sound->SetDelay(delay);
-	}
-	else if (Input::Get().CheckKey(INPUT_W))
-	{
-		delay.loop += 1;
-		if (delay.loop > 10)
-		{
-			delay.loop = 10;
-		}
-		sound->SetDelay(delay);
-	}
-	else if (Input::Get().CheckKey(INPUT_S))
-	{
-		delay.loop = ((int)delay.loop - 1 < 0) ? 0 : delay.loop - 1;
-		sound->SetDelay(delay);
-	}
+
+	Play();
 
 	distortion->UpData();
+	noise->UpData();
+	comp->UpData();
+	vol->UpData();
+	delay->UpData();
 	filter->UpData();
 }
 

@@ -18,6 +18,11 @@ public:
 	// クリア
 	void Clear(void);
 
+	// パラメータの取得
+	snd::DelayParam GetParam(void) const {
+		return param;
+	}
+
 private:
 	// パラメータ
 	snd::DelayParam param;

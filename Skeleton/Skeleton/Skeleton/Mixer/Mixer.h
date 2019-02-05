@@ -10,6 +10,10 @@ class Application;
 class Sound;
 class Mouse;
 class DistortionMane;
+class NoiseMane;
+class CompMane;
+class VolumeMane;
+class DelayMane;
 class FilterMane;
 class Wave;
 class Characteristic;
@@ -53,6 +57,18 @@ private:
 
 	// ディストーション
 	std::unique_ptr<DistortionMane>distortion;
+
+	// ノイズ
+	std::unique_ptr<NoiseMane>noise;
+
+	// コンプレッサ
+	std::unique_ptr<CompMane>comp;
+
+	// 音量
+	std::unique_ptr<VolumeMane>vol;
+
+	// ディレイ
+	std::unique_ptr<DelayMane>delay;
 
 	// デジタルフィルタ
 	std::unique_ptr<FilterMane>filter;

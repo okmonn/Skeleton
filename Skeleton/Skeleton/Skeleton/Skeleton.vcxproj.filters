@@ -136,6 +136,18 @@
     <Filter Include="Main\Manager\DistortionMane">
       <UniqueIdentifier>{dfba32d7-395b-4c4c-85f7-711cfbec0ffa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main\Manager\DelayMane">
+      <UniqueIdentifier>{25c23944-3591-4f7e-b906-8128db9e8140}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Manager\NoiseMane">
+      <UniqueIdentifier>{b1a8cad2-092e-4db5-9f0c-e6bddda71053}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Manager\CompMane">
+      <UniqueIdentifier>{00e19baa-4f16-429f-b40e-ff4171efddc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Manager\VolumeMane">
+      <UniqueIdentifier>{230d31ac-7076-48ab-94c8-5a414b9e9211}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Useful\Useful.cpp">
@@ -248,6 +260,18 @@
     </ClCompile>
     <ClCompile Include="Manager\DistortionMane.cpp">
       <Filter>Main\Manager\DistortionMane</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\DelayMane.cpp">
+      <Filter>Main\Manager\DelayMane</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\NoiseMane.cpp">
+      <Filter>Main\Manager\NoiseMane</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\CompMane.cpp">
+      <Filter>Main\Manager\CompMane</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\VolumeMane.cpp">
+      <Filter>Main\Manager\VolumeMane</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -382,6 +406,18 @@
     </ClInclude>
     <ClInclude Include="Manager\DistortionMane.h">
       <Filter>Main\Manager\DistortionMane</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\DelayMane.h">
+      <Filter>Main\Manager\DelayMane</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\NoiseMane.h">
+      <Filter>Main\Manager\NoiseMane</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\CompMane.h">
+      <Filter>Main\Manager\CompMane</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\VolumeMane.h">
+      <Filter>Main\Manager\VolumeMane</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

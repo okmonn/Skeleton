@@ -168,13 +168,19 @@ snd::Param Sound::GetParam(void) const
 	return effe->GetParam();
 }
 
-// パラメータの調節
+// パラメータのセット
 void Sound::SetParam(const snd::Param & param)
 {
 	effe->Copy(param);
 }
 
-// ディレイ調節
+// ディレイパラメータの取得
+snd::DelayParam Sound::GetDelay(void) const
+{
+	return delay->GetParam();
+}
+
+// ディレイパラメータのセット
 void Sound::SetDelay(const snd::DelayParam & param)
 {
 	delay->SetParam(param);

@@ -34,7 +34,14 @@ public:
 	// ループ位置に移動
 	void MoveLoopPos(void);
 
-	// ディレイ調節
+	// パラメータの取得
+	snd::Param GetParam(void) const;
+	// パラメータのセット
+	void SetParam(const snd::Param& param);
+
+	// ディレイパラメータの取得
+	snd::DelayParam GetDelay(void) const;
+	// ディレイパラメータのセット
 	void SetDelay(const snd::DelayParam& param);
 
 	// ローパス
@@ -50,10 +57,6 @@ public:
 	snd::Info Getinfo(void) const {
 		return info;
 	}
-	// パラメータの取得
-	snd::Param GetParam(void) const;
-	// パラメータのセット
-	void SetParam(const snd::Param& param);
 	// 現在波形の取得
 	std::vector<float> GetData(void) const {
 		return data[index];

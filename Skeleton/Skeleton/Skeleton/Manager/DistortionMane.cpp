@@ -15,9 +15,8 @@ DistortionMane::DistortionMane(std::weak_ptr<Application> app, std::weak_ptr<Sou
 	this->sound = sound;
 	this->mouse = mouse;
 
-	SetPos({ 64.0f, 0.0f });
-	SetSize(64.0f);
 	Load("en", "maru.png", 64.0f);
+	SetBox("en", { 64.0f, 0.0f }, 64.0f);
 }
 
 // デストラクタ
@@ -29,20 +28,21 @@ DistortionMane::~DistortionMane()
 // 描画
 void DistortionMane::Draw(void)
 {
-	DrawImg("en", pos, size);
+	DrawImg("en");
 }
 
 // 処理
 void DistortionMane::UpData(void)
 {
+	UpDataAngle("en", amplification, AMP_MAX);
+
 	if (mouse.lock()->GetClick() == -1 || mouse.lock()->GetPos() == 1)
 	{
 		oldAmp = amplification;
-		UpDataAngle("en", amplification, AMP_MAX);
 		return;
 	}
 
-	if (CheckMouse(pos, size))
+	if (CheckMouse("en"))
 	{
 		auto tmp = (mouse.lock()->GetClick().y - mouse.lock()->GetPos().y) / AMP_MAX;
 		amplification = oldAmp + tmp;
@@ -58,5 +58,5 @@ void DistortionMane::UpData(void)
 	auto param = sound.lock()->GetParam();
 	param.amp = amplification;
 	sound.lock()->SetParam(param);
-	UpDataAngle("en", amplification, AMP_MAX);
+	
 }
