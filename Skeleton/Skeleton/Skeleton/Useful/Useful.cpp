@@ -28,7 +28,7 @@ std::string use::ChangeCode(const std::wstring & code)
 	str.resize(byteSize);
 
 	//変換
-	byteSize = WideCharToMultiByte(CP_ACP, 0, code.c_str(), code.size(), &str[0], byteSize, nullptr, nullptr);
+	byteSize = WideCharToMultiByte(CP_ACP, 0, code.c_str(), static_cast<int>(code.size()), &str[0], byteSize, nullptr, nullptr);
 
 	return str;
 }
@@ -154,61 +154,37 @@ double use::Haninng(const unsigned int & i, const size_t & num)
 // 離散フーリエ変換
 void use::DFT(const std::vector<double>& input, std::vector<double>& real, std::vector<double>& imag)
 {
-	unsigned int index = 0;
-
-	//実部
 	real.assign(input.size(), 0.0);
-	std::for_each(real.begin(), real.end(), [&](double& i)->void {
-		for (unsigned int n = 0; n < input.size(); ++n)
-		{
-			auto re = std::cos(2.0 * PI * index * n / input.size());
-			i += re * input[n];
-		}
-		++index;
-	});
-
-	index = 0;
-
-	//虚部
 	imag.assign(input.size(), 0.0);
-	std::for_each(imag.begin(), imag.end(), [&](double& i)->void {
+	for (unsigned int i = 0; i < input.size(); ++i)
+	{
 		for (unsigned int n = 0; n < input.size(); ++n)
 		{
-			auto im = -std::sin(2.0 * PI * index * n / input.size());
-			i += im * input[n];
+			auto re =  std::cos(2.0 * PI * i * n / input.size());
+			auto im = -std::sin(2.0 * PI * i * n / input.size());
+
+			real[i] += re * input[n];
+			imag[i] += im * input[n];
 		}
-		++index;
-	});
+	}
 }
 
 //離散フーリエ変換
 void use::DFT(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imag)
 {
-	unsigned int index = 0;
-
-	//実部
 	real.assign(input.size(), 0.0);
-	std::for_each(real.begin(), real.end(), [&](float& i)->void {
-		for (unsigned int n = 0; n < input.size(); ++n)
-		{
-			auto re = std::cos(2.0f * PIF * index * n / input.size());
-			i += re * input[n];
-		}
-		++index;
-	});
-
-	index = 0;
-
-	//虚部
 	imag.assign(input.size(), 0.0);
-	std::for_each(imag.begin(), imag.end(), [&](float& i)->void {
+	for (unsigned int i = 0; i < input.size(); ++i)
+	{
 		for (unsigned int n = 0; n < input.size(); ++n)
 		{
-			auto im = -std::sin(2.0f * PIF * index * n / input.size());
-			i += im * input[n];
+			auto re =  std::cos(2.0f * PIF * i * n / input.size());
+			auto im = -std::sin(2.0f * PIF * i * n / input.size());
+
+			real[i] += re * input[n];
+			imag[i] += im * input[n];
 		}
-		++index;
-	});
+	}
 }
 
 // 逆離散フーリエ変換

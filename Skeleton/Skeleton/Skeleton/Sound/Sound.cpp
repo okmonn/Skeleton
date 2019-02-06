@@ -220,7 +220,7 @@ void Sound::Stream(void)
 
 		size = (SndLoader::Get().GetData(name)->size() - read > bps)
 			? bps
-			: SndLoader::Get().GetData(name)->size() - read - 1;
+			: static_cast<unsigned int>(SndLoader::Get().GetData(name)->size()) - read - 1;
 
 		std::vector<float>tmp(&SndLoader::Get().GetData(name)->at(read), &SndLoader::Get().GetData(name)->at(read + size));
 		tmp = effe->Execution(tmp);

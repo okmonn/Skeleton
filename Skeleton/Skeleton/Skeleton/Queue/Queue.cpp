@@ -34,5 +34,5 @@ long Queue::CreateQueue(const D3D12_COMMAND_LIST_TYPE & type)
 // ŽÀs
 void Queue::Execution(ID3D12CommandList ** list, const size_t & num) const
 {
-	queue->ExecuteCommandLists(num, list);
+	queue->ExecuteCommandLists(static_cast<unsigned int>(num), list);
 }

@@ -88,7 +88,7 @@ std::vector<float> Effector::Execution(const std::vector<float> & input)
 		list->ComputeRootTable(i, heap, i);
 	}
 
-	list->Dispatch(input.size(), 1, 1);
+	list->Dispatch(static_cast<unsigned int>(input.size()), 1, 1);
 
 	list->Close();
 

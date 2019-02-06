@@ -4,7 +4,7 @@
 // コンストラクタ
 Delay::Delay()
 {
-	param = { 1.0f, 0.0f, 0 };
+	param = { 0.5f, 0.0f, 0 };
 
 	old.clear();
 }

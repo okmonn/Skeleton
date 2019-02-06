@@ -9,12 +9,7 @@
 class Application;
 class Sound;
 class Mouse;
-class DistortionMane;
-class NoiseMane;
-class CompMane;
-class VolumeMane;
-class DelayMane;
-class FilterMane;
+class ParamMane;
 class Wave;
 class Characteristic;
 
@@ -55,29 +50,17 @@ private:
 	// マウス
 	std::shared_ptr<Mouse>mouse;
 
-	// ディストーション
-	std::unique_ptr<DistortionMane>distortion;
-
-	// ノイズ
-	std::unique_ptr<NoiseMane>noise;
-
-	// コンプレッサ
-	std::unique_ptr<CompMane>comp;
-
-	// 音量
-	std::unique_ptr<VolumeMane>vol;
-
-	// ディレイ
-	std::unique_ptr<DelayMane>delay;
-
-	// デジタルフィルタ
-	std::unique_ptr<FilterMane>filter;
+	// パラメータマネージャー
+	std::unique_ptr<ParamMane>param;
 
 	// 波形
 	std::unique_ptr<Wave>wave;
 	
 	// 特性
 	std::unique_ptr<Characteristic>chara;
+
+	// 画像ID
+	int image;
 
 	// 再生フラグ
 	bool play;

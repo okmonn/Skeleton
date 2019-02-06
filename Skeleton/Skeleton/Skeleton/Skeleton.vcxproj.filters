@@ -127,26 +127,8 @@
     <Filter Include="Main\Mouse">
       <UniqueIdentifier>{d15dd268-f557-443e-b52c-138892762e74}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Main\Manager">
-      <UniqueIdentifier>{4c5ac5b4-4caa-4c3b-afad-9a03dc63d7b3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Main\Manager\FilterMane">
-      <UniqueIdentifier>{03d2260f-9d45-4e6b-8e14-9c9a2822c6dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Main\Manager\DistortionMane">
-      <UniqueIdentifier>{dfba32d7-395b-4c4c-85f7-711cfbec0ffa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Main\Manager\DelayMane">
-      <UniqueIdentifier>{25c23944-3591-4f7e-b906-8128db9e8140}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Main\Manager\NoiseMane">
-      <UniqueIdentifier>{b1a8cad2-092e-4db5-9f0c-e6bddda71053}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Main\Manager\CompMane">
-      <UniqueIdentifier>{00e19baa-4f16-429f-b40e-ff4171efddc9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Main\Manager\VolumeMane">
-      <UniqueIdentifier>{230d31ac-7076-48ab-94c8-5a414b9e9211}</UniqueIdentifier>
+    <Filter Include="Main\ParamMane">
+      <UniqueIdentifier>{18bfe281-782a-4ea5-b49f-fffa9e04b184}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -252,26 +234,8 @@
     <ClCompile Include="Mouse\Mouse.cpp">
       <Filter>Main\Mouse</Filter>
     </ClCompile>
-    <ClCompile Include="Manager\Manager.cpp">
-      <Filter>Main\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="Manager\FilterMane.cpp">
-      <Filter>Main\Manager\FilterMane</Filter>
-    </ClCompile>
-    <ClCompile Include="Manager\DistortionMane.cpp">
-      <Filter>Main\Manager\DistortionMane</Filter>
-    </ClCompile>
-    <ClCompile Include="Manager\DelayMane.cpp">
-      <Filter>Main\Manager\DelayMane</Filter>
-    </ClCompile>
-    <ClCompile Include="Manager\NoiseMane.cpp">
-      <Filter>Main\Manager\NoiseMane</Filter>
-    </ClCompile>
-    <ClCompile Include="Manager\CompMane.cpp">
-      <Filter>Main\Manager\CompMane</Filter>
-    </ClCompile>
-    <ClCompile Include="Manager\VolumeMane.cpp">
-      <Filter>Main\Manager\VolumeMane</Filter>
+    <ClCompile Include="ParamMane\ParamMane.cpp">
+      <Filter>Main\ParamMane</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -398,26 +362,8 @@
     <ClInclude Include="Mouse\Mouse.h">
       <Filter>Main\Mouse</Filter>
     </ClInclude>
-    <ClInclude Include="Manager\Manager.h">
-      <Filter>Main\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="Manager\FilterMane.h">
-      <Filter>Main\Manager\FilterMane</Filter>
-    </ClInclude>
-    <ClInclude Include="Manager\DistortionMane.h">
-      <Filter>Main\Manager\DistortionMane</Filter>
-    </ClInclude>
-    <ClInclude Include="Manager\DelayMane.h">
-      <Filter>Main\Manager\DelayMane</Filter>
-    </ClInclude>
-    <ClInclude Include="Manager\NoiseMane.h">
-      <Filter>Main\Manager\NoiseMane</Filter>
-    </ClInclude>
-    <ClInclude Include="Manager\CompMane.h">
-      <Filter>Main\Manager\CompMane</Filter>
-    </ClInclude>
-    <ClInclude Include="Manager\VolumeMane.h">
-      <Filter>Main\Manager\VolumeMane</Filter>
+    <ClInclude Include="ParamMane\ParamMane.h">
+      <Filter>Main\ParamMane</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

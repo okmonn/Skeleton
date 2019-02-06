@@ -100,7 +100,7 @@ int snd::LoadWave8(std::vector<float>& data, FILE * file)
 	fread(tmp.data(), sizeof(unsigned char) * tmp.size(), 1, file);
 	data.assign(tmp.begin(), tmp.end());
 	std::for_each(data.begin(), data.end(), [&](float& i)->void {
-		i /= OVERFLLOW_CHAR - 0.5f;
+		i = (i / OVERFLLOW_CHAR) - 1.0f;
 	});
 
 	return 0;

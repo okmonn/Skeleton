@@ -106,7 +106,7 @@ void List::Pipe(ID3D12PipelineState * pipe) const
 // ヒープのセット
 void List::Heap(ID3D12DescriptorHeap ** heap, const size_t & num) const
 {
-	list->SetDescriptorHeaps(num, heap);
+	list->SetDescriptorHeaps(static_cast<unsigned int>(num), heap);
 }
 
 // ヒープと描画ルートとの関連付け
