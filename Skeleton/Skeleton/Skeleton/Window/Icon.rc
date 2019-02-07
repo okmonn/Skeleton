@@ -1,3 +1,0 @@
-#include "Icon.h"
-
-ICON_ID ICON "avicii.ico";
