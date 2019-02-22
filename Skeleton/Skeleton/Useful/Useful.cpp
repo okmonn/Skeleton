@@ -45,6 +45,17 @@ int use::Byte(const int & bit)
 	return bit / 8;
 }
 
+// ”CˆÓ‚ÌŒ…‚©‚çØ‚èã‚°
+float use::Ceil(const float & i, const int & num)
+{
+	float tmp = i;
+	tmp *= std::pow(10.0f, -num - 1);
+	tmp  = std::ceil(tmp);
+	tmp *= std::pow(10.0f, num + 1);
+
+	return tmp;
+}
+
 // ”CˆÓ‚ÌŒ…‚©‚çØ‚èÌ‚Ä
 float use::Floor(const float & i, const int & num)
 {

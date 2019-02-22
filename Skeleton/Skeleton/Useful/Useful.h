@@ -22,6 +22,9 @@ namespace use
 	// ƒoƒCƒg•ÏŠ·
 	int Byte(const int& bit);
 
+	// ”CˆÓ‚ÌŒ…‚©‚çØ‚èã‚°
+	float Ceil(const float& i, const int& num);
+
 	// ”CˆÓ‚ÌŒ…‚©‚çØ‚èÌ‚Ä
 	float Floor(const float& i, const int& num);
 

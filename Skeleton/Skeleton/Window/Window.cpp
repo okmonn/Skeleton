@@ -59,6 +59,7 @@ long __stdcall Window::WindowProc(void* hWnd, unsigned int message, long wParam,
 		dropFilePass.resize(size);
 		//ファイルパスの取得
 		DragQueryFile(drop, 0, &dropFilePass[0], sizeof(dropFilePass[0]) * size);
+		SetForegroundWindow(reinterpret_cast<HWND>(hWnd));
 		break;
 	default:
 		break;

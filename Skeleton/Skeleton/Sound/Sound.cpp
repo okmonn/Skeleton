@@ -9,6 +9,8 @@
 #include <ks.h>
 #include <ksmedia.h>
 #include <tchar.h>
+#include <algorithm>
+#include <numeric>
 
 // スピーカー設定用配列
 const unsigned long spk[] = {
@@ -233,6 +235,7 @@ void Sound::Stream(void)
 		tmp = delay->Execution(tmp, info, read);
 		tmp = filter->Execution(tmp);
 		data[index] = tmp;
+
 
 		buf.AudioBytes = static_cast<unsigned int>(sizeof(float) * data[index].size());
 		buf.pAudioData = reinterpret_cast<unsigned char*>(data[index].data());
