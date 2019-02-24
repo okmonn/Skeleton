@@ -3,7 +3,7 @@
 #include <algorithm>
 
 // ウィンドウサイズ
-const Vec2 winSize = { 400, 400 };
+const Vec2 winSize = { 400, 480 };
 
 // コンストラクタ
 Wave::Wave(std::weak_ptr<Application> app, std::weak_ptr<Sound> sound) : sound(sound)
