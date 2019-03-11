@@ -57,14 +57,6 @@ void Distortion(uint id)
     {
         output[id] = -1.0f;
     }
-    //if(output[id] >= 0.0f)
-    //{
-    //    output[id] = atan(output[id]) / PI / 2.0f;
-    //}
-    //else if(output[id] < -0.0f)
-    //{
-    //    output[id] = atan(output[id]) / PI / 2.0f * 0.1f;
-    //}
 }
 
 // ƒmƒCƒYƒQ[ƒg

@@ -75,15 +75,12 @@ std::vector<float> Filter::Execution(const std::vector<float>& input)
 	std::vector<float>adap(input.size());
 	unsigned int index = 0;
 	std::for_each(adap.begin(), adap.end(), [&](float& i)->void {
-		i = b[0] / a[0] * input[index]
-		  + b[1] / a[0] * this->input[0]
-		  + b[2] / a[0] * this->input[1]
-		  - a[1] / a[0] * out[0]
-		  - a[2] / a[0] * out[1];
+		i = b[0] / a[0] * input[index] + b[1] / a[0] * this->input[0] + b[2] / a[0] * this->input[1] - a[1] / a[0] * out[0] - a[2] / a[0] * out[1];
 
+		//過去の入力値更新
 		this->input[1] = this->input[0];
 		this->input[0] = input[index];
-
+		//過去の出力値更新
 		out[1] = out[0];
 		out[0] = adap[index];
 
