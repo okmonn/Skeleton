@@ -192,12 +192,6 @@
     <ClCompile Include="Texture\TexMane.cpp">
       <Filter>Library\Texture\Mane</Filter>
     </ClCompile>
-    <ClCompile Include="Compute\Compute.cpp">
-      <Filter>Library\Compute</Filter>
-    </ClCompile>
-    <ClCompile Include="Compute\Effector.cpp">
-      <Filter>Library\Compute\Effector</Filter>
-    </ClCompile>
     <ClCompile Include="Sound\Sound.cpp">
       <Filter>Library\Sound</Filter>
     </ClCompile>
@@ -236,6 +230,12 @@
     </ClCompile>
     <ClCompile Include="ParamMane\ParamMane.cpp">
       <Filter>Main\ParamMane</Filter>
+    </ClCompile>
+    <ClCompile Include="Compute\Compute.cpp">
+      <Filter>Library\Compute</Filter>
+    </ClCompile>
+    <ClCompile Include="Compute\Effector.cpp">
+      <Filter>Library\Compute\Effector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -317,12 +317,6 @@
     <ClInclude Include="Texture\TexMane.h">
       <Filter>Library\Texture\Mane</Filter>
     </ClInclude>
-    <ClInclude Include="Compute\Compute.h">
-      <Filter>Library\Compute</Filter>
-    </ClInclude>
-    <ClInclude Include="Compute\Effector.h">
-      <Filter>Library\Compute\Effector</Filter>
-    </ClInclude>
     <ClInclude Include="Sound\Sound.h">
       <Filter>Library\Sound</Filter>
     </ClInclude>
@@ -364,6 +358,12 @@
     </ClInclude>
     <ClInclude Include="ParamMane\ParamMane.h">
       <Filter>Main\ParamMane</Filter>
+    </ClInclude>
+    <ClInclude Include="Compute\Compute.h">
+      <Filter>Library\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="Compute\Effector.h">
+      <Filter>Library\Compute\Effector</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
